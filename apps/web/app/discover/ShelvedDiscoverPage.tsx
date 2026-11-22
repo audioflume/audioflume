@@ -1039,7 +1039,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
               <h1>Human made music &amp; SFX for film.</h1>
             </div>
             <div className={artist2Styles.introMeta}>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+              <p>Explore a growing library of human-made music and SFX for film. Discover original sounds by unique artists that bring your stories to life.</p>
             </div>
           </header>
         </div>
