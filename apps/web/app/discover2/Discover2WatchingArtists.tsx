@@ -49,7 +49,7 @@ export default function Discover2WatchingArtists() {
         return response.json();
       })
       .then((data) => {
-        if (!controller.signal.aborted) setArtists([...(Array.isArray(data?.artists) ? data.artists.slice(0, 5) : []), PLACEHOLDER_ARTIST]);
+        if (!controller.signal.aborted) setArtists([...(Array.isArray(data?.artists) ? data.artists.slice(0, 6) : []), PLACEHOLDER_ARTIST]);
       })
       .catch(() => {
         if (!controller.signal.aborted) setArtists([]);
