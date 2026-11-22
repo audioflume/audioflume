@@ -2094,6 +2094,8 @@
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
   min-height: 0;
+  max-height: 650px;
+  overflow-y: auto;
   border-left: 1px solid var(--border);
   padding: 24px 30px;
 }
