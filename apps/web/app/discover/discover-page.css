@@ -1263,6 +1263,11 @@
   }
 }
 
+.discover2-active-banner .audioflume-home-mockup-artists.is-discover-featured-artists:hover,
+.discover2-active-banner .audioflume-home-mockup-artists.is-discover-featured-artists:focus-within {
+  --audioflume-featured-side-card-opacity: 1;
+}
+
 .discover2-active-banner {
   --audioflume-home-canvas: transparent;
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
