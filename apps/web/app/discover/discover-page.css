@@ -2110,10 +2110,7 @@ color: #111;
   transition: transform 160ms ease;
 }
 
-.discover-page-root.is-discover2 .discover2-watching-play:hover,
-.discover-page-root.is-discover2 .discover2-watching-play:focus-visible {
-  transform: translate(-50%, -50%) scale(1.03);
-}
+
 
 .discover-page-root.is-discover2 .discover2-watching-caption {
   display: flex;
