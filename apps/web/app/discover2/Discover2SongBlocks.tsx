@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import type { Song } from "@/lib/types";
 
 function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
@@ -26,6 +27,9 @@ function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
     >
       <span className="discover2-compact-song-art">
         {song.coverArt ? <img src={song.coverArt} alt="" loading="lazy" /> : null}
+        <span className="discover2-compact-song-play">
+          <PlaybackStateIcon playing={playing} size={14} />
+        </span>
       </span>
       <span className="discover2-compact-song-copy">
         <span className="discover2-compact-song-title">{song.title}</span>
