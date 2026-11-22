@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayer } from "@/context/PlayerContext";
@@ -37,6 +37,7 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
+  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, lastChange: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -70,10 +71,32 @@ export default function Discover2WatchingArtists() {
     setPreviewArtistId(null);
   }
 
+  function handleHorizontalScroll(event: React.WheelEvent<HTMLDivElement>) {
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || artists.length < 2) return;
+
+    const now = performance.now();
+    const scroll = horizontalScroll.current;
+    if (now - scroll.lastEvent > 180) scroll.distance = 0;
+    scroll.lastEvent = now;
+    if (now - scroll.lastChange < 450) return;
+
+    scroll.distance += event.deltaX;
+    if (Math.abs(scroll.distance) < 35) return;
+
+    const direction = Math.sign(scroll.distance);
+    scroll.distance = 0;
+    scroll.lastChange = now;
+    const next = Math.max(0, Math.min(artists.length - 1, selected + direction));
+    if (next !== selected) {
+      closePreview();
+      setSelected(next);
+    }
+  }
+
   return (
     <section className="discover2-watching" aria-label="Artists we're watching">
       <h2>Artists we’re watching</h2>
-      <div className="discover2-watching-accordion">
+      <div className="discover2-watching-accordion" onWheel={handleHorizontalScroll}>
         {artists.map((artist, index) => {
           const placeholder = artist.id === PLACEHOLDER_ARTIST.id;
           const active = index === selected;
