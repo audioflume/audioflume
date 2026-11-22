@@ -50,8 +50,8 @@ export default function Discover2WatchingArtists() {
       })
       .then((data) => {
         if (!controller.signal.aborted) {
-          const directoryArtists: DirectoryArtist[] = Array.isArray(data?.artists) ? data.artists.slice(0, 6) : [];
-          const placeholders = Array.from({ length: Math.max(1, 7 - directoryArtists.length) }, (_, index) =>
+          const directoryArtists: DirectoryArtist[] = Array.isArray(data?.artists) ? data.artists.slice(0, 5) : [];
+          const placeholders = Array.from({ length: 6 - directoryArtists.length }, (_, index) =>
             index === 0 ? PLACEHOLDER_ARTIST : {
               ...PLACEHOLDER_ARTIST,
               id: `${PLACEHOLDER_ARTIST.id}-${index + 1}`,
