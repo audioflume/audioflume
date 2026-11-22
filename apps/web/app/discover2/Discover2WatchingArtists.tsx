@@ -37,7 +37,7 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
-  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, lockedUntil: 0 });
+  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false, lockedUntil: 0, lastPixels: 0, momentumSettled: false });
   const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClickUntil: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
@@ -87,25 +87,28 @@ export default function Discover2WatchingArtists() {
     const now = performance.now();
     const scroll = horizontalScroll.current;
     const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
+    const idle = now - scroll.lastEvent > 280;
+    const reversed = scroll.lastPixels !== 0 && Math.sign(pixels) !== Math.sign(scroll.lastPixels);
 
-    // A pause or a direction change starts a fresh horizontal movement.
-    if (now - scroll.lastEvent > 120 || (scroll.distance !== 0 && Math.sign(pixels) !== Math.sign(scroll.distance))) {
+    // Keep one selection per swipe, but recognize a fresh swipe even when
+    // residual trackpad momentum prevents the wheel stream from going idle.
+    if (idle || (now >= scroll.lockedUntil && reversed) ||
+      (now >= scroll.lockedUntil && scroll.momentumSettled && Math.abs(pixels) >= 8 && Math.abs(pixels) > Math.abs(scroll.lastPixels) * 1.8)) {
       scroll.distance = 0;
+      scroll.handledScroll = false;
+      scroll.momentumSettled = false;
     }
+
+    if (Math.abs(pixels) <= 2) scroll.momentumSettled = true;
     scroll.lastEvent = now;
-
-    // Only the expansion animation blocks navigation; momentum cannot keep it locked.
-    if (now < scroll.lockedUntil) {
-      scroll.distance = 0;
-      return;
-    }
+    scroll.lastPixels = pixels;
+    if (scroll.handledScroll || now < scroll.lockedUntil) return;
 
     scroll.distance += pixels;
-    if (Math.abs(scroll.distance) < 24) return;
+    if (Math.abs(scroll.distance) < 40) return;
 
-    const direction = Math.sign(scroll.distance);
-    scroll.distance = 0;
-    selectFromSwipe(direction);
+    scroll.handledScroll = true;
+    selectFromSwipe(Math.sign(scroll.distance));
   }
 
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
