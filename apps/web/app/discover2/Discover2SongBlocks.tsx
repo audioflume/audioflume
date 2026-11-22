@@ -50,7 +50,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
     <section className={`discover2-song-section${beforePlaylists ? " is-before-playlists" : ""}`} aria-label="Featured tracks">
       {beforePlaylists ? <h2 className="discover2-song-section-title">Tracks made for storytelling.</h2> : null}
       {!beforePlaylists ? (
-      <p className="discover2-song-intro">Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
+      <p className="discover2-song-intro">Explore a growing library of human-made music and SFX for film. Discover original sounds by unique artists that bring your stories to life.</p>
       ) : null}
       {loading ? (
         <div className="discover2-song-grid" aria-label="Loading tracks">
