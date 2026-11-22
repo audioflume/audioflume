@@ -2116,6 +2116,7 @@ gap: 16px;
 
 .discover-page-root.is-discover2 .discover2-watching-description > span {
   text-align: right;
+  white-space: nowrap;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-name {
@@ -2123,6 +2124,7 @@ gap: 16px;
   font-size: inherit;
   font-weight: inherit;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-play {
