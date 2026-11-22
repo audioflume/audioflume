@@ -1698,7 +1698,7 @@
 
 .discover-page-root.is-discover2 .discover2-playlist-section > h2 {
   margin: 0 0 170px;
-  color: light-dark(#c5c5c5, #858585);
+  color: light-dark(#c5c5c5, #626262);
   font-size: clamp(48px, 4.6vw, 76px);
   font-weight: 400;
   letter-spacing: -0.05em;
@@ -1939,7 +1939,7 @@
 
 .discover-page-root.is-discover2 .discover2-watching > h2 {
   margin: 0 0 148px;
-  color: light-dark(#c5c5c5, #858585);
+  color: light-dark(#c5c5c5, #626262);
   font-size: clamp(58px, 8.3vw, 150px);
   font-weight: 400;
   letter-spacing: -.065em;
