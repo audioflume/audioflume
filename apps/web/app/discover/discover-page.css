@@ -48,7 +48,7 @@
   --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
   --discover-artist-detail-inset: clamp(-80px, calc((980px - 100vw) * .1), 0px);
   --discover-artist-name-blend: normal;
-  --discover-artist-hero-height: max(560px, calc(100dvh - var(--filmwave-header-height, 60px) - var(--filmwave-searchbar-height, 75px) - 60px));
+  --discover-artist-hero-height: clamp(420px, 42vw, 660px);
   flex: 0 0 var(--home-reference-width);
   width: auto;
   margin: 0;
