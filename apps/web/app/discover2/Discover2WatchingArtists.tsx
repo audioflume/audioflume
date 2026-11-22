@@ -188,28 +188,27 @@ export default function Discover2WatchingArtists() {
                 <>
                   {!active ? (
                     <button className="discover2-watching-select" type="button" aria-label={`Show ${artist.name}`} onClick={() => setSelected(index)} />
-                  ) : (
-                    <>
-                      {!placeholder ? <Link className="discover2-watching-explore" href={`/artists/${artist.slug}`}>Explore artist ↗</Link> : null}
-                      <div className="discover2-watching-description">
-                        {placeholder ? <span className="discover2-watching-name">{artist.name}</span> : <Link href={`/artists/${artist.slug}`} className="discover2-watching-name">{artist.name}</Link>}
-                        <span>{artist.designation || "Artist / Composer"}</span>
-                      </div>
-                      {!placeholder ? (
-                      <button
-                        className="discover2-watching-play"
-                        type="button"
-                        aria-label={`Play music by ${artist.name}`}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openArtist(artist);
-                        }}
-                      >
-                        <PlaybackStateIcon playing={hasActiveSong && isPlaying} size={15} hoverIcon="list" />
-                      </button>
-                      ) : null}
-                    </>
-                  )}
+                  ) : null}
+                  {!placeholder ? <Link className="discover2-watching-explore" href={`/artists/${artist.slug}`} tabIndex={active ? undefined : -1} aria-hidden={!active}>Explore artist ↗</Link> : null}
+                  <div className="discover2-watching-description" aria-hidden={!active}>
+                    {placeholder ? <span className="discover2-watching-name">{artist.name}</span> : <Link href={`/artists/${artist.slug}`} className="discover2-watching-name" tabIndex={active ? undefined : -1}>{artist.name}</Link>}
+                    <span>{artist.designation || "Artist / Composer"}</span>
+                  </div>
+                  {!placeholder ? (
+                    <button
+                      className="discover2-watching-play"
+                      type="button"
+                      aria-label={`Play music by ${artist.name}`}
+                      tabIndex={active ? undefined : -1}
+                      aria-hidden={!active}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if (active) openArtist(artist);
+                      }}
+                    >
+                      <PlaybackStateIcon playing={hasActiveSong && isPlaying} size={15} hoverIcon="list" />
+                    </button>
+                  ) : null}
                 </>
               ) : (
                 <CardMiniPlayer
