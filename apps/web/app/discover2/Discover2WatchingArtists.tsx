@@ -38,7 +38,7 @@ export default function Discover2WatchingArtists() {
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
   const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false, lockedUntil: 0 });
-  const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClick: false });
+  const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClickUntil: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function Discover2WatchingArtists() {
     const deltaY = event.changedTouches[0].clientY - swipe.y;
     if (Math.abs(deltaX) < 50 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
 
-    swipe.suppressClick = true;
+    swipe.suppressClickUntil = performance.now() + 450;
     selectFromSwipe(-Math.sign(deltaX));
   }
 
@@ -142,8 +142,8 @@ export default function Discover2WatchingArtists() {
         onTouchEnd={handleTouchEnd}
         onTouchCancel={() => { touchSwipe.current.tracking = false; }}
         onClickCapture={(event) => {
-          if (!touchSwipe.current.suppressClick) return;
-          touchSwipe.current.suppressClick = false;
+          if (performance.now() > touchSwipe.current.suppressClickUntil) return;
+          touchSwipe.current.suppressClickUntil = 0;
           event.preventDefault();
           event.stopPropagation();
         }}
