@@ -1392,7 +1392,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-home-reference-shelf-scroller.has-shelf-primary:not(.is-scrolling):not(.is-between-cards)
   > .audioflume-home-reference-artist-card:not(.is-shelf-primary) {
-  opacity: 0;
+  opacity: var(--audioflume-featured-side-card-opacity, 0);
 }
 
 .audioflume-home-mockup-curated-shelf {
