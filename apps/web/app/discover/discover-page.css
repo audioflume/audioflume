@@ -1939,7 +1939,7 @@
 
 .discover-page-root.is-discover2 .discover2-watching-accordion {
   display: flex;
-  height: clamp(280px, 31vw, 460px);
+  height: max(320px, calc((100vw - 2 * var(--filmwave-page-gutter)) / 3));
   gap: 8px;
   overflow: hidden;
 }
@@ -2072,8 +2072,8 @@ margin-top: 20px;
   text-align: right;
 }
 
-@media (max-width: 690px) {
-.discover-page-root.is-discover2 .discover2-watching {
+@media (max-width: 750px) {
+  .discover-page-root.is-discover2 .discover2-watching {
     margin-top: 110px;
   }
 .discover-page-root.is-discover2 .discover2-watching > h2 {
@@ -2081,7 +2081,7 @@ margin-top: 20px;
     font-size: clamp(48px, 10vw, 72px);
   }
   .discover-page-root.is-discover2 .discover2-watching-accordion {
-height: 300px;
+    height: max(280px, calc((100vw - 2 * var(--filmwave-page-gutter)) / 1.8));
     gap: 8px;
   }
   .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
