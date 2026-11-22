@@ -1940,7 +1940,7 @@
 .discover-page-root.is-discover2 .discover2-watching-accordion {
   display: flex;
   height: max(320px, calc((100vw - 2 * var(--filmwave-page-gutter)) / 3));
-  gap: 8px;
+  gap: 6px;
   overflow: hidden;
 }
 
