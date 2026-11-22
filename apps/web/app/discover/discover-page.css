@@ -1821,18 +1821,9 @@
 }
 
 .discover-page-root.is-discover2 .discover2-song-genres {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 6px;
-  overflow-x: auto;
+  --bg-control: light-dark(#fff, #262626);
   margin: 0 0 14px;
-  padding: 0 40px;
-  scrollbar-width: thin;
-}
-
-.discover-page-root.is-discover2 .discover2-song-genres > button {
-  flex-shrink: 0;
+  padding: 0 12px;
 }
 
 .discover-page-root.is-discover2 .discover2-song-grid {
