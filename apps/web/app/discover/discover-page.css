@@ -2191,3 +2191,159 @@ margin-top: 20px;
     text-align: left;
   }
 }
+
+
+/* Discover2-only 3D song showcase. */
+.discover-page-root.is-discover2 .discover2-3d-songs {
+  width: 100%;
+  margin: 120px 0 0;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-songs-stage {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 510px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #080808;
+  color: #f5f5f5;
+  scrollbar-color: #434343 #080808;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-songs-row {
+  display: flex;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100%;
+  height: 510px;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: clamp(10px, 1.7vw, 30px);
+  padding: 65px max(36px, var(--filmwave-page-gutter)) 36px;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song {
+  position: relative;
+  display: flex;
+  width: clamp(148px, 15vw, 230px);
+  flex: 0 0 clamp(148px, 15vw, 230px);
+  flex-direction: column;
+  align-items: flex-start;
+  perspective: 850px;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-info {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-title,
+.discover-page-root.is-discover2 .discover2-3d-song-artist {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-artist {
+  color: #888;
+  font-size: 11px;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-play {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  place-items: center;
+  margin: 8px 0 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f5f5f5;
+  cursor: pointer;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-play:hover,
+.discover-page-root.is-discover2 .discover2-3d-song-play:focus-visible,
+.discover-page-root.is-discover2 .discover2-3d-song-play.is-active {
+  color: #aaa;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-object {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  transform-style: preserve-3d;
+  transform: rotateY(-58deg);
+  transform-origin: 40% 50%;
+  transition: transform 500ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even) .discover2-3d-song-object {
+  transform: rotateY(58deg);
+  transform-origin: 60% 50%;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song:hover .discover2-3d-song-object,
+.discover-page-root.is-discover2 .discover2-3d-song:focus-within .discover2-3d-song-object {
+  transform: rotateY(-36deg) translateY(-7px);
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even):hover .discover2-3d-song-object,
+.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even):focus-within .discover2-3d-song-object {
+  transform: rotateY(36deg) translateY(-7px);
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #262626;
+  box-shadow: 13px 15px 22px rgba(0, 0, 0, .55);
+  backface-visibility: hidden;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-song-edge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 9px;
+  height: 100%;
+  background: #333;
+  transform: rotateY(90deg);
+  transform-origin: right center;
+}
+
+.discover-page-root.is-discover2 .discover2-3d-songs-loading {
+  height: 510px;
+}
+
+@media (max-width: 750px) {
+  .discover-page-root.is-discover2 .discover2-3d-songs {
+    margin-top: 90px;
+  }
+  .discover-page-root.is-discover2 .discover2-3d-songs-row {
+    padding-top: 45px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discover-page-root.is-discover2 .discover2-3d-song-object {
+    transition: none;
+  }
+}
