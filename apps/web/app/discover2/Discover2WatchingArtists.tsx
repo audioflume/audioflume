@@ -47,8 +47,7 @@ export default function Discover2WatchingArtists() {
     if (playable.length === 0) return;
     setSelected(artists.findIndex((item) => item.id === artist.id));
     setPreviewArtistId(artist.id);
-    setQueue(playable);
-    if (currentSong?.id !== playable[0].id || !isPlaying) togglePlayPause(playable[0]);
+    // Opening the preview does not start playback; controls inside the mini-player do.
   }
 
   function closePreview() {
