@@ -1698,7 +1698,7 @@
 
 .discover-page-root.is-discover2 .discover2-playlist-section > h2 {
   margin: 0 0 170px;
-  color: #c5c5c5;
+  color: light-dark(#c5c5c5, #858585);
   font-size: clamp(48px, 4.6vw, 76px);
   font-weight: 400;
   letter-spacing: -0.05em;
@@ -1770,8 +1770,8 @@
   justify-content: center;
   margin: 60px auto 0;
   padding: 0 56px;
-  background: #e5e5df;
-  color: #111;
+ background: light-dark(#e5e5df, #303030);
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 400;
   text-decoration: none;
@@ -1779,8 +1779,8 @@
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-explore:hover {
-  background: #111;
-  color: #fff;
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
@@ -1939,7 +1939,7 @@
 
 .discover-page-root.is-discover2 .discover2-watching > h2 {
   margin: 0 0 148px;
-  color: #c5c5c5;
+  color: light-dark(#c5c5c5, #858585);
   font-size: clamp(58px, 8.3vw, 150px);
   font-weight: 400;
   letter-spacing: -.065em;
