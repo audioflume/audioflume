@@ -1820,24 +1820,11 @@
   text-align: center;
 }
 
-.discover-page-root.is-discover2 .discover2-song-genres {
-  --bg-control: light-dark(#fff, #262626);
-  margin: 0 0 14px;
-  padding: 0 12px;
-}
-
 .discover-page-root.is-discover2 .discover2-song-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: 24px;
   row-gap: 0;
-}
-
-.discover-page-root.is-discover2 .discover2-song-empty {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 13px;
 }
 
 .discover-page-root.is-discover2 .discover2-song-section:not(.is-before-playlists) .discover2-song-grid {
