@@ -76,11 +76,14 @@ export default function Discover2WatchingArtists() {
 
     const now = performance.now();
     const scroll = horizontalScroll.current;
-    const newGesture = now - scroll.lastEvent > 160;
+    const magnitude = Math.abs(event.deltaX);
+    const previousMagnitude = Math.abs(scroll.lastDelta);
+    const newGesture = now - scroll.lastEvent > 100;
     const renewedSwipe = scroll.handledGesture
-      && now - scroll.lastChange > 160
-      && Math.abs(scroll.lastDelta) < 5
-      && Math.abs(event.deltaX) > Math.max(6, Math.abs(scroll.lastDelta) * 2);
+      && now - scroll.lastChange > 180
+      && magnitude >= 5
+      && magnitude > previousMagnitude * 1.7
+      && magnitude - previousMagnitude >= 3;
     if (newGesture || renewedSwipe) {
       scroll.distance = 0;
       scroll.handledGesture = false;
@@ -90,7 +93,7 @@ export default function Discover2WatchingArtists() {
     if (scroll.handledGesture) return;
 
     scroll.distance += event.deltaX;
-    if (Math.abs(scroll.distance) < 35) return;
+    if (Math.abs(scroll.distance) < 18) return;
 
     const direction = Math.sign(scroll.distance);
     scroll.handledGesture = true;
