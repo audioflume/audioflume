@@ -21,8 +21,8 @@
 
 /* Discover2 main artist hero uses the featured shelf's navigation and side-card reveal. */
 .discover-page-root.is-discover2 .discover2-hero-shelf {
-  --discover2-hero-inset: clamp(24px, 4vw, 70px);
-  width: calc(100% - 2 * var(--filmwave-page-gutter));
+  --discover2-hero-inset: var(--filmwave-page-gutter);
+  width: 100vw;
   margin: 0 auto;
 }
 
