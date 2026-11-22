@@ -37,7 +37,8 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
-  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false });
+  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false, lockedUntil: 0 });
+  const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClick: false });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -68,31 +69,57 @@ export default function Discover2WatchingArtists() {
     setPreviewArtistId(null);
   }
 
-  function handleHorizontalScroll(event: React.WheelEvent<HTMLDivElement>) {
-    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || artists.length < 2) return;
-
+  function selectFromSwipe(direction: number) {
     const now = performance.now();
     const scroll = horizontalScroll.current;
-    // Treat a continuous stream of wheel events (including momentum) as one scroll action.
-    if (now - scroll.lastEvent > 110) {
-      scroll.distance = 0;
-      scroll.handledScroll = false;
-    }
-    scroll.lastEvent = now;
-    if (scroll.handledScroll) return;
-
-    // Accumulate actual horizontal scroll distance instead of interpreting velocity spikes as swipes.
-    const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
-    scroll.distance += pixels;
-    if (Math.abs(scroll.distance) < 40) return;
-
-    const direction = Math.sign(scroll.distance);
-    scroll.handledScroll = true;
+    if (now < scroll.lockedUntil || artists.length < 2) return;
+    scroll.lockedUntil = now + 360;
     const next = Math.max(0, Math.min(artists.length - 1, selected + direction));
     if (next !== selected) {
       closePreview();
       setSelected(next);
     }
+  }
+
+  function handleHorizontalScroll(event: React.WheelEvent<HTMLDivElement>) {
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || artists.length < 2) return;
+
+    const now = performance.now();
+    const scroll = horizontalScroll.current;
+    // Wait for the horizontal gesture (including trackpad momentum) to go idle.
+    if (now - scroll.lastEvent > 280) {
+      scroll.distance = 0;
+      scroll.handledScroll = false;
+    }
+    scroll.lastEvent = now;
+    if (scroll.handledScroll || now < scroll.lockedUntil) return;
+
+    const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
+    scroll.distance += pixels;
+    if (Math.abs(scroll.distance) < 40) return;
+
+    scroll.handledScroll = true;
+    selectFromSwipe(Math.sign(scroll.distance));
+  }
+
+  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    if (event.touches.length !== 1) return;
+    touchSwipe.current.x = event.touches[0].clientX;
+    touchSwipe.current.y = event.touches[0].clientY;
+    touchSwipe.current.tracking = true;
+  }
+
+  function handleTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+    const swipe = touchSwipe.current;
+    if (!swipe.tracking || event.changedTouches.length !== 1) return;
+    swipe.tracking = false;
+
+    const deltaX = event.changedTouches[0].clientX - swipe.x;
+    const deltaY = event.changedTouches[0].clientY - swipe.y;
+    if (Math.abs(deltaX) < 50 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+
+    swipe.suppressClick = true;
+    selectFromSwipe(-Math.sign(deltaX));
   }
 
   return (
@@ -108,7 +135,19 @@ export default function Discover2WatchingArtists() {
           </span>
         </Link>
       </h2>
-      <div className="discover2-watching-accordion" onWheel={handleHorizontalScroll}>
+      <div
+        className="discover2-watching-accordion"
+        onWheel={handleHorizontalScroll}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={() => { touchSwipe.current.tracking = false; }}
+        onClickCapture={(event) => {
+          if (!touchSwipe.current.suppressClick) return;
+          touchSwipe.current.suppressClick = false;
+          event.preventDefault();
+          event.stopPropagation();
+        }}
+      >
         {artists.map((artist, index) => {
           const placeholder = artist.id === PLACEHOLDER_ARTIST.id;
           const active = index === selected;
