@@ -467,24 +467,6 @@ export default function Header() {
           }
         }
 
-        .filmwave-web-header.is-editorial-header {
-          --audioflume-reference-header-logo-inset: 34px;
-          --audioflume-reference-wordmark-size: 20.5px;
-          --audioflume-reference-nav-position: absolute;
-          --audioflume-reference-nav-left: 0;
-          --audioflume-reference-nav-right: 0;
-          --audioflume-reference-nav-top: 0;
-          --audioflume-reference-nav-height: 100%;
-          --audioflume-reference-nav-justify: center;
-          --audioflume-reference-nav-pointer-events: none;
-          --audioflume-reference-nav-transform: none;
-          --audioflume-reference-nav-gap: 18px;
-          --audioflume-reference-nav-link-gap: 6px;
-          --audioflume-reference-nav-link-padding: 7px;
-          --audioflume-reference-nav-font-size: 14px;
-          --audioflume-reference-nav-font-weight: 400;
-        }
-
         .filmwave-header-logo-action.has-audioflume-symbol {
           display: inline-flex;
           align-items: center;
@@ -1063,13 +1045,6 @@ export default function Header() {
         }
 
         @media (max-width: 1000px) {
-          .filmwave-web-header.is-editorial-header {
-            --audioflume-reference-header-logo-inset: 24px;
-            --audioflume-reference-nav-compact-gap: 8px;
-            --audioflume-reference-nav-font-size: 13px;
-            --audioflume-reference-nav-link-padding: 4px;
-          }
-
           .filmwave-playlists-mega-inner {
             grid-template-columns: max-content !important;
             gap: 24px !important;
@@ -1100,17 +1075,6 @@ export default function Header() {
         }
 
         @media (max-width: 690px) {
-          .filmwave-web-header.is-editorial-header {
-            --audioflume-reference-nav-position: static;
-            --audioflume-reference-nav-left: auto;
-            --audioflume-reference-nav-right: auto;
-            --audioflume-reference-nav-top: auto;
-            --audioflume-reference-nav-height: auto;
-            --audioflume-reference-nav-justify: flex-start;
-            --audioflume-reference-nav-pointer-events: auto;
-            --audioflume-reference-nav-transform: none;
-          }
-
           .filmwave-web-header.has-open-mobile-nav {
             z-index: calc(var(--filmwave-z-header) + 3) !important;
           }
