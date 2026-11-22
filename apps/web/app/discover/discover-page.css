@@ -1828,6 +1828,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-compact-song-art {
+  --filmwave-song-card-play-size: 32px;
   position: relative;
   display: block;
   width: 62px;
