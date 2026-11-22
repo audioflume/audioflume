@@ -2102,15 +2102,30 @@ gap: 16px;
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #fff;
-color: #111;
+  background: transparent;
+  color: #111;
   font-weight: 300;
   cursor: pointer;
   transform: translate(-50%, -50%);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-play::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
   transition: transform 160ms ease;
 }
 
+.discover-page-root.is-discover2 .discover2-watching-play > span {
+  position: relative;
+}
 
+.discover-page-root.is-discover2 .discover2-watching-play:hover::before,
+.discover-page-root.is-discover2 .discover2-watching-play:focus-visible::before {
+  transform: scale(1.03);
+}
 
 .discover-page-root.is-discover2 .discover2-watching-caption {
   display: flex;
