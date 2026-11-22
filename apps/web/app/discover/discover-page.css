@@ -1762,6 +1762,21 @@
   line-height: 1.3;
 }
 
+.discover-page-root.is-discover2 .discover2-playlist-explore {
+  display: flex;
+  width: fit-content;
+  height: 51px;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  background: #e5e5df;
+  color: #111;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
 .discover-page-root.is-discover2 .discover2-song-section {
   margin-top: 125px;
   margin-bottom: 90px;
