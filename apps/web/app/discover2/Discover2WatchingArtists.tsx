@@ -49,7 +49,17 @@ export default function Discover2WatchingArtists() {
         return response.json();
       })
       .then((data) => {
-        if (!controller.signal.aborted) setArtists([...(Array.isArray(data?.artists) ? data.artists.slice(0, 6) : []), PLACEHOLDER_ARTIST]);
+        if (!controller.signal.aborted) {
+          const directoryArtists: DirectoryArtist[] = Array.isArray(data?.artists) ? data.artists.slice(0, 6) : [];
+          const placeholders = Array.from({ length: Math.max(1, 7 - directoryArtists.length) }, (_, index) =>
+            index === 0 ? PLACEHOLDER_ARTIST : {
+              ...PLACEHOLDER_ARTIST,
+              id: `${PLACEHOLDER_ARTIST.id}-${index + 1}`,
+              name: `Artist preview ${index + 1}`,
+            },
+          );
+          setArtists([...directoryArtists, ...placeholders]);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setArtists([]);
@@ -158,7 +168,7 @@ export default function Discover2WatchingArtists() {
         }}
       >
         {artists.map((artist, index) => {
-          const placeholder = artist.id === PLACEHOLDER_ARTIST.id;
+          const placeholder = artist.id.startsWith(PLACEHOLDER_ARTIST.id);
           const active = index === selected;
           const previewOpen = artist.id === previewArtistId;
           const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
