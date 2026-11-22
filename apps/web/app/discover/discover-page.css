@@ -22,13 +22,14 @@
 /* Discover2 main artist hero uses the featured shelf's navigation and side-card reveal. */
 .discover-page-root.is-discover2 .discover2-hero-shelf {
   --discover2-hero-inset: var(--filmwave-page-gutter);
+  --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100vw;
   margin: 0 auto;
 }
 
 .discover-page-root.is-discover2 .discover2-hero-scroller {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   overflow-x: auto;
   overflow-y: hidden;
   padding-inline: var(--discover2-hero-inset);
@@ -42,7 +43,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card {
-  flex: 0 0 calc(100% - 2 * var(--discover2-hero-inset));
+  flex: 0 0 var(--home-reference-width);
   width: auto;
   margin: 0;
   scroll-snap-align: start;
@@ -57,11 +58,6 @@
 .discover-page-root.is-discover2 .discover2-hero-shelf:focus-within .discover2-hero-card,
 .discover-page-root.is-discover2 .discover2-hero-scroller.is-scrolling .discover2-hero-card {
   opacity: 1;
-}
-
-.discover-page-root.is-discover2 .discover2-hero-shelf > .audioflume-discover-artist-navigation {
-  width: 100%;
-  margin-inline: 0;
 }
 
 
