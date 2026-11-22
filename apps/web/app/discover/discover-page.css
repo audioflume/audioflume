@@ -1999,13 +1999,19 @@
 
 .discover-page-root.is-discover2 .discover2-watching-description {
   position: absolute;
+  right: clamp(22px, 2.4vw, 42px);
   bottom: clamp(20px, 2.4vw, 42px);
   left: clamp(22px, 2.4vw, 42px);
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: 7px;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
   font-size: clamp(12px, 1vw, 16px);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-description > span {
+  text-align: right;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-name {
