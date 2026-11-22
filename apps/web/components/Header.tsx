@@ -534,7 +534,7 @@ export default function Header() {
 
         .filmwave-header-new-badge {
           display: inline-flex;
-          height: 18px;
+          height: 21px;
           align-items: center;
           border-radius: 999px;
           background: #111;
