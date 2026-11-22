@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSongs } from "@/hooks/useSongs";
+import { MusicQuickChip } from "@filmwave/shared";
+import { GENRE_OPTIONS } from "@/lib/constants";
 import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import type { Song } from "@/lib/types";
@@ -43,9 +45,21 @@ function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
 
 export default function Discover2SongBlocks({ beforePlaylists = false }: { beforePlaylists?: boolean }) {
   const { songs, loading } = useSongs();
-  const recentSongs = useMemo(
-    () => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12),
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const playableSongs = useMemo(
+    () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
+  );
+  const availableGenres = useMemo(() => {
+    const present = new Set(playableSongs.flatMap((song) => song.genres));
+    return GENRE_OPTIONS.filter((genre) => present.has(genre));
+  }, [playableSongs]);
+  const recentSongs = useMemo(
+    () => playableSongs.filter((song) =>
+      selectedGenres.length === 0 ||
+      song.genres.some((genre) => selectedGenres.includes(genre))
+    ).slice(0, 12),
+    [playableSongs, selectedGenres],
   );
 
   return (
@@ -53,6 +67,24 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
       {beforePlaylists ? <h2 className="discover2-song-section-title">Tracks made for storytelling.</h2> : null}
       {!beforePlaylists ? (
       <h2 className="discover2-song-intro">Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</h2>
+      ) : null}
+      {!beforePlaylists && !loading && availableGenres.length > 0 ? (
+        <div className="discover2-song-genres" role="group" aria-label="Filter featured tracks by genre">
+          {availableGenres.map((genre) => {
+            const active = selectedGenres.includes(genre);
+            return (
+              <MusicQuickChip
+                key={genre}
+                active={active}
+                onClick={() => setSelectedGenres((current) =>
+                  active ? current.filter((value) => value !== genre) : [...current, genre]
+                )}
+              >
+                {genre}
+              </MusicQuickChip>
+            );
+          })}
+        </div>
       ) : null}
       {loading ? (
         <div className="discover2-song-grid" aria-label="Loading tracks">
@@ -65,9 +97,11 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
         </div>
       ) : (
         <div className="discover2-song-grid">
-          {recentSongs.map((song) => (
+          {recentSongs.length ? recentSongs.map((song) => (
             <Discover2CompactSong key={song.id} song={song} queue={recentSongs} />
-          ))}
+          )) : (
+            <p className="discover2-song-empty">No tracks match the selected genres.</p>
+          )}
         </div>
       )}
     </section>
