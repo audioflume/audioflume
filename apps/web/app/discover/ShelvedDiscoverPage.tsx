@@ -7,7 +7,6 @@ import {
   type MouseEvent,
   type ReactNode,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -82,49 +81,6 @@ type DiscoverFeatureCardArtist = {
   hero_image_position_y: number;
   songs: Song[];
 };
-
-function Discover2FittedArtistName({ name }: { name: string }) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-
-  useLayoutEffect(() => {
-    const title = titleRef.current;
-    const feature = title?.closest(".discover-artist-hero-feature");
-    if (!title || !feature) return;
-
-    const fitName = () => {
-      title.style.fontSize = "";
-      const computed = getComputedStyle(title);
-      const originalSize = parseFloat(computed.fontSize);
-      const fits = () => {
-        const lineHeight = parseFloat(getComputedStyle(title).lineHeight);
-        return title.scrollHeight <= lineHeight * 2 + 2 &&
-          title.scrollWidth <= title.clientWidth + 1;
-      };
-
-      if (fits()) return;
-
-      let low = 24;
-      let high = originalSize;
-      for (let attempt = 0; attempt < 12; attempt += 1) {
-        const size = (low + high) / 2;
-        title.style.fontSize = `${size}px`;
-        if (fits()) low = size;
-        else high = size;
-      }
-      title.style.fontSize = `${low}px`;
-    };
-
-    fitName();
-    const observer = new ResizeObserver(fitName);
-    observer.observe(feature);
-    document.fonts.ready.then(() => {
-      if (title.isConnected) fitName();
-    });
-    return () => observer.disconnect();
-  }, [name]);
-
-  return <h1 ref={titleRef}>{name}</h1>;
-}
 
 const ARTISTS_WATCHING: ShelfItem[] = [
   {
@@ -1188,7 +1144,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                     <div className="discover-artist-hero-feature">
                       <div className="discover-artist-hero-identity">
                         <span className="discover-artist-hero-eyebrow">Featured Artist</span>
-                        <Discover2FittedArtistName name={artist.name} />
+                        <h1>{artist.name}</h1>
                         <div className="discover-artist-hero-genres">
                           {genres.length ? genres.map((genre) => <span key={genre}>{genre}</span>) : (
                             <>
