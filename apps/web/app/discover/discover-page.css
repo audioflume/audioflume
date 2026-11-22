@@ -11,11 +11,11 @@
 }
 
 .discover-page-root.is-discover2 {
-  background: #f7f7f5;
+  background: light-dark(#f7f7f5, #171717);
 }
 
 .discover-page-root.is-discover2 > .discover2-searchbar-background {
-  background: #fff;
+  background: var(--bg-primary);
 }
 
 .discover-page-root button,
