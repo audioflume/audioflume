@@ -1945,6 +1945,255 @@
 }
 
 
+/* Discover2-only temporary song layout comparisons; the original grid above is unchanged. */
+.discover-page-root.is-discover2 .discover2-song-experiments {
+  width: calc(100% - 2 * var(--filmwave-page-gutter));
+  margin: 0 auto 130px;
+}
+
+.discover-page-root.is-discover2 .discover2-song-experiment {
+  margin-top: 120px;
+}
+
+.discover-page-root.is-discover2 .discover2-song-experiment-heading {
+  margin: 0 0 28px;
+}
+
+.discover-page-root.is-discover2 .discover2-song-experiment-heading > span {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.discover-page-root.is-discover2 .discover2-song-experiment-heading h2 {
+  margin: 0 0 9px;
+  color: var(--text-primary);
+  font-size: clamp(30px, 3.2vw, 52px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+
+.discover-page-root.is-discover2 .discover2-song-experiment-heading p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Option 1: a gallery of larger album artworks. */
+.discover-page-root.is-discover2 .discover2-experiment-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px 16px;
+  background: light-dark(#fff, #262626);
+  padding: 40px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song {
+  display: flex;
+  height: auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  border: 0;
+  padding: 0;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.22 / 1;
+  flex: 0 0 auto;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song-copy {
+  gap: 5px;
+  padding-top: 13px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song-title {
+  font-size: 16px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song-artist {
+  font-size: 12px;
+}
+
+/* Option 2: typography-led rows and large sequence numbers. */
+.discover-page-root.is-discover2 .discover2-experiment-numbered {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 46px;
+  background: light-dark(#fff, #262626);
+  padding: 28px 40px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song {
+  height: 115px;
+  gap: 18px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-experiment-track-number {
+  width: 58px;
+  flex: 0 0 58px;
+  color: light-dark(#c5c5c5, #626262);
+  font-size: clamp(28px, 2.75vw, 45px);
+  font-weight: 300;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song-art {
+  width: 74px;
+  height: 74px;
+  flex: 0 0 74px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song-title {
+  font-size: 17px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song-artist {
+  font-size: 12px;
+}
+
+/* Option 3: an asymmetric contact sheet with information on the imagery. */
+.discover-page-root.is-discover2 .discover2-experiment-collage {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: clamp(140px, 13.4vw, 250px);
+  gap: 12px;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song {
+  position: relative;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: #202020;
+  isolation: isolate;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song:nth-child(1),
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song:nth-child(8) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent 58%);
+  content: "";
+  pointer-events: none;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-art img {
+  transition: transform 320ms ease;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song:hover .discover2-compact-song-art img {
+  transform: scale(1.025);
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-copy {
+  position: absolute;
+  right: 15px;
+  bottom: 17px;
+  left: 15px;
+  z-index: 2;
+  color: #fff;
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-title {
+  font-size: clamp(13px, 1.35vw, 19px);
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-artist {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song:nth-child(1) .discover2-compact-song-title,
+.discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song:nth-child(8) .discover2-compact-song-title {
+  font-size: clamp(20px, 2vw, 34px);
+}
+
+@media (max-width: 900px) {
+  .discover-page-root.is-discover2 .discover2-experiment-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-numbered {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-collage {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(160px, 28vw, 300px);
+  }
+}
+
+@media (max-width: 540px) {
+  .discover-page-root.is-discover2 .discover2-song-experiment {
+    margin-top: 80px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-gallery {
+    gap: 18px 10px;
+    padding: 18px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-gallery .discover2-compact-song-title {
+    font-size: 13px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-numbered {
+    padding: 15px 18px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-experiment-track-number {
+    width: 38px;
+    flex-basis: 38px;
+    font-size: 28px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song {
+    gap: 10px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-numbered .discover2-compact-song-art {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-collage {
+    grid-auto-rows: 170px;
+    gap: 8px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-experiment-collage .discover2-compact-song-copy {
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+  }
+}
+
 /* Discover2-only artist accordion. */
 .discover-page-root.is-discover2 .discover2-watching {
   width: calc(100% - 2 * var(--filmwave-page-gutter));
