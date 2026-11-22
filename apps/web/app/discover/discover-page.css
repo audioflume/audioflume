@@ -1928,7 +1928,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-watching > h2 {
-  margin: 0 0 125px;
+  margin: 0 0 140px;
   color: #c5c5c5;
   font-size: clamp(58px, 8.3vw, 150px);
   font-weight: 400;
@@ -2083,7 +2083,7 @@ margin-top: 20px;
     margin-top: 110px;
   }
 .discover-page-root.is-discover2 .discover2-watching > h2 {
-    margin-bottom: 125px;
+    margin-bottom: 140px;
     font-size: clamp(48px, 10vw, 72px);
   }
 
