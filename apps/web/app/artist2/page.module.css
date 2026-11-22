@@ -169,6 +169,15 @@
   background: var(--bg-tertiary);
 }
 
+.artistMedia::after {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+  content: "";
+  pointer-events: none;
+}
+
 .artistFallback,
 .previewImage {
   position: absolute;
@@ -741,7 +750,7 @@
 .headingSearchMeasure {
   white-space: nowrap;
   padding-inline: 28px;
- color: light-dark(#c5c5c5, #626262);
+ color: light-dark(#c5c5c5, #424242);
   pointer-events: none;
 }
 
