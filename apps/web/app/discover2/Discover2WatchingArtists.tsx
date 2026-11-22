@@ -107,10 +107,11 @@ export default function Discover2WatchingArtists() {
 
     if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
     scrollEndTimer.current = setTimeout(() => {
-      // Allow a little overshoot toward the next card before snapping past it.
+      // Require 80% progress into the next card before committing the snap,
+      // leaving room for a small overshoot without selecting another artist.
       const nearest = scrollPositionRef.current > selected
-        ? Math.ceil(scrollPositionRef.current - 0.65)
-        : Math.floor(scrollPositionRef.current + 0.65);
+        ? Math.floor(scrollPositionRef.current + 0.2)
+        : Math.ceil(scrollPositionRef.current - 0.2);
       scrollPositionRef.current = nearest;
       setIsScrolling(false);
       setScrollPosition(nearest);
