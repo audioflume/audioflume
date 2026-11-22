@@ -37,7 +37,7 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
-  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, lastChange: 0 });
+  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledGesture: false });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -76,16 +76,18 @@ export default function Discover2WatchingArtists() {
 
     const now = performance.now();
     const scroll = horizontalScroll.current;
-    if (now - scroll.lastEvent > 180) scroll.distance = 0;
+    if (now - scroll.lastEvent > 350) {
+      scroll.distance = 0;
+      scroll.handledGesture = false;
+    }
     scroll.lastEvent = now;
-    if (now - scroll.lastChange < 450) return;
+    if (scroll.handledGesture) return;
 
     scroll.distance += event.deltaX;
     if (Math.abs(scroll.distance) < 35) return;
 
     const direction = Math.sign(scroll.distance);
-    scroll.distance = 0;
-    scroll.lastChange = now;
+    scroll.handledGesture = true;
     const next = Math.max(0, Math.min(artists.length - 1, selected + direction));
     if (next !== selected) {
       closePreview();
