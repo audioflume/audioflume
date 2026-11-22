@@ -43,6 +43,8 @@
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card {
+  --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
+  --discover-artist-hero-grid-max-width: 1400px;
   --discover-artist-hero-height: max(560px, calc(100dvh - var(--filmwave-header-height, 60px) - var(--filmwave-searchbar-height, 75px) - 60px));
   flex: 0 0 var(--home-reference-width);
   width: auto;
@@ -246,10 +248,10 @@
   grid-row: 1;
   box-sizing: border-box;
   width: 100%;
-  max-width: 100%;
+  max-width: var(--discover-artist-hero-grid-max-width, 100%);
   padding-right: clamp(60px, 4.5vw, 90px);
   padding-left: clamp(60px, 4.5vw, 90px);
-  grid-template-columns: fit-content(640px) minmax(0, 560px);
+  grid-template-columns: var(--discover-artist-hero-grid-columns, fit-content(640px) minmax(0, 560px));
   grid-template-rows: auto auto auto;
   align-self: center;
   align-items: start;
