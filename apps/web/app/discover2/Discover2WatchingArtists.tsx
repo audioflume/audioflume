@@ -20,6 +20,19 @@ type DirectoryArtist = {
   songs: Song[];
 };
 
+const PLACEHOLDER_ARTIST: DirectoryArtist = {
+  id: "discover2-artist-placeholder",
+  name: "Artist preview",
+  slug: "",
+  designation: "Coming soon",
+  hero_image_url: null,
+  profile_image_url: null,
+  hero_image_position_x: 50,
+  hero_image_position_y: 50,
+  track_count: 0,
+  songs: [],
+};
+
 export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
@@ -34,7 +47,7 @@ export default function Discover2WatchingArtists() {
         return response.json();
       })
       .then((data) => {
-        if (!controller.signal.aborted) setArtists(Array.isArray(data?.artists) ? data.artists.slice(0, 5) : []);
+        if (!controller.signal.aborted) setArtists([...(Array.isArray(data?.artists) ? data.artists.slice(0, 5) : []), PLACEHOLDER_ARTIST]);
       })
       .catch(() => {
         if (!controller.signal.aborted) setArtists([]);
@@ -62,6 +75,7 @@ export default function Discover2WatchingArtists() {
       <h2>Artists we’re watching</h2>
       <div className="discover2-watching-accordion">
         {artists.map((artist, index) => {
+          const placeholder = artist.id === PLACEHOLDER_ARTIST.id;
           const active = index === selected;
           const previewOpen = artist.id === previewArtistId;
           const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -93,11 +107,12 @@ export default function Discover2WatchingArtists() {
                     <button className="discover2-watching-select" type="button" aria-label={`Show ${artist.name}`} onClick={() => setSelected(index)} />
                   ) : (
                     <>
-                      <Link className="discover2-watching-explore" href={`/artists/${artist.slug}`}>Explore artist ↗</Link>
+                      {!placeholder ? <Link className="discover2-watching-explore" href={`/artists/${artist.slug}`}>Explore artist ↗</Link> : null}
                       <div className="discover2-watching-description">
-                        <Link href={`/artists/${artist.slug}`} className="discover2-watching-name">{artist.name}</Link>
+                        {placeholder ? <span className="discover2-watching-name">{artist.name}</span> : <Link href={`/artists/${artist.slug}`} className="discover2-watching-name">{artist.name}</Link>}
                         <span>{artist.designation || "Artist / Composer"}</span>
                       </div>
+                      {!placeholder ? (
                       <button
                         className="discover2-watching-play"
                         type="button"
@@ -109,6 +124,7 @@ export default function Discover2WatchingArtists() {
                       >
                         <PlaybackStateIcon playing={hasActiveSong && isPlaying} size={15} hoverIcon="list" />
                       </button>
+                      ) : null
                     </>
                   )}
                 </>
