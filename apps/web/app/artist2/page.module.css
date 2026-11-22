@@ -750,7 +750,7 @@
 .headingSearchMeasure {
   white-space: nowrap;
   padding-inline: 28px;
- color: light-dark(#c5c5c5, #424242);
+ color: light-dark(#c5c5c5, #303030);
   pointer-events: none;
 }
 
