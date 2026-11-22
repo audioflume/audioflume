@@ -107,7 +107,10 @@ export default function Discover2WatchingArtists() {
 
     if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
     scrollEndTimer.current = setTimeout(() => {
-      const nearest = Math.round(scrollPositionRef.current);
+      // Allow a little overshoot toward the next card before snapping past it.
+      const nearest = scrollPositionRef.current > selected
+        ? Math.ceil(scrollPositionRef.current - 0.65)
+        : Math.floor(scrollPositionRef.current + 0.65);
       scrollPositionRef.current = nearest;
       setIsScrolling(false);
       setScrollPosition(nearest);
