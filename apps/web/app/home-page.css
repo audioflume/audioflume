@@ -52,7 +52,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing {
-  padding-top: 0;
+  padding-top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter):not(.audioflume-experiment-curated > a):not(.audioflume-discover-featured-artist-link) {
