@@ -1811,9 +1811,9 @@
 
 .discover-page-root.is-discover2 .discover2-song-intro {
   margin: 0 auto 160px;
-  max-width: 760px;
+  max-width: 850px;
   color: var(--text-primary);
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 400;
   letter-spacing: -0.05em;
   line-height: 1.2;
