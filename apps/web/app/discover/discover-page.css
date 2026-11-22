@@ -1696,7 +1696,16 @@
   margin-top: 108px;
 }
 
-.discover-page-root.is-discover2 .discover2-playlist-section > h2,
+.discover-page-root.is-discover2 .discover2-playlist-section > h2 {
+  margin: 0 0 170px;
+  color: #c5c5c5;
+  font-size: clamp(48px, 4.6vw, 76px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  text-align: center;
+}
+
 .discover-page-root.is-discover2 .discover2-song-section-title {
   margin: 0 0 30px;
   font-size: clamp(16px, 1.25vw, 20px);
@@ -1708,7 +1717,7 @@
 .discover-page-root.is-discover2 .discover2-playlist-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: min(var(--filmwave-page-gutter), 48px);
+  column-gap: 12px;
   row-gap: 40px;
 }
 
