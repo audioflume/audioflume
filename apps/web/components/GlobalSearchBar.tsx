@@ -37,7 +37,14 @@ export default function GlobalSearchBar({
 
   return (
     <div className={styles.slot}>
-      <div className={barClassName}>
+      <div
+        className={barClassName}
+        onClick={(event) => {
+          if (event.target instanceof Element && event.target.closest(`.${musicFieldStyle ? styles.musicField : styles.field}`) && !event.target.closest("button")) {
+            event.currentTarget.querySelector<HTMLInputElement>('input[type="search"]')?.focus();
+          }
+        }}
+      >
         <Link href="/music?filters=open" className={styles.filters}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
