@@ -6153,17 +6153,6 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   isolation: isolate;
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-experiment-search::before {
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  left: calc(50% - 50vw);
-  width: 100vw;
-  background: #e5e5df;
-  content: "";
-}
-
 :where(html.light, html[data-theme="light"]) .audioflume-experiment-promos {
   position: relative;
   isolation: isolate;
