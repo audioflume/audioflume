@@ -65,9 +65,6 @@ export default function Discover2WatchingArtists() {
   }
 
   function closePreview() {
-    if (previewArtistId && isPlaying && artists.find((artist) => artist.id === previewArtistId)?.songs.some((song) => song.id === currentSong?.id) && currentSong) {
-      togglePlayPause(currentSong);
-    }
     setPreviewArtistId(null);
   }
 
