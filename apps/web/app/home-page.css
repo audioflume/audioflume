@@ -5624,13 +5624,21 @@ body:has(.audioflume-home-landing)
 }
 
 
+/* The homepage uses a white canvas; other editorial pages retain their own canvas. */
+body:has(.audioflume-home-experiment) {
+  --audioflume-home-canvas: #fff;
+}
+
+body:has(:is(.audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
+  --audioflume-home-canvas: #e5e5df;
+}
+
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
   --audioflume-home-header-background: #fff;
   --audioflume-home-header-text: #111111;
   --audioflume-home-header-muted-link: #111111;
   --audioflume-home-header-scrolled-background: #fff;
-  --audioflume-home-canvas: #e5e5df;
   --audioflume-home-content-text: #111;
   --audioflume-home-search-surface: #fff;
   --audioflume-home-search-text: #111;
