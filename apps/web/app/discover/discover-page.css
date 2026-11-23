@@ -45,8 +45,8 @@
 .discover-page-root.is-discover2 .discover2-hero-card {
   --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
   --discover-artist-hero-grid-max-width: 1400px;
-  --discover-artist-name-inset: 0px;
-  --discover-artist-detail-inset: 0px;
+  --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
+  --discover-artist-detail-inset: calc(clamp(-80px, calc((980px - 100vw) * .1), 0px) - 70px);
   --discover-artist-name-blend: normal;
   --discover-artist-hero-height: clamp(420px, 42vw, 660px);
   flex: 0 0 var(--home-reference-width);
@@ -54,15 +54,6 @@
   margin: 0;
   scroll-snap-align: start;
   transition: opacity 160ms ease;
-}
-
-.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
-  padding-inline: 72px;
-  column-gap: 64px;
-}
-
-.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
-  font-size: 16px;
 }
 
 /* Laptop/tablet: intentional left-aligned editorial stack. */
@@ -93,6 +84,14 @@
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
     display: block;
     min-width: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity h1,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-genres,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
+    transform: none;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity h1 {
@@ -153,6 +152,10 @@
     margin-top: 20px;
     font-size: 10.5px;
   }
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
+  font-size: clamp(11px, 1.6vw, 16px);
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
