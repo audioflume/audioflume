@@ -20,7 +20,7 @@
 @import "../../../packages/shared/styles/settings-side-nav.css";
 
 body:has(.filmwave-web-header.is-editorial-header) {
-  --filmwave-header-height: 64px;
+  --filmwave-header-height: calc(60px + var(--audioflume-cta-bar-height, 28px));
   --audioflume-reference-header-logo-inset: 34px;
   --audioflume-reference-wordmark-size: 20.5px;
   --audioflume-reference-nav-position: absolute;
@@ -44,7 +44,7 @@ body:has(.filmwave-web-header.is-editorial-header) {
 
 @media (min-width: 1001px) {
   body:has(.filmwave-web-header.is-editorial-header) {
-    --filmwave-header-avatar-size: 40px;
+    --filmwave-header-avatar-size: 44px;
   }
 }
 
