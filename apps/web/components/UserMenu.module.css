@@ -35,7 +35,7 @@
 
 :global(html.dark) .darkOption,
 :global(html[data-theme="dark"]) .darkOption {
-  --user-menu-dark-option-background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+  --user-menu-dark-option-background: color-mix(in srgb, var(--text-primary) 7%, transparent);
 }
 
 .lightOption:hover {
@@ -50,13 +50,13 @@
 }
 
 .darkOption:hover {
-  background: #1b1b1b;
+  background: #111111;
   color: #fff;
 }
 
 :global(html.dark) .darkOption:hover,
 :global(html[data-theme="dark"]) .darkOption:hover {
-  background: #383838;
+  background: #292929;
 }
 
 .appearanceOption[aria-pressed="false"] svg {
