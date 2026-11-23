@@ -82,8 +82,8 @@
     min-height: var(--discover-artist-hero-height);
     align-self: stretch;
     justify-content: flex-start;
-    padding: 64px;
-    gap: 28px;
+    padding: clamp(36px, 5vw, 64px);
+    gap: clamp(18px, 2.2vw, 28px);
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity,
@@ -133,7 +133,7 @@
     align-self: flex-start;
     gap: 24px;
     margin-top: auto;
-    padding-top: 28px;
+    padding-top: clamp(16px, 2.2vw, 28px);
   }
 }
 
