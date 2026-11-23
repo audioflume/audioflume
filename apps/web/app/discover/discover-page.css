@@ -107,6 +107,10 @@
   }
 }
 
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
+  font-size: clamp(11px, 1.6vw, 16px);
+}
+
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
   opacity: 0;
 }
