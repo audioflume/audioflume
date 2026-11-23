@@ -1984,7 +1984,6 @@
   position: absolute;
   inset: 0;
   z-index: 3;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   content: "";
   pointer-events: none;
 }
@@ -2311,7 +2310,6 @@
   position: absolute;
   inset: 0;
   z-index: 5;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   content: "";
   pointer-events: none;
 }
