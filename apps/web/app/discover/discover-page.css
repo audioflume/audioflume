@@ -46,7 +46,7 @@
   --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
   --discover-artist-hero-grid-max-width: 1400px;
   --discover-artist-column-gap: calc(clamp(48px, 4.5vw, 76px) - 40px);
-  --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
+  --discover-artist-name-inset: 70px;
   --discover-artist-detail-inset: calc(clamp(-80px, calc((980px - 100vw) * .1), 0px) - 70px);
   --discover-artist-name-blend: normal;
   --discover-artist-hero-height: clamp(420px, 42vw, 660px);
@@ -61,7 +61,7 @@
   font-size: clamp(11px, 1.6vw, 16px);
 }
 
-/* Tablet and mobile: artist identity and playback in opposite bottom corners. */
+/* Tablet: identity and bio at bottom left, play at bottom right. */
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-hero-card {
     height: auto;
@@ -76,34 +76,29 @@
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
+    display: grid;
     width: 100%;
     max-width: none;
-    display: flex;
-    flex-direction: row;
     min-height: var(--discover-artist-hero-height);
     align-self: stretch;
-    align-items: flex-end;
-    justify-content: space-between;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr auto auto;
+    align-items: end;
+    justify-content: stretch;
     padding: clamp(36px, 5vw, 64px);
-    gap: clamp(18px, 2.2vw, 28px);
-  }
-
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity,
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
-    display: block;
-    min-width: 0;
+    column-gap: clamp(18px, 2.2vw, 28px);
+    row-gap: clamp(18px, 2.2vw, 28px);
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity {
-    flex: 1 1 auto;
+    display: block;
+    min-width: 0;
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
-    display: flex;
-    flex: 0 0 auto;
-    align-self: flex-end;
-    flex-direction: column;
-    align-items: flex-start;
+    display: contents;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow,
@@ -128,18 +123,29 @@
     margin-top: 24px;
   }
 
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions > a,
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen > span:last-child {
-    display: none;
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    grid-column: 1;
+    grid-row: 3;
+    align-self: end;
+    font-size: 18px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: end;
     flex-wrap: nowrap;
-    align-self: flex-end;
+    gap: 0;
     margin: 0;
     padding: 0;
-    gap: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions > a,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen > span:last-child {
+    display: none;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen {
@@ -149,9 +155,10 @@
   }
 }
 
-/* Mobile: smaller, readable type and consistent internal spacing. */
+/* Mobile: no bio, artist identity and play in opposite bottom corners. */
 @media (max-width: 640px) {
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
+    grid-template-rows: 1fr auto;
     padding: 36px;
     gap: 20px;
   }
@@ -170,6 +177,14 @@
     margin-top: 18px;
   }
 
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
+    grid-row: 2;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
+    display: none;
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
