@@ -5688,6 +5688,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   background: var(--audioflume-home-canvas);
   color: var(--audioflume-home-content-text);
   padding-bottom: 0;
+  transition: background-color 400ms ease;
 }
 
 .audioflume-experiment-search {
@@ -6496,6 +6497,7 @@ body:has(.filmwave-web-header.is-home-scrolled) .audioflume-home-intro {
   padding: clamp(30px, 3.8vh, 58px) clamp(24px, 4.2vw, 82px) 24px;
   background: var(--bg-primary);
   color: var(--text-primary);
+  transition: background-color 400ms ease;
 }
 
 .audioflume-home-intro-main {
