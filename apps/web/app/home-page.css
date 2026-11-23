@@ -6548,21 +6548,29 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 
 .audioflume-home-intro-primary {
   display: inline-flex;
-  min-height: 55px;
+  width: fit-content;
+  height: 51px;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: 25px;
-  padding: 0 21px;
+  gap: 6px;
+  padding: 0 56px;
   background: #111;
   color: #fff;
   font-size: 14px;
+  font-weight: 400;
   text-decoration: none;
-  transition: background-color 160ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 .audioflume-home-intro-primary:hover {
   background: #333;
+}
+
+.audioflume-home-intro-primary svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
 }
 
 .audioflume-home-intro-secondary {
