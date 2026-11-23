@@ -14,14 +14,15 @@ import {
 } from "react";
 import {
   buildWaveformBars,
-  DEFAULT_WAVEFORM_BAR_WIDTH,
-  DEFAULT_WAVEFORM_BAR_GAP,
   createWaveformCanvasDrawCache,
   drawWaveformBarsToCanvas,
   type WaveformCanvasDrawCache,
   type WaveformColors,
   type WaveformBarOptions,
 } from "./waveform";
+
+const DEFAULT_BAR_WIDTH = 1.5;
+const DEFAULT_BAR_GAP = 1;
 
 function getWaveformColors(element?: HTMLElement | null): WaveformColors {
   const styles = getComputedStyle(element ?? document.documentElement);
@@ -74,8 +75,8 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
 
     const [waveformWidth, setWaveformWidth] = useState(0);
 
-    const barWidth = options?.barWidth ?? DEFAULT_WAVEFORM_BAR_WIDTH;
-    const barGap = options?.barGap ?? DEFAULT_WAVEFORM_BAR_GAP;
+    const barWidth = options?.barWidth ?? DEFAULT_BAR_WIDTH;
+    const barGap = options?.barGap ?? DEFAULT_BAR_GAP;
 
     const waveformBars = useMemo(
       () => buildWaveformBars(peaks, waveformWidth, options),
