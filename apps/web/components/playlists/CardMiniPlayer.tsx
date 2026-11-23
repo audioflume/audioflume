@@ -163,7 +163,7 @@ export default function CardMiniPlayer({
               if (listSong) toggleFavorite(listSong);
             }}
           >
-            <HeartIcon size={18} filled={Boolean(listSong && isFavorite(listSong.id))} />
+            <HeartIcon filled={Boolean(listSong && isFavorite(listSong.id))} />
           </button>
           <button
             type="button"
