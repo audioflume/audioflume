@@ -1526,6 +1526,8 @@
 .discover2-active-banner {
   --audioflume-home-canvas: transparent;
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
+  --audioflume-featured-card-identity-inset: clamp(30px, 3.4vw, 48px);
+  --audioflume-featured-card-link-inset: clamp(30px, 3.4vw, 48px);
   --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100vw;
   margin-top: 125px;
