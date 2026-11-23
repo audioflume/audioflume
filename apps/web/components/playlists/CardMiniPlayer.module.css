@@ -524,10 +524,10 @@
     display: flex;
     grid-column: 1;
     grid-row: 1;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 0;
     box-sizing: border-box;
-    padding-top: clamp(20px, 2.5vw, 36px);
+    padding-top: 13px;
   }
 
   .miniPlayerWideHero .miniPlayerUpper .miniPlayerArt {
