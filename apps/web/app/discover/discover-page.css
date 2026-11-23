@@ -2372,8 +2372,8 @@ gap: 16px;
   left: 50%;
   z-index: 2;
   display: grid;
-  width: clamp(62px, 5.6vw, 70px);
-  height: clamp(62px, 5.6vw, 70px);
+  width: 70px;
+  height: 70px;
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -2382,6 +2382,13 @@ gap: 16px;
   font-weight: 300;
   cursor: pointer;
   transform: translate(-50%, -50%);
+}
+
+@media (max-width: 1250px) {
+  .discover-page-root.is-discover2 .discover2-watching-play {
+    width: 62px;
+    height: 62px;
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-watching-play::before {
