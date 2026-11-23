@@ -1152,6 +1152,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                   } as CSSProperties}
                 >
                   {!previewOpen ? <div className="discover-artist-hero-inner">
+                    <img className="discover2-hero-founding-mark" src="/founding-artist-mark.svg" alt="Founding Artist" />
                     <div className="discover-artist-hero-feature">
                       <div className="discover-artist-hero-identity">
                         <span className="discover-artist-hero-eyebrow">Featured Artist</span>
