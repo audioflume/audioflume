@@ -5,6 +5,7 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import SongCard from "@/components/SongCard";
+import HomeSectionWithHeading from "../HomeSectionWithHeading";
 import type { Song } from "@/lib/types";
 
 function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
@@ -84,11 +85,18 @@ export function Discover2NewSongs() {
 
   return (
     <section className="discover2-new-songs audioflume-experiment-songs" aria-label="Newly added songs">
-      <div className="audioflume-experiment-songs-list">
-        {!loading ? recentSongs.map((song) => (
+      <HomeSectionWithHeading
+        title="Newly added songs"
+        linkHref="/music"
+        linkLabel="Explore new music"
+        contentClassName="audioflume-experiment-songs-list"
+      >
+        {loading ? (
+          <div className="audioflume-experiment-songs-loading" role="status">Loading new music…</div>
+        ) : recentSongs.map((song) => (
           <SongCard key={song.id} song={song} showDivider={false} />
-        )) : null}
-      </div>
+        ))}
+      </HomeSectionWithHeading>
     </section>
   );
 }
