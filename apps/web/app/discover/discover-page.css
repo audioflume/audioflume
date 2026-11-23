@@ -2378,7 +2378,7 @@
   box-sizing: border-box;
   flex: 1 1 0;
   overflow: hidden;
-  border-right: 6px solid transparent;
+  border-right: 5px solid transparent;
   background: #202020;
   background-clip: padding-box;
   color: #fff;
@@ -2400,12 +2400,12 @@
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
-  flex: 0 0 calc((100% - 30px) * 6.5 / 11.5 + 6px);
+  flex: 0 0 calc((100% - 25px) * 6.5 / 11.5 + 5px);
   cursor: default;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected:last-child {
-  flex-basis: calc((100% - 30px) * 6.5 / 11.5);
+  flex-basis: calc((100% - 25px) * 6.5 / 11.5);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-image,
