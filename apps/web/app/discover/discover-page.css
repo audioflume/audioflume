@@ -1902,7 +1902,8 @@
   margin-top: 152px;
 }
 
-.discover-page-root.is-discover2 .discover2-playlist-section > h2 {
+.discover-page-root.is-discover2 .discover2-playlist-section > h2,
+.discover-page-root.is-discover2 .discover2-new-music-section > h2 {
   margin: 0 0 170px;
   color: light-dark(#c5c5c5, #303030);
   font-size: clamp(48px, 4.6vw, 76px);
@@ -1983,6 +1984,7 @@
   height: 51px;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   margin: 60px auto 0;
   padding: 0 56px;
  background: light-dark(#e5e5df, #303030);
@@ -1996,6 +1998,37 @@
 .discover-page-root.is-discover2 .discover2-playlist-explore:hover {
   background: var(--text-primary);
   color: var(--bg-primary);
+}
+
+.discover-page-root.is-discover2 .discover2-playlist-explore svg {
+  flex: 0 0 16px;
+}
+
+.discover-page-root.is-discover2 .discover2-playlist-intro {
+  max-width: 850px;
+  margin: 160px auto 0;
+  padding-bottom: 160px;
+  color: var(--text-primary);
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.discover-page-root.is-discover2 .discover2-playlist-section + .discover2-active-banner {
+  margin-top: 0;
+}
+
+.discover-page-root.is-discover2 .discover2-new-music-section {
+  --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
+  width: calc(100% - 2 * var(--filmwave-page-gutter));
+  margin: 152px auto 0;
+}
+
+.discover-page-root.is-discover2 .discover2-new-songs {
+  width: 100%;
+  margin: 0 auto;
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
