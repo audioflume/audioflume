@@ -14,7 +14,7 @@
   --audioflume-music-field-icon-color: light-dark(#999, #555);
   --audioflume-music-field-placeholder-color: light-dark(#aaa, #555);
   --discover-artist-hero-width: calc(100% - 2 * var(--filmwave-page-gutter));
-  background: light-dark(#fff, #111111);
+  background: light-dark(#f7f7f5, #111111);
 }
 
 .discover-page-root.is-discover2 > .discover2-searchbar-background {
