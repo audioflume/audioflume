@@ -357,10 +357,10 @@
     flex: 1 1 auto;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    margin-top: 0;
+    margin-top: var(--mini-player-list-top-margin, 0px);
     box-sizing: border-box;
-    padding-top: 16px;
-    scroll-padding-top: 16px;
+    padding-top: var(--mini-player-list-top-padding, 16px);
+    scroll-padding-top: var(--mini-player-list-top-padding, 16px);
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
@@ -572,6 +572,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .miniPlayer { animation: none; }
+}
+
+/* Align the Discover2 desktop list's content with its existing top fade. */
+@media (min-width: 801px) {
+  .miniPlayerDiscover2TopFade {
+    --mini-player-list-top-margin: 16px;
+    --mini-player-list-top-padding: 0px;
+  }
 }
 
 /* Opt-in main-banner composition. The existing mini-player remains the fallback at 800px and below. */
