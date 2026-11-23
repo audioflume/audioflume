@@ -13,12 +13,12 @@
 }
 
 :global(button:hover) .playing .waveform,
-:global(button:focus-visible) .playing .waveform {
+:global(button:focus-visible) .playing:not(.listHover) .waveform {
   display: none;
 }
 
 :global(button:hover) .playing .pause,
-:global(button:focus-visible) .playing .pause {
+:global(button:focus-visible) .playing:not(.listHover) .pause {
   display: grid;
   place-items: center;
 }
