@@ -2031,6 +2031,12 @@
   margin: 0 auto;
 }
 
+.discover-page-root.is-discover2 .discover2-new-songs-inner {
+  box-sizing: border-box;
+  padding: 12px 36px;
+  background: var(--bg-secondary);
+}
+
 .discover-page-root.is-discover2 .discover2-song-section {
   margin-top: 125px;
   margin-bottom: 90px;
@@ -2386,8 +2392,8 @@ gap: 16px;
 
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-watching-play {
-    width: 62px;
-    height: 62px;
+    width: 52px;
+    height: 52px;
   }
 }
 
