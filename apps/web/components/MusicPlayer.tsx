@@ -42,6 +42,10 @@ import {
   useState,
 } from "react";
 
+const BAR_WIDTH = 2;
+const BAR_GAP = 1;
+const BAR_TOTAL = BAR_WIDTH + BAR_GAP;
+
 const WAVEFORM_MIN_WIDTH = 780;
 const FULL_COMPACT_TIME_MIN_WIDTH = 620;
 const COMPACT_TIME_MIN_WIDTH = 500;
@@ -314,6 +318,7 @@ export default function MusicPlayer() {
       cache: playerCanvasDrawCacheRef.current,
       colors: getWaveformColors(),
       forceResize,
+      options: { barWidth: BAR_WIDTH, barGap: BAR_GAP },
     });
   }, []);
 
