@@ -546,6 +546,12 @@ export default function Header() {
           font-size: var(--audioflume-reference-nav-font-size, 13px) !important;
           font-weight: var(--audioflume-reference-nav-font-weight, 500) !important;
           text-transform: none !important;
+          transition: opacity 150ms ease !important;
+        }
+
+        .filmwave-web-header .filmwave-header-nav-link:hover,
+        .filmwave-web-header .filmwave-header-nav-link:focus-visible {
+          opacity: 0.65;
         }
 
         .filmwave-header-playlists-chevron {
@@ -718,11 +724,6 @@ export default function Header() {
           color: #111;
         }
 
-        .filmwave-web-header.is-transparent:hover:not(:has(.filmwave-header-menu-wrap:hover))
-          .filmwave-header-nav-link:not(.is-active):not(:hover) {
-          color: var(--filmwave-transparent-header-muted-text) !important;
-        }
-
         .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
           background: transparent !important;
@@ -760,14 +761,6 @@ export default function Header() {
           .filmwave-web-header.is-discover-route.is-transparent
           .filmwave-header-nav-link {
           color: var(--audioflume-home-header-text, var(--text-primary)) !important;
-        }
-
-        .filmwave-web-header.is-solid:hover:not(:has(.filmwave-header-menu-wrap:hover))
-          .filmwave-header-nav-link:not(.is-active):not(:hover),
-        :where(html.light, html[data-theme="light"])
-          .filmwave-web-header.is-discover-route.is-transparent:hover:not(:has(.filmwave-header-menu-wrap:hover))
-          .filmwave-header-nav-link:not(.is-active):not(:hover) {
-          color: var(--audioflume-home-header-muted-link, var(--text-secondary)) !important;
         }
 
         .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
