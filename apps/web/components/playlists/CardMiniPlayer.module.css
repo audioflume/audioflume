@@ -342,7 +342,7 @@
 
 @container (min-width: 275px) {
   .miniPlayer {
-    padding: clamp(28px, 3vw, 40px);
+    padding: clamp(36px, 3vw, 48px);
   }
 
   .miniPlayerUpper {
@@ -579,7 +579,7 @@
     grid-template-rows: minmax(0, 1fr) auto;
     align-items: stretch;
     column-gap: clamp(28px, 4vw, 76px);
-    padding: clamp(44px, 4vw, 60px);
+    padding: clamp(54px, 4vw, 60px);
   }
 
   .miniPlayerWideHero .miniPlayerUpper {
