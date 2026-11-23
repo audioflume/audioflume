@@ -1839,6 +1839,9 @@ export default function MusicPage() {
                         >
                           <HomeHeroBanner backgroundOnly />
                           <div className="audioflume-music-home-hero-content">
+                            {(artist?.name ?? "Judah Earl").trim().toLowerCase() === "judah earl" ? (
+                              <img className="audioflume-music-home-hero-founding-mark" src="/founding-artist-mark.svg" alt="Founding Artist" />
+                            ) : null}
                             <div className="audioflume-music-home-hero-footer">
                               <button
                                 type="button"
