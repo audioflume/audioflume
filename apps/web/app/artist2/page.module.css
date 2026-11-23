@@ -171,6 +171,17 @@
   background: var(--bg-tertiary);
 }
 
+.foundingArtistMark {
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  z-index: 3;
+  display: block;
+  width: min(117.26px, 36%);
+  height: auto;
+  pointer-events: none;
+}
+
 .artistMedia::after {
   position: absolute;
   inset: 0;
@@ -667,6 +678,7 @@
   .featuredCard { aspect-ratio: 1 / 1.2; }
   .featuredCard { --artist-featured-name-size: clamp(80px, 19vw, 104px); }
   .featuredLabel { top: 21px; left: 21px; }
+  .foundingArtistMark { top: 21px; right: 21px; }
   .cardContent { right: 78px; bottom: 21px; left: 21px; }
 }
 
