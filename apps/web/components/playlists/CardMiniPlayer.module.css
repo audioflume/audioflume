@@ -342,8 +342,9 @@
 
 @container (min-width: 275px) {
   .miniPlayer {
+    justify-content: flex-start;
     padding: clamp(28px, 3vw, 40px);
-    padding-top: clamp(84px, 16cqw, 100px);
+    padding-top: clamp(76px, 10cqw, 88px);
   }
 
   .miniPlayerUpper {
@@ -353,15 +354,15 @@
   .miniPlayerCompactSongs {
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     min-height: 0;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     overflow-y: auto;
     overscroll-behavior-y: contain;
     margin-top: 0;
     box-sizing: border-box;
-    padding-top: 18px;
-    scroll-padding-top: 18px;
+    padding-top: 12px;
+    scroll-padding-top: 12px;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
