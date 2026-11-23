@@ -84,16 +84,18 @@ export function Discover2NewSongs() {
   );
 
   return (
-    <section className="discover2-new-songs audioflume-home-reference-new-songs" aria-label="Newly added songs">
-      <div className="audioflume-home-reference-width">
-        {!loading ? (
-          <MusicListShell title={null}>
-            {recentSongs.map((song) => (
-              <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
-            ))}
-          </MusicListShell>
-        ) : null}
-      </div>
-    </section>
+    <div className="audioflume-home-mockup">
+      <section className="discover2-new-songs audioflume-home-reference-new-songs" aria-label="Newly added songs">
+        <div className="audioflume-home-reference-width">
+          {!loading ? (
+            <MusicListShell title={null}>
+              {recentSongs.map((song) => (
+                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
+              ))}
+            </MusicListShell>
+          ) : null}
+        </div>
+      </section>
+    </div>
   );
 }
