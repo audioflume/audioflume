@@ -375,6 +375,20 @@
   }
 
   .miniPlayerCompactRow {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    min-height: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    color: #fff;
+  }
+
+  .miniPlayerCompactPlayTarget {
     position: relative;
     display: grid;
     width: 100%;
@@ -382,31 +396,69 @@
     grid-template-columns: 26px minmax(0, 1fr) 35px 20px;
     align-items: center;
     gap: 10px;
-    min-height: 0;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     box-sizing: border-box;
     padding: 7px 0;
     border: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
     background: transparent;
-    color: #fff;
+    color: inherit;
     text-align: left;
     cursor: pointer;
+  }
+
+  .miniPlayerCompactLicense {
+    display: none;
+    height: 28px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 0;
+    background: #fff;
+    color: #111;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: opacity 160ms ease;
+  }
+
+  .miniPlayerCompactLicense:is(:hover, :focus-visible) {
+    opacity: .8;
+  }
+
+  @container (min-width: 390px) {
+    .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .miniPlayerCompactLicense {
+      display: inline-flex;
+    }
+  }
+
+  .miniPlayerCompactPlaceholder {
+    grid-template-columns: 26px minmax(0, 1fr) 35px 20px;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
   }
 
   .miniPlayerCompactPage:last-child .miniPlayerCompactRow:last-child {
     border-bottom: 0;
   }
 
-  .miniPlayerCompactRow > :is(svg, span:last-child) {
+  .miniPlayerCompactPlayTarget > :is(svg, span:last-child),
+  .miniPlayerCompactPlaceholder > :is(svg, span:last-child) {
     position: relative;
     z-index: 1;
     grid-column: 4;
     justify-self: center;
   }
 
-  .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder)::after {
+  .miniPlayerCompactPlayTarget::after {
     position: absolute;
     right: 0;
     top: 50%;
@@ -420,11 +472,11 @@
     transform: translateY(-50%);
   }
 
-  .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder):is(:hover, :focus-visible)::after {
+  .miniPlayerCompactPlayTarget:is(:hover, :focus-visible)::after {
     opacity: 1;
   }
 
-  .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder):is(:hover, :focus-visible) > :is(svg, span:last-child) {
+  .miniPlayerCompactPlayTarget:is(:hover, :focus-visible) > :is(svg, span:last-child) {
     color: #111;
   }
 
@@ -596,10 +648,19 @@
     height: clamp(120px, 12vw, 192px);
   }
 
-  .miniPlayerWideHero .miniPlayerCompactRow {
+  .miniPlayerWideHero .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(10px, 0.75vw, 12px);
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactPlayTarget {
     grid-template-columns: clamp(26px, 2.375vw, 38px) minmax(0, 1fr) minmax(0, .65fr) clamp(35px, 2.625vw, 42px) 20px;
     gap: clamp(10px, 0.75vw, 12px);
     padding: clamp(7px, 0.75vw, 12px) 0;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactLicense {
+    display: inline-flex;
   }
 
   .miniPlayerWideHero .miniPlayerCompactCover {
@@ -620,7 +681,7 @@
     white-space: nowrap;
   }
 
-  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) {
+  .miniPlayerWideHero .miniPlayerCompactPlayTarget > :is(svg, span:last-child) {
     grid-column: 5;
   }
 
@@ -628,8 +689,8 @@
     font-size: clamp(11px, 0.75vw, 12px);
   }
 
-  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) svg,
-  .miniPlayerWideHero .miniPlayerCompactRow > svg {
+  .miniPlayerWideHero .miniPlayerCompactPlayTarget > :is(svg, span:last-child) svg,
+  .miniPlayerWideHero .miniPlayerCompactPlayTarget > svg {
     width: clamp(12px, 0.875vw, 14px);
     height: clamp(12px, 0.875vw, 14px);
   }
