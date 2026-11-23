@@ -156,7 +156,7 @@
   gap: 12px;
   margin: 12px 12px 12px 0;
   border-radius: 0;
-  background: #262626;
+  background: var(--filmwave-search-surface);
   padding: 0 16px;
   color: #999;
 }
