@@ -59,6 +59,47 @@
   transition: opacity 160ms ease;
 }
 
+.discover-page-root.is-discover2 .discover2-hero-card:not(.is-loading) {
+  background: #171717;
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card:not(.is-loading)::before,
+.discover-page-root.is-discover2 .discover2-hero-card:not(.is-loading)::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card:not(.is-loading)::before {
+  background: var(--discover-artist-hero-image, linear-gradient(#171717, #171717))
+    var(--discover-artist-hero-position, center 42%) / cover no-repeat;
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card:not(.is-loading)::after {
+  background:
+    linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.115) 0%,
+      rgba(0, 0, 0, 0.03) 46%,
+      rgba(0, 0, 0, 0.06) 64%,
+      transparent 80%
+    );
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-inner {
+  z-index: 1;
+}
+
+@media (hover: hover) {
+  .discover-page-root.is-discover2 .discover2-hero-card:hover::before {
+    transform: scale(1.035);
+  }
+}
+
 .discover-page-root.is-discover2 .discover2-hero-card.is-preview-open {
   container-type: inline-size;
 }
@@ -2325,6 +2366,12 @@
   transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1);
 }
 
+@media (hover: hover) {
+  .discover-page-root.is-discover2 .discover2-watching-card:not(.is-selected):hover {
+    flex-grow: 1.4;
+  }
+}
+
 .discover-page-root.is-discover2 .discover2-watching-card::before {
   position: absolute;
   inset: 0;
@@ -2345,6 +2392,14 @@
   height: 100%;
   object-fit: cover;
   background: linear-gradient(135deg, #303030, #111);
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
+}
+
+@media (hover: hover) {
+  .discover-page-root.is-discover2 .discover2-watching-card:hover > .discover2-watching-image,
+  .discover-page-root.is-discover2 .discover2-watching-card:hover > .discover2-watching-image-fallback {
+    transform: scale(1.035);
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected::after {
@@ -2515,6 +2570,12 @@ margin-top: 20px;
 
   .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
     flex: 0 0 72%;
+  }
+
+  @media (hover: hover) {
+    .discover-page-root.is-discover2 .discover2-watching-card:not(.is-selected):hover {
+      flex-basis: 15%;
+    }
   }
 
   .discover-page-root.is-discover2 .discover2-watching-navigation {
