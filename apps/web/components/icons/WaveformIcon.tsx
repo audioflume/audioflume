@@ -15,31 +15,31 @@ export default function WaveformIcon({ size = 14 }: WaveformIconProps) {
         d="M4 13V11"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M8 17V7"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M12 20V4"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M16 16V8"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M20 13V11"
         stroke="currentColor"
         strokeWidth="2.2"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
     </svg>
   );
