@@ -49,7 +49,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
-import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SlidingShelfShell from "@/components/SlidingShelfShell";
 
@@ -1839,7 +1839,6 @@ export default function MusicPage() {
                         >
                           <HomeHeroBanner backgroundOnly />
                           <div className="audioflume-music-home-hero-content">
-                            <AudioflumeMark className="audioflume-music-home-hero-mark" />
                             <div className="audioflume-music-home-hero-footer">
                               <button
                                 type="button"
