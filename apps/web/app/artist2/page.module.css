@@ -704,7 +704,7 @@
 
 .artist2Intro p {
   margin: clamp(75px, 9.5vw, 145px) 0 0;
-  color: light-dark(#999, #666);
+  color: light-dark(#999, #555);
   font-size: 14px;
   font-weight: 300;
   line-height: 1.5;
