@@ -22,3 +22,16 @@
   display: grid;
   place-items: center;
 }
+
+.idleList {
+  display: none;
+}
+
+:global(button:hover) .idlePlay {
+  display: none;
+}
+
+:global(button:hover) .idleList {
+  display: grid;
+  place-items: center;
+}
