@@ -260,6 +260,7 @@ export default function Discover2WatchingArtists() {
                 </>
               ) : (
                 <CardMiniPlayer
+                  discover2TopFade
                   artistName={artist.name}
                   trackCount={artist.track_count}
                   songs={playable}
