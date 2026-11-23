@@ -86,7 +86,7 @@
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
-    position: relative;
+    position: static;
     display: grid;
     width: 100%;
     max-width: none;
