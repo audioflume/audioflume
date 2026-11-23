@@ -2695,11 +2695,11 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-identity {
   position: absolute;
-  top: clamp(20px, 2.6vw, 40px);
-  left: clamp(20px, 2.6vw, 40px);
+  top: var(--audioflume-featured-card-identity-inset, clamp(20px, 2.6vw, 40px));
+  left: var(--audioflume-featured-card-identity-inset, clamp(20px, 2.6vw, 40px));
   z-index: 2;
   display: flex;
-  max-width: calc(100% - 2 * clamp(20px, 2.6vw, 40px));
+  max-width: calc(100% - 2 * var(--audioflume-featured-card-identity-inset, clamp(20px, 2.6vw, 40px)));
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
@@ -2785,8 +2785,8 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-artist-link {
   position: absolute;
-  left: clamp(16px, 2vw, 32px);
-  bottom: clamp(16px, 2vw, 32px);
+  left: var(--audioflume-featured-card-link-inset, clamp(16px, 2vw, 32px));
+  bottom: var(--audioflume-featured-card-link-inset, clamp(16px, 2vw, 32px));
   z-index: 3;
   display: inline-flex;
   max-width: 58%;
