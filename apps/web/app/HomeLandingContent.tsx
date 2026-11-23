@@ -167,6 +167,9 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
     <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
       <div className="audioflume-experiment-main">
         <HomeIntroSection />
+        <section className="audioflume-home-intro-statement" aria-label="Human made music and SFX for film">
+          <p>Human made music &amp; SFX for film.</p>
+        </section>
         <HomeHeroBanner featuredSong={featuredSong} />
 
         <HomeLandingPromoBlocks />
