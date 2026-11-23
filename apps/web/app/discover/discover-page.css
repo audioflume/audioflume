@@ -2041,6 +2041,10 @@
   margin: 0 auto;
 }
 
+.discover-page-root.is-discover2 .discover2-new-songs .audioflume-home-mockup-section-label {
+  display: none;
+}
+
 .discover-page-root.is-discover2 .discover2-song-section {
   margin-top: 125px;
   margin-bottom: 90px;
