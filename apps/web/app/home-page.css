@@ -2502,7 +2502,6 @@ body:has(.audioflume-home-landing)
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   pointer-events: none;
 }
 
@@ -5868,7 +5867,6 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   pointer-events: none;
 }
 
