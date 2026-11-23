@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
+import SongCard from "@/components/SongCard";
+import { MusicListShell } from "@filmwave/shared";
 import type { Song } from "@/lib/types";
 
 function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
@@ -70,6 +72,28 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
           ))}
         </div>
       )}
+    </section>
+  );
+}
+
+export function Discover2NewSongs() {
+  const { songs, loading } = useSongs();
+  const recentSongs = useMemo(
+    () => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12),
+    [songs],
+  );
+
+  return (
+    <section className="discover2-new-songs audioflume-home-reference-new-songs" aria-label="Newly added songs">
+      <div className="audioflume-home-reference-width">
+        {!loading ? (
+          <MusicListShell title={null}>
+            {recentSongs.map((song) => (
+              <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
+            ))}
+          </MusicListShell>
+        ) : null}
+      </div>
     </section>
   );
 }
