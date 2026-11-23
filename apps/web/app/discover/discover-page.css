@@ -2037,8 +2037,6 @@
 .discover-page-root.is-discover2 .discover2-new-songs {
   --audioflume-home-songs-surface: light-dark(#fff, #262626);
   --audioflume-home-content-text: var(--text-primary);
-  width: 100%;
-  margin: 0 auto;
 }
 
 .discover-page-root.is-discover2 .discover2-new-songs .audioflume-home-mockup-section-label {
