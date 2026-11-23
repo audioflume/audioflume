@@ -532,8 +532,10 @@
 
   .miniPlayerWideHero .miniPlayerUpper .miniPlayerArt {
     display: block;
-    width: min(100%, clamp(240px, 25vw, 340px), 38dvh);
-    max-height: 100%;
+    width: min(100%, 340px, max(120px, calc(var(--discover-artist-hero-height) - 255px)));
+    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: none;
   }
 
   .miniPlayerWideHero .miniPlayerSongInfo {
