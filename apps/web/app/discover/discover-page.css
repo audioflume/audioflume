@@ -45,6 +45,7 @@
 .discover-page-root.is-discover2 .discover2-hero-card {
   --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
   --discover-artist-hero-grid-max-width: 1400px;
+  --discover-artist-column-gap: calc(clamp(48px, 4.5vw, 76px) - 40px);
   --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
   --discover-artist-detail-inset: calc(clamp(-80px, calc((980px - 100vw) * .1), 0px) - 70px);
   --discover-artist-name-blend: normal;
@@ -375,7 +376,7 @@
   align-items: start;
   justify-content: center;
   justify-self: center;
-  column-gap: clamp(48px, 4.5vw, 76px);
+  column-gap: var(--discover-artist-column-gap, clamp(48px, 4.5vw, 76px));
   row-gap: 0;
 }
 
