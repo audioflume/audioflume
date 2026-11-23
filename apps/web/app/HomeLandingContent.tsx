@@ -119,14 +119,20 @@ function HomeIntroSection() {
             <AudioflumeMark className="audioflume-home-intro-mark" />
             <span>Human made. Story driven.</span>
           </div>
-          <h1>Music for <em>the stories</em> you tell.</h1>
+          <h1>Music for the stories you tell.</h1>
           <p>Human-made music and sound effects for filmmakers, editors, and storytellers. Find the sound that makes your next project feel something.</p>
           <div className="audioflume-home-intro-actions">
             <Link href="/music" className="audioflume-home-intro-primary">Explore music library <ArrowUpRightIcon size={20} strokeWidth={1.5} /></Link>
             <Link href="/curated-playlists" className="audioflume-home-intro-secondary">Explore curated playlists</Link>
           </div>
           <div className="audioflume-home-intro-rating">
-            <span aria-hidden="true" className="audioflume-home-intro-stars">★★★★★</span>
+            <span aria-hidden="true" className="audioflume-home-intro-stars">
+              {Array.from({ length: 5 }, (_, index) => (
+                <svg key={index} viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                  <path d="M12 1L14.84 8.16L22.54 8.65L16.61 13.58L18.51 21.05L12 16.91L5.49 21.05L7.39 13.58L1.46 8.65L9.16 8.16Z" />
+                </svg>
+              ))}
+            </span>
             <span>Music made for filmmakers and storytellers</span>
           </div>
         </div>
