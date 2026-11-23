@@ -72,6 +72,7 @@ export default function CardMiniPlayer({
         </div>
         <div className={styles.miniPlayerSongInfo}>
           <span className={styles.miniPlayerSongTitle}>{listSong?.title ?? "No preview available"}</span>
+          {wideHero && listSong ? <span className={styles.miniPlayerSongArtist}>{listSong.artist || artistName}</span> : null}
           {listSong ? <span className={styles.miniPlayerSongDuration}>{formatPreviewDuration(listSong.duration)}</span> : null}
         </div>
       </div>
@@ -107,6 +108,7 @@ export default function CardMiniPlayer({
                     {previewSong.coverArt ? <img src={previewSong.coverArt} alt="" draggable={false} /> : null}
                   </span>
                   <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
+                  {wideHero ? <span className={styles.miniPlayerCompactArtist}>{previewSong.artist || artistName}</span> : null}
                   <span className={styles.miniPlayerCompactDuration}>{formatPreviewDuration(previewSong.duration)}</span>
                   {discoverPlaybackIcon ? <PlaybackStateIcon playing={Boolean(active && isPlaying)} size={12} /> : active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
                 </button>
