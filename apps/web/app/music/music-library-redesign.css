@@ -128,6 +128,13 @@
   color: #555;
 }
 
+@media (min-width: 691px) {
+  .audioflume-music-page-searchbar.is-filters-open .audioflume-home-reference-searchbar-field {
+    margin-left: calc(var(--audioflume-music-content-gap, 20px) + 12px);
+    max-width: calc(100% - var(--audioflume-music-content-gap, 20px) - 24px);
+  }
+}
+
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field:focus-within {
   color: var(--audioflume-music-input-focus-color, #fff);
