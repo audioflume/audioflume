@@ -118,7 +118,7 @@ function HomeIntroSection() {
         <div className="audioflume-home-intro-copy">
           <div className="audioflume-home-intro-seal">
             <AudioflumeMark className="audioflume-home-intro-mark" />
-            <span>Human made. Story driven.</span>
+            <span>Human made music. Story driven dounds.</span>
           </div>
           <h1>Music for the stories you tell.</h1>
           <p>Human-made music and sound effects for filmmakers, editors, and storytellers. Find the sound that makes your next project feel something.</p>
