@@ -6620,6 +6620,22 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   object-fit: cover;
 }
 
+.audioflume-home-intro-artwork {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: clamp(130px, 15vw, 250px);
+  padding: 8px;
+  background: #f0f0ec;
+}
+
+.audioflume-home-intro-artwork img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
 .audioflume-home-intro-statement {
   display: flex;
   align-items: center;
@@ -6720,6 +6736,10 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-home-intro-photo {
     width: 78%;
     max-height: 480px;
+  }
+
+  .audioflume-home-intro-artwork {
+    width: 34%;
   }
 
   .audioflume-home-intro-logos {
