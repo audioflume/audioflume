@@ -138,10 +138,6 @@ function HomeIntroSection() {
         </div>
         <div className="audioflume-home-intro-visual">
           <img className="audioflume-home-intro-photo" src={ARTISTS_IMAGE} alt="Behind-the-scenes filmmaking photography" />
-          <div className="audioflume-home-intro-artwork">
-            <img src={CURATED_IMAGE} alt="" />
-            <span>Curated for the cut.</span>
-          </div>
         </div>
       </div>
       <div className="audioflume-home-intro-logos">
