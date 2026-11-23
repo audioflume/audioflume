@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -37,6 +38,8 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
+  const accordionRef = useRef<HTMLDivElement>(null);
+  const scrollbarDragging = useRef(false);
   const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false, lockedUntil: 0, lastPixels: 0, momentumSettled: false });
   const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClickUntil: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
@@ -66,6 +69,33 @@ export default function Discover2WatchingArtists() {
       });
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    const scroller = accordionRef.current;
+    if (!scroller || artists.length < 2) return;
+
+    const alignSelection = () => {
+      if (!window.matchMedia("(max-width: 1100px)").matches || scrollbarDragging.current) return;
+      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      scroller.scrollTo({ left: maxScroll * selected / (artists.length - 1), behavior: "auto" });
+    };
+
+    alignSelection();
+    window.addEventListener("resize", alignSelection);
+    return () => window.removeEventListener("resize", alignSelection);
+  }, [selected, artists.length]);
+
+  function selectFromScrollbar() {
+    const scroller = accordionRef.current;
+    if (!scroller || artists.length < 2) return;
+    const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    if (maxScroll === 0) return;
+    const next = Math.max(0, Math.min(artists.length - 1, Math.round((scroller.scrollLeft / maxScroll) * (artists.length - 1))));
+    if (next !== selected) {
+      closePreview();
+      setSelected(next);
+    }
+  }
 
   function openArtist(artist: DirectoryArtist) {
     const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -156,6 +186,7 @@ export default function Discover2WatchingArtists() {
       </h2>
       <div
         className="discover2-watching-accordion"
+        ref={accordionRef}
         onWheel={handleHorizontalScroll}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -239,6 +270,23 @@ export default function Discover2WatchingArtists() {
           );
         })}
       </div>
+      {artists.length > 1 ? (
+        <div className="discover2-watching-navigation">
+          <ShelfIndicatorNavigation
+            label="artists we're watching"
+            scrollerRef={accordionRef}
+            itemCount={artists.length}
+            onPrev={() => selectFromSwipe(-1)}
+            onNext={() => selectFromSwipe(1)}
+            onProgressPointerDown={() => { scrollbarDragging.current = true; }}
+            onProgressPointerUp={() => {
+              selectFromScrollbar();
+              scrollbarDragging.current = false;
+            }}
+            progressScrollbar
+          />
+        </div>
+      ) : null}
       <div className="discover2-watching-caption">
         <p>Discover the artists shaping the sound of modern storytelling.</p>
         <span>A HIGHLY CURATED SELECTION OF THE WORLD’S BEST COMPOSERS</span>
