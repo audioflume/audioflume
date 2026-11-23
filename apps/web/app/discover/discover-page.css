@@ -140,8 +140,16 @@
 /* Mobile: smaller, readable type and consistent internal spacing. */
 @media (max-width: 640px) {
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
     padding: 36px;
-    gap: 22px;
+    gap: 20px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
@@ -158,15 +166,28 @@
     margin-top: 18px;
   }
 
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
-    max-width: 100%;
-    font-size: 16px;
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
+    flex: 0 0 auto;
+    align-self: flex-end;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions > a,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen > span:last-child {
+    display: none;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
-    gap: 16px 24px;
-    padding-top: 24px;
-    font-size: 10.5px;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen {
+    display: inline-grid;
+    grid-template-columns: 52px;
+    column-gap: 0;
   }
 }
 
