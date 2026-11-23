@@ -674,6 +674,11 @@
     padding: clamp(7px, 0.75vw, 12px) 0;
   }
 
+  .miniPlayerWideHero .miniPlayerCompactPlaceholder {
+    grid-template-columns: clamp(26px, 2.375vw, 38px) minmax(0, 1fr) clamp(35px, 2.625vw, 42px) 20px;
+    gap: clamp(10px, 0.75vw, 12px);
+  }
+
   .miniPlayerWideHero .miniPlayerCompactLicense {
     width: auto;
     padding: 0 10px;
