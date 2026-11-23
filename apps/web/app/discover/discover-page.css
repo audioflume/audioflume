@@ -604,11 +604,11 @@
   display: none;
 }
 
-.discover-page-root.is-discover2 .discover-artist-hero-listen:is(:hover, :focus-visible) .is-mini-player-trigger .discover-artist-play-icon {
+.discover-page-root.is-discover2 .discover-artist-hero-listen:hover .is-mini-player-trigger .discover-artist-play-icon {
   display: none;
 }
 
-.discover-page-root.is-discover2 .discover-artist-hero-listen:is(:hover, :focus-visible) .is-mini-player-trigger .discover-artist-list-icon {
+.discover-page-root.is-discover2 .discover-artist-hero-listen:hover .is-mini-player-trigger .discover-artist-list-icon {
   display: inline-grid;
   place-items: center;
 }
