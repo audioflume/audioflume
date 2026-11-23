@@ -4,7 +4,7 @@
 @import "../home-page.css";
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
-  --audioflume-music-search-input-background: #262626;
+  --audioflume-music-search-input-background: var(--filmwave-search-surface);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
@@ -40,7 +40,7 @@
 }
 
 :where(html:not(.light):not([data-theme="light"])) .audioflume-music-page-searchbar {
-  background: #1b1b1b;
+  background: var(--bg-primary);
 }
 
 .audioflume-music-page-searchbar.is-filters-open {
