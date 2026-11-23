@@ -6,7 +6,7 @@
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 60px);
-  background: light-dark(#fff, #171717);
+  background: light-dark(#fff, #111111);
   color: var(--text-primary);
 }
 
