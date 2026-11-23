@@ -2033,8 +2033,14 @@
 
 .discover-page-root.is-discover2 .discover2-new-songs-inner {
   box-sizing: border-box;
-  padding: 12px 36px;
+  padding: clamp(22px, 4.2vw, 64px);
   background: var(--bg-secondary);
+}
+
+@media (max-width: 750px) {
+  .discover-page-root.is-discover2 .discover2-new-songs-inner {
+    padding: 16px;
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
