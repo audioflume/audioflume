@@ -9,6 +9,7 @@ import {
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import ListViewIcon from "@/components/icons/ListViewIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
@@ -181,8 +182,15 @@ export default function CuratedPlaylistPlayButton({
       >
         {discoverPlaybackIcon ? (
           <PlaybackStateIcon playing={isPlaylistPlaying} size={previewEnabled ? 15 : 18} hoverIcon={previewEnabled && !previewOpen ? "list" : "pause"} />
-        ) : previewEnabled && isPlaylistPlaying ? (
-          <CardPlayingWaveform />
+        ) : previewEnabled ? (
+          <span className={styles.previewTriggerIcon}>
+            <span className={styles.previewTriggerDefault}>
+              {isPlaylistPlaying ? <CardPlayingWaveform /> : <PlayIconSmall size={15} />}
+            </span>
+            <span className={styles.previewTriggerList}>
+              <ListViewIcon size={15} />
+            </span>
+          </span>
         ) : isPlaylistPlaying && !previewEnabled ? (
           <PauseIcon size={18} />
         ) : (
