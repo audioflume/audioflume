@@ -6657,16 +6657,12 @@ body:has(.filmwave-web-header.is-home-scrolled) .audioflume-home-intro {
 .audioflume-home-intro-statement p {
   max-width: 1400px;
   margin: 0;
-  color: #b3b3b3;
+  color: light-dark(#c5c5c5, #303030);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(56px, 8vw, 128px);
+  font-size: clamp(48px, 4.6vw, 76px);
   font-weight: 400;
-  letter-spacing: -.05em;
-  line-height: 1.12;
-}
-
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-intro-statement p {
-  color: #b3b3b3;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
 }
 
 .audioflume-home-intro-logos {
