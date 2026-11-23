@@ -405,7 +405,7 @@ export default function Header() {
           display: flex;
           box-sizing: border-box;
           width: 100%;
-          height: ${pathname === "/" ? "35px" : "var(--audioflume-cta-bar-height, 37px)"};
+          height: var(--audioflume-cta-bar-height, 37px);
           align-items: center;
           justify-content: space-between;
           gap: 24px;
@@ -421,7 +421,7 @@ export default function Header() {
           min-width: 0;
           align-items: center;
           gap: 8px;
-          font-size: ${pathname === "/" ? "12px" : "var(--audioflume-cta-copy-size, 11px)"};
+          font-size: var(--audioflume-cta-copy-size, 11px);
           font-weight: 400;
           letter-spacing: 0.01em;
           line-height: 1;
@@ -439,7 +439,7 @@ export default function Header() {
           gap: 6px;
           color: inherit;
           font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
-          font-size: ${pathname === "/" ? "10px" : "var(--audioflume-cta-link-size, 9px)"};
+          font-size: var(--audioflume-cta-link-size, 9px);
           font-weight: 400;
           letter-spacing: 0.06em;
           line-height: 1;
@@ -463,7 +463,7 @@ export default function Header() {
 
         @media (max-width: 640px) {
           .audioflume-artist-cta-link {
-            font-size: ${pathname === "/" ? "9px" : "8px"};
+            font-size: 8px;
           }
         }
 
@@ -1350,7 +1350,7 @@ export default function Header() {
         }
       `}</style>
 
-      {(pathname === "/" || (!isBackendPage && !useCombinedHeaderHeight)) && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
+      {!isBackendPage && !useCombinedHeaderHeight && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
