@@ -2363,12 +2363,12 @@
   color: #fff;
   cursor: pointer;
   container-type: inline-size;
-  transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1);
+  transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1), transform 360ms cubic-bezier(.22, 1, .36, 1);
 }
 
 @media (hover: hover) {
   .discover-page-root.is-discover2 .discover2-watching-card:not(.is-selected):hover {
-    flex-grow: 1.4;
+    transform: scaleX(1.08);
   }
 }
 
@@ -2381,6 +2381,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
+  z-index: 1;
   flex-grow: 6.5;
   cursor: default;
 }
@@ -2565,17 +2566,11 @@ margin-top: 20px;
 
   .discover-page-root.is-discover2 .discover2-watching-card {
     flex: 0 0 13.5%;
-    transition: flex-basis 360ms cubic-bezier(.22, 1, .36, 1);
+    transition: flex-basis 360ms cubic-bezier(.22, 1, .36, 1), transform 360ms cubic-bezier(.22, 1, .36, 1);
   }
 
   .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
     flex: 0 0 72%;
-  }
-
-  @media (hover: hover) {
-    .discover-page-root.is-discover2 .discover2-watching-card:not(.is-selected):hover {
-      flex-basis: 15%;
-    }
   }
 
   .discover-page-root.is-discover2 .discover2-watching-navigation {
