@@ -568,9 +568,14 @@
   }
 }
 
-.discover-artist-hero-listen:hover .discover-artist-play-badge,
-.discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
+.discover-page-root:not(.is-discover2) .discover-artist-hero-listen:hover .discover-artist-play-badge,
+.discover-page-root:not(.is-discover2) .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
   transform: none;
+}
+
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen:hover .discover-artist-play-badge,
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
+  transform: scale(1.03);
 }
 
 .discover-artist-hero-listen > span:last-child {
