@@ -32,3 +32,26 @@
 .button:disabled {
   cursor: default;
 }
+
+.previewTriggerIcon {
+  display: inline-grid;
+  place-items: center;
+}
+
+.previewTriggerDefault,
+.previewTriggerList {
+  grid-area: 1 / 1;
+}
+
+.previewTriggerList {
+  display: none;
+}
+
+:global(button:hover) .previewTriggerDefault {
+  display: none;
+}
+
+:global(button:hover) .previewTriggerList {
+  display: inline-grid;
+  place-items: center;
+}
