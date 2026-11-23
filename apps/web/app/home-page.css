@@ -6474,6 +6474,10 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-header-border: transparent;
 }
 
+body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
+  --audioflume-home-header-border: var(--border);
+}
+
 .audioflume-home-intro {
   display: flex;
   height: calc(100dvh - var(--filmwave-header-height, 75px));
