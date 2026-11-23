@@ -6631,7 +6631,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 .audioflume-home-intro-artwork-upper {
   top: clamp(24px, 3vw, 48px);
   bottom: auto;
-  left: clamp(0px, 1vw, 15px);
+  left: clamp(-35px, -2vw, -15px);
   width: clamp(80px, 8vw, 135px);
 }
 
