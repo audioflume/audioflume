@@ -508,3 +508,86 @@
 @media (prefers-reduced-motion: reduce) {
   .miniPlayer { animation: none; }
 }
+
+/* Opt-in main-banner composition. The existing mini-player remains the fallback at 800px and below. */
+@media (min-width: 801px) {
+  .miniPlayerWideHero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: stretch;
+    column-gap: clamp(28px, 4vw, 76px);
+    padding: clamp(32px, 4vw, 60px);
+  }
+
+  .miniPlayerWideHero .miniPlayerUpper {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-end;
+    min-height: 0;
+  }
+
+  .miniPlayerWideHero .miniPlayerUpper .miniPlayerArt {
+    display: block;
+    width: min(100%, 29vh, 260px);
+    max-height: 100%;
+  }
+
+  .miniPlayerWideHero .miniPlayerSongInfo {
+    justify-content: space-between;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+
+  .miniPlayerWideHero .miniPlayerSongDuration {
+    display: block;
+    font-size: 12px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactSongs {
+    display: block;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    margin-top: 0;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactSongs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .miniPlayerWideHero .miniPlayerListFooter {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 18px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactPage {
+    grid-template-rows: repeat(3, 50px);
+    height: 150px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactRow {
+    grid-template-columns: 38px minmax(0, 1fr) 42px 20px;
+    gap: 12px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactCover {
+    width: 38px;
+    height: 38px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactTitle {
+    font-size: 13px;
+  }
+}
