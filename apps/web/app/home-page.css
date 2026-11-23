@@ -6480,7 +6480,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 
 .audioflume-home-intro {
   display: flex;
-  height: calc(100dvh - var(--filmwave-header-height, 75px));
+  height: calc(100dvh - var(--filmwave-header-height, 75px) - 35px);
   min-height: 610px;
   box-sizing: border-box;
   flex-direction: column;
