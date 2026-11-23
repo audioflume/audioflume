@@ -523,15 +523,15 @@ export default function Header() {
         }
 
         .filmwave-web-header .filmwave-header-nav {
-          position: var(--audioflume-reference-nav-position, static);
-          left: var(--audioflume-reference-nav-left, auto);
-          right: var(--audioflume-reference-nav-right, auto);
-          top: var(--audioflume-reference-nav-top, auto);
-          height: var(--audioflume-reference-nav-height, auto);
-          justify-content: var(--audioflume-reference-nav-justify, flex-start);
+          position: static;
+          left: auto;
+          right: auto;
+          top: auto;
+          height: auto;
+          justify-content: flex-start;
           gap: var(--audioflume-reference-nav-gap, 18px) !important;
-          pointer-events: var(--audioflume-reference-nav-pointer-events, auto);
-          transform: var(--audioflume-reference-nav-transform, none);
+          pointer-events: auto;
+          transform: none;
         }
 
         .filmwave-web-header .filmwave-header-nav > * {
@@ -546,6 +546,18 @@ export default function Header() {
           font-size: var(--audioflume-reference-nav-font-size, 13px) !important;
           font-weight: var(--audioflume-reference-nav-font-weight, 500) !important;
           text-transform: none !important;
+        }
+
+        .filmwave-header-playlists-chevron {
+          display: block;
+          width: 12px;
+          height: 12px;
+          flex: 0 0 12px;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 1.6;
+          stroke-linecap: round;
+          stroke-linejoin: round;
         }
 
         .filmwave-header-new-badge {
@@ -1416,6 +1428,9 @@ export default function Header() {
                         onClick={closePlaylistsMenu}
                       >
                         {link.label}
+                        <svg className="filmwave-header-playlists-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
                       </Link>
 
                       <div
@@ -1532,12 +1547,6 @@ export default function Header() {
                   </Link>
                 );
               })}
-              {useCombinedHeaderHeight ? (
-                <>
-                  <Link href="/pricing" className="filmwave-header-nav-link">Pricing</Link>
-                  <a href="mailto:hello@filmwave.io" className="filmwave-header-nav-link">Enterprise</a>
-                </>
-              ) : null}
             </nav>
 
             <button
@@ -1572,20 +1581,18 @@ export default function Header() {
 
             {isLoaded && (
               <div className="filmwave-header-right-actions">
-                {!useCombinedHeaderHeight ? (
-                  <>
-                    <Link href="/pricing" className="filmwave-header-utility-link">
-                      Pricing
-                    </Link>
+                <>
+                  <Link href="/pricing" className="filmwave-header-utility-link">
+                    Pricing
+                  </Link>
 
-                    <a
-                      href="mailto:hello@filmwave.io"
-                      className="filmwave-header-utility-link"
-                    >
-                      Need Enterprise?
-                    </a>
-                  </>
-                ) : null}
+                  <a
+                    href="mailto:hello@filmwave.io"
+                    className="filmwave-header-utility-link"
+                  >
+                    {useCombinedHeaderHeight ? "Enterprise" : "Need Enterprise?"}
+                  </a>
+                </>
 
                 {user ? (
                   <>
