@@ -5,7 +5,6 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import SongCard from "@/components/SongCard";
-import { MusicListShell } from "@filmwave/shared";
 import type { Song } from "@/lib/types";
 
 function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
@@ -84,18 +83,12 @@ export function Discover2NewSongs() {
   );
 
   return (
-    <div className="audioflume-home-mockup">
-      <section className="discover2-new-songs audioflume-home-reference-new-songs" aria-label="Newly added songs">
-        <div className="audioflume-home-reference-width discover2-new-songs-inner">
-          {!loading ? (
-            <MusicListShell title={null}>
-              {recentSongs.map((song) => (
-                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
-              ))}
-            </MusicListShell>
-          ) : null}
-        </div>
-      </section>
-    </div>
+    <section className="discover2-new-songs audioflume-experiment-songs" aria-label="Newly added songs">
+      <div className="audioflume-experiment-songs-list">
+        {!loading ? recentSongs.map((song) => (
+          <SongCard key={song.id} song={song} showDivider={false} />
+        )) : null}
+      </div>
+    </section>
   );
 }
