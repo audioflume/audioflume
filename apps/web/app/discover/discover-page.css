@@ -98,7 +98,7 @@
     justify-content: stretch;
     padding: 48px;
     column-gap: clamp(18px, 2.2vw, 28px);
-    row-gap: clamp(18px, 2.2vw, 28px);
+    row-gap: 18px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity {
