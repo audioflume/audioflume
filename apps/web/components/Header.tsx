@@ -474,7 +474,7 @@ export default function Header() {
         }
 
         .filmwave-header-audioflume-symbol {
-          display: none;
+          display: block;
           width: 22px;
           height: 23.54px;
           flex: 0 0 auto;
@@ -487,7 +487,7 @@ export default function Header() {
           color: var(--text-primary) !important;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
           font-size: var(--audioflume-reference-wordmark-size, 22px) !important;
-          font-weight: 600 !important;
+          font-weight: 500 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
           text-transform: lowercase !important;
