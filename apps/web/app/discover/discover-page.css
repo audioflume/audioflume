@@ -2401,6 +2401,11 @@ gap: 16px;
     width: 52px;
     height: 52px;
   }
+
+  .discover-page-root.is-discover2 .discover2-watching-play svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-watching-play::before {
