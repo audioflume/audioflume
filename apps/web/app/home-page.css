@@ -5658,7 +5658,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-header-scrolled-background: var(--bg-primary);
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
-  --audioflume-home-canvas: #1b1b1b;
+  --audioflume-home-canvas: var(--bg-primary);
   --audioflume-home-content-text: #fff;
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
