@@ -12,7 +12,7 @@
 
 .discover-page-root.is-discover2 {
   --discover-artist-hero-width: calc(100% - 2 * var(--filmwave-page-gutter));
-  background: light-dark(#fff, #171717);
+  background: light-dark(#fff, #111111);
 }
 
 .discover-page-root.is-discover2 > .discover2-searchbar-background {
