@@ -1,17 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
-import HomeSectionWithHeading from "./HomeSectionWithHeading";
-import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
 import { useHasCurrentSong, useIsCurrentSongPlaying, usePlayer } from "@/context/PlayerContext";
-import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
 const HERO_BACKGROUND = "https://images.filmwave.io/images/home/judah-earl-background.png";
@@ -155,37 +151,12 @@ function HomeIntroSection() {
 }
 
 export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
-  const { songs, loading } = useSongs();
   const playerVisible = useHasCurrentSong();
-  const newSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12), [songs]);
-  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
-    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
 
   return (
     <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
       <div className="audioflume-experiment-main">
         <HomeIntroSection />
-        <section className="audioflume-home-intro-statement" aria-label="Human made music and SFX for film">
-          <p>Human made music &amp; SFX for film.</p>
-        </section>
-        <HomeHeroBanner featuredSong={featuredSong} />
-
-        <HomeLandingPromoBlocks />
-
-        <section className="audioflume-experiment-songs" aria-label="Newly added songs">
-          <HomeSectionWithHeading
-            title="Newly added songs"
-            linkHref="/music"
-            linkLabel="Explore new music"
-            contentClassName="audioflume-experiment-songs-list"
-          >
-            {loading ? (
-              <div className="audioflume-experiment-songs-loading" role="status">Loading new music…</div>
-            ) : newSongs.map((song) => (
-              <SongCard key={song.id} song={song} showDivider={false} />
-            ))}
-          </HomeSectionWithHeading>
-        </section>
       </div>
       <Footer showTopBorder={false} />
     </main>
