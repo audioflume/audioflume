@@ -813,7 +813,7 @@
   border: 0;
   background: transparent;
   padding: 0;
-  color: light-dark(#999, #aaa);
+  color: light-dark(#999, #555);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
   font-weight: 300;
