@@ -144,7 +144,7 @@
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
     display: block;
     width: 100%;
-    max-width: 340px;
+    max-width: 380px;
     grid-column: 1;
     grid-row: 3;
     align-self: end;
