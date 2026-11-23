@@ -1260,7 +1260,6 @@ main
   inset: 0;
   z-index: -1;
   background: rgba(17, 17, 17, 0.58);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
 }
 
 .audioflume-music-page .audioflume-music-reference-summary > img,
@@ -1367,7 +1366,6 @@ main
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   pointer-events: none;
 }
 
@@ -1688,7 +1686,6 @@ main
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   pointer-events: none;
 }
 
