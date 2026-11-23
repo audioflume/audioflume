@@ -6632,6 +6632,25 @@ body:has(.audioflume-home-experiment) {
   font-size: 11px;
 }
 
+.audioflume-home-intro-statement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(100px, 9.5vw, 160px) clamp(24px, 4.2vw, 82px);
+  text-align: center;
+}
+
+.audioflume-home-intro-statement p {
+  max-width: 1050px;
+  margin: 0;
+  color: light-dark(#999, #aaa);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(34px, 4vw, 60px);
+  font-weight: 400;
+  letter-spacing: -.05em;
+  line-height: 1.12;
+}
+
 .audioflume-home-intro-logos {
   display: flex;
   min-height: 60px;
