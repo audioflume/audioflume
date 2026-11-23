@@ -177,7 +177,7 @@
   right: 26px;
   z-index: 3;
   display: block;
-  width: min(117.26px, 36%);
+  width: min(94px, 36%);
   height: auto;
   pointer-events: none;
 }
