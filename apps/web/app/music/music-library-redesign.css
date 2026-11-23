@@ -1586,6 +1586,16 @@ main
   pointer-events: none;
 }
 
+.audioflume-music-page .audioflume-music-home-hero-founding-mark {
+  position: absolute;
+  top: var(--audioflume-music-hero-padding);
+  right: var(--audioflume-music-hero-padding);
+  display: block;
+  width: 117.26px;
+  height: auto;
+  pointer-events: none;
+}
+
 .audioflume-music-page .audioflume-music-home-hero-mark {
   align-self: flex-end;
   width: clamp(24px, 2.2vw, 34px);
