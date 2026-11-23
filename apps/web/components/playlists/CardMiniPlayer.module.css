@@ -524,20 +524,26 @@
     display: flex;
     grid-column: 1;
     grid-row: 1;
-    justify-content: flex-end;
+    justify-content: center;
     min-height: 0;
+    box-sizing: border-box;
+    padding-top: clamp(20px, 2.5vw, 36px);
   }
 
   .miniPlayerWideHero .miniPlayerUpper .miniPlayerArt {
     display: block;
-    width: min(100%, 29vh, 260px);
+    width: min(100%, clamp(240px, 25vw, 340px), 38dvh);
     max-height: 100%;
   }
 
   .miniPlayerWideHero .miniPlayerSongInfo {
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     margin-top: 14px;
     font-size: 14px;
+    text-align: center;
   }
 
   .miniPlayerWideHero .miniPlayerSongDuration {
@@ -573,13 +579,14 @@
   }
 
   .miniPlayerWideHero .miniPlayerCompactPage {
-    grid-template-rows: repeat(3, 50px);
-    height: 150px;
+    grid-template-rows: repeat(3, 64px);
+    height: 192px;
   }
 
   .miniPlayerWideHero .miniPlayerCompactRow {
     grid-template-columns: 38px minmax(0, 1fr) 42px 20px;
     gap: 12px;
+    padding: 12px 0;
   }
 
   .miniPlayerWideHero .miniPlayerCompactCover {
