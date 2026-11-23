@@ -18,6 +18,7 @@ const HERO_BACKGROUND = "https://images.filmwave.io/images/home/judah-earl-backg
 const HERO_OVERLAY = "https://images.filmwave.io/images/home/judah-earl-overlay.png";
 const ARTISTS_IMAGE = "https://images.filmwave.io/images/home/1746637466005-3b4a2be8450f-gigapixel-low%20resolution%20v2-2x.jpeg";
 const CURATED_IMAGE = "https://images.filmwave.io/images/home/jimmy-whitson-LKdN0yuScT8-unsplash.jpg";
+const COLLAGE_IMAGE = "https://images.filmwave.io/images/home/kriss-films-I8OoRxdxCqk-unsplash.jpg";
 
 function HomeHeroFeaturedSong({ song }: { song?: Song }) {
   const { togglePlayPause } = usePlayer();
@@ -138,6 +139,9 @@ function HomeIntroSection() {
         </div>
         <div className="audioflume-home-intro-visual">
           <img className="audioflume-home-intro-photo" src={ARTISTS_IMAGE} alt="Behind-the-scenes filmmaking photography" />
+          <div className="audioflume-home-intro-artwork audioflume-home-intro-artwork-upper">
+            <img src={COLLAGE_IMAGE} alt="" />
+          </div>
           <div className="audioflume-home-intro-artwork">
             <img src={CURATED_IMAGE} alt="" />
           </div>
