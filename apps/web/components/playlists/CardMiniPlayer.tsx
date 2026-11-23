@@ -72,7 +72,6 @@ export default function CardMiniPlayer({
         </div>
         <div className={styles.miniPlayerSongInfo}>
           <span className={styles.miniPlayerSongTitle}>{listSong?.title ?? "No preview available"}</span>
-          {wideHero && listSong ? <span className={styles.miniPlayerSongArtist}>{listSong.artist || artistName}</span> : null}
           {listSong ? <span className={styles.miniPlayerSongDuration}>{formatPreviewDuration(listSong.duration)}</span> : null}
         </div>
       </div>
