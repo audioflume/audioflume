@@ -29,9 +29,9 @@ export default function ListViewIcon({ size = 17 }: ListViewIconProps) {
         strokeWidth="1.8"
         strokeLinecap="butt"
       />
-      <rect x="3.1" y="6.1" width="1.8" height="1.8" fill="currentColor" />
-      <rect x="3.1" y="11.1" width="1.8" height="1.8" fill="currentColor" />
-      <rect x="3.1" y="16.1" width="1.8" height="1.8" fill="currentColor" />
+      <rect x="2.8" y="5.8" width="2.4" height="2.4" fill="currentColor" />
+      <rect x="2.8" y="10.8" width="2.4" height="2.4" fill="currentColor" />
+      <rect x="2.8" y="15.8" width="2.4" height="2.4" fill="currentColor" />
     </svg>
   );
 }
