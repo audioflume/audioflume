@@ -767,6 +767,12 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
   const [heroPreviewArtistId, setHeroPreviewArtistId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!discover2Layout) return;
+    const closePreview = () => setHeroPreviewArtistId(null);
+    window.addEventListener("audioflume:discover2-preview-open", closePreview);
+    return () => window.removeEventListener("audioflume:discover2-preview-open", closePreview);
+  }, [discover2Layout]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
@@ -1166,7 +1172,10 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                             className="discover-artist-hero-listen"
                             disabled={!playable.length}
                             aria-label={`Preview music by ${artist.name}`}
-                            onClick={() => setHeroPreviewArtistId(artist.id)}
+                            onClick={() => {
+                              window.dispatchEvent(new Event("audioflume:discover2-preview-open"));
+                              setHeroPreviewArtistId(artist.id);
+                            }}
                           >
                             <PlayBadge isPlaying={activeSong} />
                             <span>Listen now</span>
