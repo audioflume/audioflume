@@ -175,10 +175,6 @@
 
 /* Mobile: no bio, artist identity and play in opposite bottom corners. */
 @media (max-width: 640px) {
-  .discover-page-root.is-discover2 .discover2-hero-card .discover2-hero-artist-designation {
-    display: none;
-  }
-
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
     grid-template-rows: 1fr auto;
     padding: 36px;
