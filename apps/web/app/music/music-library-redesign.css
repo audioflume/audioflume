@@ -225,6 +225,12 @@
   cursor: pointer;
 }
 
+:where(html.dark, html[data-theme="dark"])
+  .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song {
+  background: #e5e5df;
+  color: #111;
+}
+
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song svg {
   width: 16px;
   height: 16px;
