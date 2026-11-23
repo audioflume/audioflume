@@ -6478,12 +6478,14 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 
 .audioflume-home-intro {
   display: flex;
+  width: calc(100% + var(--audioflume-home-page-gutter) + var(--audioflume-home-page-gutter));
   height: calc(100dvh - var(--filmwave-header-height, 75px));
   min-height: 610px;
   box-sizing: border-box;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(30px, 3.8vh, 58px) clamp(24px, 4.2vw, 82px) 24px;
+  margin-left: calc(0px - var(--audioflume-home-page-gutter));
+  padding: clamp(30px, 3.8vh, 58px) calc(clamp(24px, 4.2vw, 82px) + var(--audioflume-home-page-gutter)) 24px;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
