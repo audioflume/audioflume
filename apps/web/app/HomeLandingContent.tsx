@@ -148,7 +148,7 @@ function HomeIntroSection() {
         </div>
       </div>
       <div className="audioflume-home-intro-logos">
-        <span>Sound for stories that go further.</span>
+        <span>Filmmakers working for these brands already use Audioflume.</span>
         <img
           src="https://images.filmwave.io/images/home/logos.png"
           alt="Brands whose filmmakers use Audioflume"
