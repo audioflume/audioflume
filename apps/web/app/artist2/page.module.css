@@ -3,6 +3,8 @@
   --curated-main-pill-active-background: transparent;
   --curated-main-pill-active-color: var(--text-primary);
   --audioflume-experiment-search-bottom-padding: 0px;
+  --audioflume-music-field-icon-color: light-dark(#999, #555);
+  --audioflume-music-field-placeholder-color: light-dark(#aaa, #555);
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 60px);
