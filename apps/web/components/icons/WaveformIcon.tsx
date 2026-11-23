@@ -12,7 +12,7 @@ export default function WaveformIcon({ size = 14 }: WaveformIconProps) {
       aria-hidden="true"
     >
       <path
-        d="M4 13V11"
+        d="M4 14V10"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="butt"
@@ -36,7 +36,7 @@ export default function WaveformIcon({ size = 14 }: WaveformIconProps) {
         strokeLinecap="butt"
       />
       <path
-        d="M20 13V11"
+        d="M20 14V10"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="butt"
