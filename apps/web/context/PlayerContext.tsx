@@ -74,6 +74,8 @@ type PlayerContextType = {
   unregisterWaveform: (songId: string) => void;
   setQueue: (songs: Song[]) => void;
   navigateTrack: (direction: "prev" | "next") => void;
+  repeatSongId: string | null;
+  toggleRepeatSong: (songId: string) => void;
   closePlayer: () => void;
 };
 
@@ -218,6 +220,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const playbackSubscribersRef = useRef<Set<() => void>>(new Set());
 
   const queueRef = useRef<Song[]>([]);
+  const repeatSongIdRef = useRef<string | null>(null);
   const playRequestIdRef = useRef(0);
   const pendingSeekRequestIdRef = useRef(0);
   const channelRef = useRef<BroadcastChannel | null>(null);
@@ -234,6 +237,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [remotePlayingInAnotherTab, setRemotePlayingInAnotherTab] = useState(false);
   const [volume, setVolumeState] = useState(1);
+  const [repeatSongId, setRepeatSongId] = useState<string | null>(null);
+
+  const toggleRepeatSong = useCallback((songId: string) => {
+    const nextId = repeatSongIdRef.current === songId ? null : songId;
+    repeatSongIdRef.current = nextId;
+    setRepeatSongId(nextId);
+  }, []);
 
   const emitPlaybackUpdate = useCallback(() => {
     playbackSubscribersRef.current.forEach((l) => l());
@@ -467,6 +477,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       audio.addEventListener("ended", () => {
         const current = currentSongRef.current;
+        if (current && repeatSongIdRef.current === current.id) {
+          audio.currentTime = 0;
+          waveformsRef.current.get(current.id)?.seekTo(0);
+          setCurrentTimeState(0);
+          audio.play().catch((err) => {
+            if (!isInterruptedPlayError(err)) console.warn("[Player] repeat play() rejected:", err);
+          });
+          return;
+        }
         const queue = queueRef.current;
 
         if (!current || !queue.length) {
@@ -595,6 +614,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (current) waveformsRef.current.get(current.id)?.seekTo(0);
 
     currentSongRef.current = null;
+    repeatSongIdRef.current = null;
+    setRepeatSongId(null);
     currentTimeRef.current = 0;
     durationRef.current = 0;
     progressSnapshotRef.current = { currentTime: 0, duration: 0 };
@@ -1009,6 +1030,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       unregisterWaveform,
       setQueue,
       navigateTrack,
+      repeatSongId,
+      toggleRepeatSong,
       closePlayer,
     } as PlayerContextType;
 
@@ -1030,6 +1053,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     unregisterWaveform,
     setQueue,
     navigateTrack,
+    repeatSongId,
+    toggleRepeatSong,
     closePlayer,
   ]);
 
