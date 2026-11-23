@@ -26,9 +26,6 @@ import VolumeIcon from "@/components/icons/VolumeIcon";
 import Toast from "@/components/Toast";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
 
-const BAR_WIDTH = 2;
-const BAR_GAP = 1;
-
 const WAVEFORM_MIN_WIDTH = 780;
 const FULL_COMPACT_TIME_MIN_WIDTH = 620;
 const COMPACT_TIME_MIN_WIDTH = 500;
@@ -164,7 +161,6 @@ export default function AdminMusicPlayer() {
       cache: playerCanvasDrawCacheRef.current,
       colors: getWaveformColors(),
       forceResize,
-      options: { barWidth: BAR_WIDTH, barGap: BAR_GAP },
     });
   }, []);
 
