@@ -106,6 +106,9 @@ function ArtistCard({
         }
         overlays={
           <>
+            {artist.name.trim().toLowerCase() === "judah earl" && !previewOpen ? (
+              <img className={styles.foundingArtistMark} src="/founding-artist-mark.svg" alt="Founding Artist" />
+            ) : null}
             <button
               type="button"
               className={cardWaveformStyles.cardPlayButton}
