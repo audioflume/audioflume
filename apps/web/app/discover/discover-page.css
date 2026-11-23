@@ -94,6 +94,24 @@
   z-index: 1;
 }
 
+.discover-page-root.is-discover2 .discover2-hero-founding-mark {
+  position: absolute;
+  top: 48px;
+  right: 48px;
+  z-index: 2;
+  display: block;
+  width: 117.26px;
+  height: auto;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .discover-page-root.is-discover2 .discover2-hero-founding-mark {
+    top: 36px;
+    right: 36px;
+  }
+}
+
 @media (hover: hover) {
   .discover-page-root.is-discover2 .discover2-hero-card:hover::before {
     transform: scale(1.035);
