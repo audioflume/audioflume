@@ -119,7 +119,7 @@ function HomeIntroSection() {
             <AudioflumeMark className="audioflume-home-intro-mark" />
             <span>Human made. Story driven.</span>
           </div>
-          <h1>Music for the stories you tell.</h1>
+          <h1>Human made music &amp; SFX for film.</h1>
           <p>Human-made music and sound effects for filmmakers, editors, and storytellers. Find the sound that makes your next project feel something.</p>
           <div className="audioflume-home-intro-actions">
             <Link href="/music" className="audioflume-home-intro-primary">Explore music library <ArrowUpRightIcon size={20} strokeWidth={1.5} /></Link>
@@ -142,7 +142,6 @@ function HomeIntroSection() {
             <img src={CURATED_IMAGE} alt="" />
             <span>Curated for the cut.</span>
           </div>
-          <AudioflumeMark className="audioflume-home-intro-visual-mark" />
         </div>
       </div>
       <div className="audioflume-home-intro-logos">
