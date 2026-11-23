@@ -15,19 +15,19 @@ export default function ListViewIcon({ size = 17 }: ListViewIconProps) {
         d="M8 7H20"
         stroke="currentColor"
         strokeWidth="1.8"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M8 12H20"
         stroke="currentColor"
         strokeWidth="1.8"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M8 17H20"
         stroke="currentColor"
         strokeWidth="1.8"
-        strokeLinecap="round"
+        strokeLinecap="butt"
       />
       <path
         d="M4 7H4.01"
