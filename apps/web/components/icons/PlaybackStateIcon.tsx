@@ -17,6 +17,11 @@ export default function PlaybackStateIcon({ playing, size = 14, hoverIcon = "pau
             {hoverIcon === "list" ? <ListViewIcon size={size} /> : <PauseIcon size={size} />}
           </span>
         </>
+      ) : hoverIcon === "list" ? (
+        <>
+          <span className={styles.idlePlay}><PlayIconSmall size={size} /></span>
+          <span className={styles.idleList}><ListViewIcon size={size} /></span>
+        </>
       ) : (
         <PlayIconSmall size={size} />
       )}
