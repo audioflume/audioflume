@@ -291,8 +291,8 @@
 }
 
 @container (max-width: 389.99px) {
-  .miniPlayerExtraControl {
-    display: none !important;
+  .miniPlayerListControls .miniPlayerExtraControl {
+    display: none;
   }
 }
 
