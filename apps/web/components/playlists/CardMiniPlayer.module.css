@@ -527,7 +527,7 @@
     justify-content: flex-start;
     min-height: 0;
     box-sizing: border-box;
-    padding-top: 13px;
+    padding-top: calc((clamp(40px, 4vw, 64px) - clamp(26px, 2.375vw, 38px)) / 2);
   }
 
   .miniPlayerWideHero .miniPlayerUpper .miniPlayerArt {
@@ -581,22 +581,32 @@
   }
 
   .miniPlayerWideHero .miniPlayerCompactPage {
-    grid-template-rows: repeat(3, 64px);
-    height: 192px;
+    grid-template-rows: repeat(3, clamp(40px, 4vw, 64px));
+    height: clamp(120px, 12vw, 192px);
   }
 
   .miniPlayerWideHero .miniPlayerCompactRow {
-    grid-template-columns: 38px minmax(0, 1fr) 42px 20px;
-    gap: 12px;
-    padding: 12px 0;
+    grid-template-columns: clamp(26px, 2.375vw, 38px) minmax(0, 1fr) clamp(35px, 2.625vw, 42px) 20px;
+    gap: clamp(10px, 0.75vw, 12px);
+    padding: clamp(7px, 0.75vw, 12px) 0;
   }
 
   .miniPlayerWideHero .miniPlayerCompactCover {
-    width: 38px;
-    height: 38px;
+    width: clamp(26px, 2.375vw, 38px);
+    height: clamp(26px, 2.375vw, 38px);
   }
 
   .miniPlayerWideHero .miniPlayerCompactTitle {
-    font-size: 13px;
+    font-size: clamp(12px, 0.8125vw, 13px);
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactDuration {
+    font-size: clamp(11px, 0.75vw, 12px);
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) svg,
+  .miniPlayerWideHero .miniPlayerCompactRow > svg {
+    width: clamp(12px, 0.875vw, 14px);
+    height: clamp(12px, 0.875vw, 14px);
   }
 }
