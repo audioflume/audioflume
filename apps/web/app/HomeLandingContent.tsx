@@ -116,14 +116,10 @@ function HomeIntroSection() {
     <section className="audioflume-home-intro" aria-label="Explore human-made music">
       <div className="audioflume-home-intro-main">
         <div className="audioflume-home-intro-copy">
-          <div className="audioflume-home-intro-seal">
-            <span>Human made. Story driven.</span>
-          </div>
           <h1>Music for the stories you tell.</h1>
           <p>Human-made music and sound effects for filmmakers, editors, and storytellers. Find the sound that makes your next project feel something.</p>
           <div className="audioflume-home-intro-actions">
             <Link href="/music" className="audioflume-home-intro-primary">Explore music library <ArrowUpRightIcon size={20} strokeWidth={1.5} /></Link>
-            <Link href="/curated-playlists" className="audioflume-home-intro-secondary">Explore curated playlists</Link>
           </div>
           <div className="audioflume-home-intro-rating">
             <span aria-hidden="true" className="audioflume-home-intro-stars">
