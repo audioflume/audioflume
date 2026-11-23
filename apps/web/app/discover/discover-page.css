@@ -2040,7 +2040,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-new-songs .audioflume-home-mockup-section-label {
-  display: none;
+  visibility: hidden;
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
