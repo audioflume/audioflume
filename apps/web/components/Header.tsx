@@ -474,7 +474,7 @@ export default function Header() {
         .filmwave-header-audioflume-symbol {
           display: block;
           width: 22px;
-          height: 23.54px;
+          height: 24px;
           flex: 0 0 auto;
           fill: currentColor;
         }
