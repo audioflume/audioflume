@@ -6657,7 +6657,7 @@ body:has(.filmwave-web-header.is-home-scrolled) .audioflume-home-intro {
 .audioflume-home-intro-statement p {
   max-width: 1400px;
   margin: 0;
-  color: #999;
+  color: #b3b3b3;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(56px, 8vw, 128px);
   font-weight: 400;
@@ -6666,7 +6666,7 @@ body:has(.filmwave-web-header.is-home-scrolled) .audioflume-home-intro {
 }
 
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-intro-statement p {
-  color: #aaa;
+  color: #b3b3b3;
 }
 
 .audioflume-home-intro-logos {
