@@ -6509,7 +6509,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   align-items: center;
   gap: 13px;
   margin-bottom: clamp(32px, 3.2vw, 60px);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: normal;
 }
@@ -6535,6 +6535,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   margin: clamp(20px, 2.5vw, 36px) 0 0;
   color: var(--text-secondary);
   font-size: clamp(13px, 1.1vw, 17px);
+  font-weight: 300;
   line-height: 1.55;
 }
 
