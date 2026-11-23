@@ -378,8 +378,9 @@
     display: grid;
     width: 100%;
     min-width: 0;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
+    gap: 6px;
     min-height: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -406,13 +407,14 @@
   }
 
   .miniPlayerCompactLicense {
-    display: none;
+    display: inline-flex;
+    width: 28px;
     height: 28px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 0 10px;
+    padding: 0;
     border: 0;
     background: #fff;
     color: #111;
@@ -428,14 +430,22 @@
     opacity: .8;
   }
 
+  .miniPlayerCompactLicense > span {
+    display: none;
+  }
+
   @container (min-width: 390px) {
     .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
-      grid-template-columns: minmax(0, 1fr) auto;
       gap: 10px;
     }
 
     .miniPlayerCompactLicense {
-      display: inline-flex;
+      width: auto;
+      padding: 0 10px;
+    }
+
+    .miniPlayerCompactLicense > span {
+      display: inline;
     }
   }
 
@@ -660,7 +670,12 @@
   }
 
   .miniPlayerWideHero .miniPlayerCompactLicense {
-    display: inline-flex;
+    width: auto;
+    padding: 0 10px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactLicense > span {
+    display: inline;
   }
 
   .miniPlayerWideHero .miniPlayerCompactCover {
