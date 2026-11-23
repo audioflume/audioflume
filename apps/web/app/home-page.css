@@ -6476,6 +6476,7 @@ body:has(.audioflume-home-experiment) {
 
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-border: var(--border);
+  --audioflume-home-header-background: light-dark(#f7f7f5, #171717);
 }
 
 .audioflume-home-intro {
