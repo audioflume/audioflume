@@ -277,6 +277,25 @@
   cursor: default;
 }
 
+.miniPlayerExtraControl {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  color: rgba(255, 255, 255, .65);
+  transition: color 160ms ease;
+}
+
+.miniPlayerExtraControl:is(:hover, :focus-visible),
+.miniPlayerExtraControl[aria-pressed="true"] {
+  color: #fff;
+}
+
+@container (max-width: 389.99px) {
+  .miniPlayerExtraControl {
+    display: none !important;
+  }
+}
+
 .miniPlayerListPlay {
   width: 42px;
   height: 42px;
@@ -293,6 +312,7 @@
 .miniPlayerListProgress {
   display: block;
   width: 100%;
+  max-width: 400px;
   height: 2px;
   flex: 0 0 auto;
   margin: 16px 0 0;
