@@ -124,11 +124,13 @@
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
     width: 100%;
     max-width: 520px;
+    align-self: flex-start;
     font-size: 18px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
     flex-wrap: wrap;
+    align-self: flex-start;
     gap: 24px;
     margin-top: auto;
     padding-top: 28px;
