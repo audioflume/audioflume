@@ -6509,7 +6509,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   align-items: center;
   gap: 13px;
   margin-bottom: clamp(32px, 3.2vw, 60px);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: normal;
 }
