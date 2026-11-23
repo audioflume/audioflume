@@ -67,6 +67,10 @@
   font-size: clamp(11px, 1.6vw, 16px);
 }
 
+.discover-page-root.is-discover2 .discover2-hero-artist-designation {
+  display: none;
+}
+
 /* Tablet: identity and bio at bottom left, play at bottom right. */
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-hero-card {
@@ -119,6 +123,14 @@
     font-size: 58px;
   }
 
+  .discover-page-root.is-discover2 .discover2-hero-card .discover2-hero-artist-designation {
+    display: block;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
     margin-bottom: 16px;
     font-size: 14px;
@@ -132,11 +144,11 @@
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
     display: block;
     width: 100%;
-    max-width: 440px;
+    max-width: 340px;
     grid-column: 1;
     grid-row: 3;
     align-self: end;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
