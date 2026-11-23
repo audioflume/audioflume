@@ -26,6 +26,7 @@ import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
+import ListViewIcon from "@/components/icons/ListViewIcon";
 import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
@@ -243,10 +244,11 @@ function stopTrackKeyEvent(event: KeyboardEvent<HTMLElement>) {
   event.nativeEvent.stopImmediatePropagation();
 }
 
-function PlayBadge({ isPlaying = false }: { isPlaying?: boolean }) {
+function PlayBadge({ isPlaying = false, hoverList = false }: { isPlaying?: boolean; hoverList?: boolean }) {
   return (
-    <span className="discover-artist-play-badge" aria-hidden="true">
-      <PlaybackStateIcon playing={isPlaying} size={18} />
+    <span className={`discover-artist-play-badge${hoverList ? " is-mini-player-trigger" : ""}`} aria-hidden="true">
+      <span className="discover-artist-play-icon"><PlaybackStateIcon playing={isPlaying} size={18} /></span>
+      {hoverList ? <span className="discover-artist-list-icon"><ListViewIcon size={18} /></span> : null}
     </span>
   );
 }
@@ -1177,7 +1179,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                               setHeroPreviewArtistId(artist.id);
                             }}
                           >
-                            <PlayBadge isPlaying={activeSong} />
+                            <PlayBadge isPlaying={activeSong} hoverList />
                             <span>Listen now</span>
                           </button>
                           <Link href={`/artists/${artist.slug}`}>View license catalogue</Link>
