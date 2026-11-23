@@ -2037,10 +2037,12 @@
 .discover-page-root.is-discover2 .discover2-new-songs {
   --audioflume-home-songs-surface: light-dark(#fff, #262626);
   --audioflume-home-content-text: var(--text-primary);
+  padding-right: calc(clamp(22px, 4.2vw, 64px) - 10px);
+  padding-left: calc(clamp(22px, 4.2vw, 64px) - 10px);
 }
 
 .discover-page-root.is-discover2 .discover2-new-songs .audioflume-home-mockup-section-label {
-  visibility: hidden;
+  display: none;
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
