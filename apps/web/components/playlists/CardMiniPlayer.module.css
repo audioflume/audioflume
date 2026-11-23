@@ -633,27 +633,8 @@
   }
 }
 
-/* The banner-only list keeps the artist credit until the compact layout runs out of room. */
-@media (min-width: 621px) and (max-width: 800px) {
-  .miniPlayerWideHero .miniPlayerCompactRow {
-    grid-template-columns: 26px minmax(0, 1fr) minmax(0, .65fr) 35px 20px;
-  }
-
-  .miniPlayerWideHero .miniPlayerCompactArtist {
-    min-width: 0;
-    overflow: hidden;
-    color: rgba(255, 255, 255, .6);
-    font-size: 11px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) {
-    grid-column: 5;
-  }
-}
-
-@media (max-width: 620px) {
+/* Hide the banner's song-list artist credit at the first breakpoint. */
+@media (max-width: 800px) {
   .miniPlayerWideHero .miniPlayerCompactArtist {
     display: none;
   }
