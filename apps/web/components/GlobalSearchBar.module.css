@@ -518,13 +518,17 @@
 }
 
 :global(html.dark) .darkSimilarSong,
-:global(html[data-theme="dark"]) .darkSimilarSong,
+:global(html[data-theme="dark"]) .darkSimilarSong {
+  background: #e5e5df;
+  color: #111;
+}
+
 :global(html.dark) .darkSimilarSong:hover,
 :global(html[data-theme="dark"]) .darkSimilarSong:hover,
 :global(html.dark) .darkSimilarSong:focus-visible,
 :global(html[data-theme="dark"]) .darkSimilarSong:focus-visible {
   background: #e5e5df;
-  color: #111;
+  color: #fff;
 }
 
 @media (max-width: 1000px) {
@@ -558,7 +562,13 @@
   }
 
   :global(html.dark) .darkSimilarSong,
-  :global(html[data-theme="dark"]) .darkSimilarSong,
+  :global(html[data-theme="dark"]) .darkSimilarSong {
+    border: 0;
+    border-radius: 0;
+    background: #e5e5df;
+    color: #111;
+  }
+
   :global(html.dark) .darkSimilarSong:hover,
   :global(html[data-theme="dark"]) .darkSimilarSong:hover,
   :global(html.dark) .darkSimilarSong:focus-visible,
@@ -566,6 +576,6 @@
     border: 0;
     border-radius: 0;
     background: #e5e5df;
-    color: #111;
+    color: #fff;
   }
 }
