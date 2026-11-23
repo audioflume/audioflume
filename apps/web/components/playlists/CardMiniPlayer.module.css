@@ -548,6 +548,15 @@
     text-align: center;
   }
 
+  .miniPlayerWideHero .miniPlayerSongArtist {
+    overflow: hidden;
+    max-width: 100%;
+    color: rgba(255, 255, 255, .65);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .miniPlayerWideHero .miniPlayerSongDuration {
     display: block;
     font-size: 12px;
@@ -586,7 +595,7 @@
   }
 
   .miniPlayerWideHero .miniPlayerCompactRow {
-    grid-template-columns: clamp(26px, 2.375vw, 38px) minmax(0, 1fr) clamp(35px, 2.625vw, 42px) 20px;
+    grid-template-columns: clamp(26px, 2.375vw, 38px) minmax(0, 1fr) minmax(0, .65fr) clamp(35px, 2.625vw, 42px) 20px;
     gap: clamp(10px, 0.75vw, 12px);
     padding: clamp(7px, 0.75vw, 12px) 0;
   }
@@ -600,6 +609,19 @@
     font-size: clamp(12px, 0.8125vw, 13px);
   }
 
+  .miniPlayerWideHero .miniPlayerCompactArtist {
+    min-width: 0;
+    overflow: hidden;
+    color: rgba(255, 255, 255, .6);
+    font-size: clamp(11px, 0.75vw, 12px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) {
+    grid-column: 5;
+  }
+
   .miniPlayerWideHero .miniPlayerCompactDuration {
     font-size: clamp(11px, 0.75vw, 12px);
   }
@@ -608,5 +630,31 @@
   .miniPlayerWideHero .miniPlayerCompactRow > svg {
     width: clamp(12px, 0.875vw, 14px);
     height: clamp(12px, 0.875vw, 14px);
+  }
+}
+
+/* The banner-only list keeps the artist credit until the compact layout runs out of room. */
+@media (min-width: 621px) and (max-width: 800px) {
+  .miniPlayerWideHero .miniPlayerCompactRow {
+    grid-template-columns: 26px minmax(0, 1fr) minmax(0, .65fr) 35px 20px;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactArtist {
+    min-width: 0;
+    overflow: hidden;
+    color: rgba(255, 255, 255, .6);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .miniPlayerWideHero .miniPlayerCompactRow > :is(svg, span:last-child) {
+    grid-column: 5;
+  }
+}
+
+@media (max-width: 620px) {
+  .miniPlayerWideHero .miniPlayerCompactArtist {
+    display: none;
   }
 }
