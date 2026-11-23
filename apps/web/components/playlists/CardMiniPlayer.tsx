@@ -28,6 +28,7 @@ export default function CardMiniPlayer({
   onClose,
   discoverPlaybackIcon = true,
   wideHero = false,
+  discover2TopFade = false,
 }: {
   artistName: string;
   trackCount: number;
@@ -39,6 +40,7 @@ export default function CardMiniPlayer({
   onClose?: () => void;
   discoverPlaybackIcon?: boolean;
   wideHero?: boolean;
+  discover2TopFade?: boolean;
 }) {
   const { currentTime, duration } = usePlayerProgress();
   async function licenseSong(song: Song) {
@@ -69,7 +71,7 @@ export default function CardMiniPlayer({
     : 0;
 
   return (
-    <div className={`${styles.miniPlayer}${wideHero ? ` ${styles.miniPlayerWideHero}` : ""}`} aria-label={`Preview music by ${artistName}`}>
+    <div className={`${styles.miniPlayer}${wideHero ? ` ${styles.miniPlayerWideHero}` : ""}${discover2TopFade ? ` ${styles.miniPlayerDiscover2TopFade}` : ""}`} aria-label={`Preview music by ${artistName}`}>
       {onClose ? (
         <button
           type="button"
