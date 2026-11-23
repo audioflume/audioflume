@@ -1706,7 +1706,7 @@
     line-height: 1.4;
   }
 
-  .discover-artist-hero-actions {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-actions {
     position: static;
     flex-wrap: nowrap;
     align-items: center;
@@ -1715,29 +1715,29 @@
     font-size: 10.5px;
   }
 
-  .discover-artist-hero-listen {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen {
     display: inline-flex;
     align-items: center;
     gap: 12px;
   }
 
-  .discover-artist-hero-listen > span:last-child {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen > span:last-child {
     align-self: center;
   }
 
-  .discover-artist-hero-listen .discover-artist-play-badge {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen .discover-artist-play-badge {
     width: 52px;
     height: 52px;
     flex-basis: 52px;
     transform: none;
   }
 
-  .discover-artist-hero-listen:hover .discover-artist-play-badge,
-  .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen:hover .discover-artist-play-badge,
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
     transform: none;
   }
 
-  .discover-artist-hero-listen > span:last-child {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-listen > span:last-child {
     margin-right: 0;
   }
 
