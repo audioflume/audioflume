@@ -5623,9 +5623,9 @@ body:has(.audioflume-home-landing)
 }
 
 
-/* The homepage uses a white canvas; other editorial pages retain their own canvas. */
+/* The homepage intro stays white; the remaining page uses the light grey canvas. */
 body:has(.audioflume-home-experiment) {
-  --audioflume-home-canvas: #fff;
+  --audioflume-home-canvas: #f7f7f5;
 }
 
 body:has(:is(.audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
