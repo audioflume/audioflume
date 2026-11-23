@@ -107,11 +107,11 @@ html.light, html[data-theme="light"] {
 
 /* Website-only dark palette: darker canvas with raised surfaces kept distinct. */
 :root:not(.light):not([data-theme="light"]) {
-  --filmwave-black: #1b1b1b;
-  --filmwave-neutral-surface: #262626;
-  --filmwave-search-surface: #262626;
-  --bg-tertiary-hover: #303030;
-  --bg-panel-2: #2e2e2e;
+  --filmwave-black: #111111;
+  --filmwave-neutral-surface: #1b1b1b;
+  --filmwave-search-surface: #1b1b1b;
+  --bg-tertiary-hover: #252525;
+  --bg-panel-2: #222222;
 }
 
 html,
