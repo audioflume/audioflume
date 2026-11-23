@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { useEffect, useState } from "react";
 
 type CuratedPlaylist = {
@@ -71,7 +72,11 @@ export default function Discover2Playlists() {
               </div>
             ))}
       </div>
-      <Link className="discover2-playlist-explore" href="/curated-playlists">Explore curated playlists</Link>
+      <Link className="discover2-playlist-explore" href="/curated-playlists">
+        Explore curated playlists
+        <ArrowUpRightIcon size={16} strokeWidth={1.5} />
+      </Link>
+      <p className="discover2-playlist-intro">Handpicked playlists for every mood, moment, and turning point in the story.</p>
     </section>
   );
 }
