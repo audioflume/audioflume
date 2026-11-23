@@ -26,6 +26,7 @@ export default function CardMiniPlayer({
   onSeek,
   onClose,
   discoverPlaybackIcon = true,
+  wideHero = false,
 }: {
   artistName: string;
   trackCount: number;
@@ -36,6 +37,7 @@ export default function CardMiniPlayer({
   onSeek?: (song: Song, progress: number) => void;
   onClose?: () => void;
   discoverPlaybackIcon?: boolean;
+  wideHero?: boolean;
 }) {
   const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
@@ -50,7 +52,7 @@ export default function CardMiniPlayer({
     : 0;
 
   return (
-    <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
+    <div className={`${styles.miniPlayer}${wideHero ? ` ${styles.miniPlayerWideHero}` : ""}`} aria-label={`Preview music by ${artistName}`}>
       {onClose ? (
         <button
           type="button"
