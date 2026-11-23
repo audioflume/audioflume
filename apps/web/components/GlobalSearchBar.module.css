@@ -158,7 +158,7 @@
   border-radius: 0;
   background: var(--filmwave-search-surface);
   padding: 0 16px;
-  color: #999;
+  color: var(--audioflume-music-field-icon-color, #999);
 }
 
 .musicField:focus-within {
@@ -197,7 +197,7 @@
 }
 
 .musicField input::placeholder {
-  color: #999;
+  color: var(--audioflume-music-field-placeholder-color, #999);
   opacity: 1;
 }
 
