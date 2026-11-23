@@ -117,16 +117,6 @@ function HomeIntroSection() {
           <div className="audioflume-home-intro-actions">
             <Link href="/music" className="audioflume-home-intro-primary">Explore music library <ArrowUpRightIcon size={20} strokeWidth={1.5} /></Link>
           </div>
-          <div className="audioflume-home-intro-rating">
-            <span aria-hidden="true" className="audioflume-home-intro-stars">
-              {Array.from({ length: 5 }, (_, index) => (
-                <svg key={index} viewBox="0 0 24 24" fill="currentColor" focusable="false">
-                  <path d="M12 1L14.84 8.16L22.54 8.65L16.61 13.58L18.51 21.05L12 16.91L5.49 21.05L7.39 13.58L1.46 8.65L9.16 8.16Z" />
-                </svg>
-              ))}
-            </span>
-            <span>Music made for filmmakers and storytellers</span>
-          </div>
         </div>
         <div className="audioflume-home-intro-visual">
           <img className="audioflume-home-intro-photo" src={ARTISTS_IMAGE} alt="Behind-the-scenes filmmaking photography" />
