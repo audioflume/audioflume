@@ -6,7 +6,6 @@ import { useMemo } from "react";
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
-import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -111,6 +110,47 @@ export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE, showCurat
   );
 }
 
+function HomeIntroSection() {
+  return (
+    <section className="audioflume-home-intro" aria-label="Explore human-made music">
+      <div className="audioflume-home-intro-main">
+        <div className="audioflume-home-intro-copy">
+          <div className="audioflume-home-intro-seal">
+            <AudioflumeMark className="audioflume-home-intro-mark" />
+            <span>Human made. Story driven.</span>
+          </div>
+          <h1>Music for <em>the stories</em> you tell.</h1>
+          <p>Human-made music and sound effects for filmmakers, editors, and storytellers. Find the sound that makes your next project feel something.</p>
+          <div className="audioflume-home-intro-actions">
+            <Link href="/music" className="audioflume-home-intro-primary">Explore music library <ArrowUpRightIcon size={20} strokeWidth={1.5} /></Link>
+            <Link href="/curated-playlists" className="audioflume-home-intro-secondary">Explore curated playlists</Link>
+          </div>
+          <div className="audioflume-home-intro-rating">
+            <span aria-hidden="true" className="audioflume-home-intro-stars">★★★★★</span>
+            <span>Music made for filmmakers and storytellers</span>
+          </div>
+        </div>
+        <div className="audioflume-home-intro-visual">
+          <img className="audioflume-home-intro-photo" src={ARTISTS_IMAGE} alt="Behind-the-scenes filmmaking photography" />
+          <div className="audioflume-home-intro-artwork">
+            <img src={CURATED_IMAGE} alt="" />
+            <span>Curated for the cut.</span>
+          </div>
+          <AudioflumeMark className="audioflume-home-intro-visual-mark" />
+        </div>
+      </div>
+      <div className="audioflume-home-intro-logos">
+        <span>Sound for stories that go further.</span>
+        <img
+          src="https://images.filmwave.io/images/home/logos.png"
+          alt="Brands whose filmmakers use Audioflume"
+          draggable={false}
+        />
+      </div>
+    </section>
+  );
+}
+
 export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
   const { songs, loading } = useSongs();
   const playerVisible = useHasCurrentSong();
@@ -120,9 +160,8 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
 
   return (
     <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
-      <HomeExperimentSearch />
-
       <div className="audioflume-experiment-main">
+        <HomeIntroSection />
         <HomeHeroBanner featuredSong={featuredSong} />
 
         <HomeLandingPromoBlocks />
