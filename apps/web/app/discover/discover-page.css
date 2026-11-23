@@ -150,7 +150,7 @@
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen {
     display: inline-grid;
-    grid-template-columns: 52px;
+    grid-template-columns: 56px;
     column-gap: 0;
   }
 }
@@ -549,6 +549,14 @@
   flex-basis: 52px;
   align-self: center;
   transform: none;
+}
+
+@media (max-width: 1250px) {
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen .discover-artist-play-badge {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
 }
 
 @media (min-width: 1251px) {
@@ -2388,8 +2396,8 @@ gap: 16px;
 
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-watching-play {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
   }
 
   .discover-page-root.is-discover2 .discover2-watching-play svg {
