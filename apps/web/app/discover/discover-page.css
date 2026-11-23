@@ -60,7 +60,7 @@
   font-size: clamp(11px, 1.6vw, 16px);
 }
 
-/* Laptop/tablet: intentional left-aligned editorial stack. */
+/* Tablet and mobile: artist identity and playback in opposite bottom corners. */
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-hero-card {
     height: auto;
@@ -78,10 +78,11 @@
     width: 100%;
     max-width: none;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     min-height: var(--discover-artist-hero-height);
     align-self: stretch;
-    justify-content: flex-start;
+    align-items: flex-end;
+    justify-content: space-between;
     padding: clamp(36px, 5vw, 64px);
     gap: clamp(18px, 2.2vw, 28px);
   }
@@ -92,9 +93,14 @@
     min-width: 0;
   }
 
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity {
+    flex: 1 1 auto;
+  }
+
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
     display: flex;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
+    align-self: flex-end;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -121,35 +127,32 @@
     margin-top: 24px;
   }
 
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
-    width: 100%;
-    max-width: 520px;
-    align-self: flex-start;
-    font-size: 18px;
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions > a,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen > span:last-child {
+    display: none;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
-    flex-wrap: wrap;
-    align-self: flex-start;
-    gap: 24px;
-    margin-top: auto;
-    padding-top: clamp(16px, 2.2vw, 28px);
+    flex-wrap: nowrap;
+    align-self: flex-end;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen {
+    display: inline-grid;
+    grid-template-columns: 52px;
+    column-gap: 0;
   }
 }
 
 /* Mobile: smaller, readable type and consistent internal spacing. */
 @media (max-width: 640px) {
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
     padding: 36px;
     gap: 20px;
-  }
-
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity {
-    flex: 1 1 auto;
-    min-width: 0;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
@@ -166,29 +169,6 @@
     margin-top: 18px;
   }
 
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
-    flex: 0 0 auto;
-    align-self: flex-end;
-  }
-
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions > a,
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen > span:last-child {
-    display: none;
-  }
-
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
-    flex-wrap: nowrap;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-  }
-
-  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-listen {
-    display: inline-grid;
-    grid-template-columns: 52px;
-    column-gap: 0;
-  }
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
