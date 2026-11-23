@@ -574,11 +574,23 @@
   .miniPlayer { animation: none; }
 }
 
-/* Align the Discover2 desktop list's content with its existing top fade. */
-@media (min-width: 801px) {
+/* Keep the Discover2 desktop song-list fade anchored at the scrolling top edge. */
+@media (min-width: 1101px) {
   .miniPlayerDiscover2TopFade {
     --mini-player-list-top-margin: 16px;
     --mini-player-list-top-padding: 0px;
+  }
+
+  .miniPlayerDiscover2TopFade .miniPlayerCompactSongs::before {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: block;
+    height: 10px;
+    margin-bottom: -10px;
+    background: linear-gradient(to bottom, rgba(17, 17, 17, .95), transparent);
+    content: "";
+    pointer-events: none;
   }
 }
 
