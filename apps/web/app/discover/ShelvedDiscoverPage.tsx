@@ -15,6 +15,7 @@ import {
 import Footer from "@/components/Footer";
 import FeaturedArtistShelf from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import artist2Styles from "@/app/artist2/page.module.css";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -762,9 +763,10 @@ export function DiscoverArchivedSections({
 
 export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBanner, liveContent = false, moveWatchingAndPlaylistsAfterReadyToCut = false, discover2Layout = false }: { afterPlaylists?: ReactNode; afterFeaturedSongs?: ReactNode; topBanner?: ReactNode; liveContent?: boolean; moveWatchingAndPlaylistsAfterReadyToCut?: boolean; discover2Layout?: boolean } = {}) {
   const { songs } = useSongs();
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
+  const [heroPreviewArtistId, setHeroPreviewArtistId] = useState<string | null>(null);
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
@@ -1128,9 +1130,10 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
               ))).slice(0, 3);
               const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
               const activeSong = Boolean(isPlaying && currentSong && playable.some((song) => song.id === currentSong.id));
+              const previewOpen = heroPreviewArtistId === artist.id;
               return (
                 <section
-                  className={`discover-artist-hero discover2-hero-card${index === 0 ? " is-shelf-primary" : ""}`}
+                  className={`discover-artist-hero discover2-hero-card${index === 0 ? " is-shelf-primary" : ""}${previewOpen ? " is-preview-open" : ""}`}
                   key={artist.id}
                   aria-label={`Featured artist ${artist.name}`}
                   style={{
@@ -1140,7 +1143,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                     "--discover-artist-hero-position": `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
                   } as CSSProperties}
                 >
-                  <div className="discover-artist-hero-inner">
+                  {!previewOpen ? <div className="discover-artist-hero-inner">
                     <div className="discover-artist-hero-feature">
                       <div className="discover-artist-hero-identity">
                         <span className="discover-artist-hero-eyebrow">Featured Artist</span>
@@ -1162,15 +1165,8 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                             type="button"
                             className="discover-artist-hero-listen"
                             disabled={!playable.length}
-                            aria-label={activeSong ? `Pause music by ${artist.name}` : `Play music by ${artist.name}`}
-                            onClick={() => {
-                              if (activeSong && currentSong) {
-                                togglePlayPause(currentSong);
-                              } else if (playable.length) {
-                                setQueue(playable);
-                                togglePlayPause(playable[0]);
-                              }
-                            }}
+                            aria-label={`Preview music by ${artist.name}`}
+                            onClick={() => setHeroPreviewArtistId(artist.id)}
                           >
                             <PlayBadge isPlaying={activeSong} />
                             <span>Listen now</span>
@@ -1179,7 +1175,22 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> : (
+                    <CardMiniPlayer
+                      wideHero
+                      artistName={artist.name}
+                      trackCount={playable.length}
+                      songs={playable}
+                      currentSongId={currentSong?.id}
+                      isPlaying={isPlaying}
+                      onPlay={(song) => {
+                        setQueue(playable);
+                        togglePlayPause(song);
+                      }}
+                      onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+                      onClose={() => setHeroPreviewArtistId(null)}
+                    />
+                  )}
                 </section>
               );
             })}
