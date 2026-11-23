@@ -343,6 +343,7 @@
 @container (min-width: 275px) {
   .miniPlayer {
     padding: clamp(28px, 3vw, 40px);
+    padding-top: clamp(84px, 16cqw, 100px);
   }
 
   .miniPlayerUpper {
@@ -358,6 +359,9 @@
     overflow-y: auto;
     overscroll-behavior-y: contain;
     margin-top: 0;
+    box-sizing: border-box;
+    padding-top: 18px;
+    scroll-padding-top: 18px;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
@@ -435,16 +439,6 @@
   }
 
   @container (min-width: 390px) {
-    .miniPlayer:not(.miniPlayerWideHero) {
-      padding-top: clamp(64px, 7vw, 76px);
-    }
-
-    .miniPlayerCompactSongs {
-      box-sizing: border-box;
-      padding-top: 14px;
-      scroll-padding-top: 14px;
-    }
-
     .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
       gap: 10px;
     }
