@@ -280,21 +280,11 @@
 }
 
 .miniPlayerListPlay {
-  width: var(--discover2-mini-play-size, 42px);
-  height: var(--discover2-mini-play-size, 42px);
+  width: 42px;
+  height: 42px;
   background: #fff;
   color: #111;
   transition: transform 160ms ease;
-}
-
-.miniPlayerListPlay svg {
-  width: var(--discover2-mini-play-icon-size, 15px);
-  height: var(--discover2-mini-play-icon-size, 15px);
-}
-
-.miniPlayerListControls .miniPlayerSkip svg {
-  width: var(--discover2-mini-skip-icon-size, 12px);
-  height: var(--discover2-mini-skip-icon-size, 12px);
 }
 
 .miniPlayerListPlay:hover:not(:disabled),
