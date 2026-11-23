@@ -56,6 +56,57 @@
   transition: opacity 160ms ease;
 }
 
+/* Keep the Discover2 hero as two columns until its content needs a stacked layout. */
+@media (max-width: 1250px) {
+  .discover-page-root.is-discover2 .discover2-hero-card {
+    height: auto;
+    min-height: var(--discover-artist-hero-height);
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-inner {
+    display: flex;
+    height: auto;
+    min-height: var(--discover-artist-hero-height);
+    align-items: center;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
+    width: 100%;
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    justify-content: stretch;
+    padding: clamp(26px, 4vw, 48px) clamp(24px, 5vw, 72px);
+    row-gap: clamp(18px, 2vw, 28px);
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
+    display: block;
+    min-width: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity h1,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-genres,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p,
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
+    transform: none;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-genres {
+    flex-wrap: wrap;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail > p {
+    max-width: 680px;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
+    flex-wrap: wrap;
+  }
+}
+
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
   opacity: 0;
 }
