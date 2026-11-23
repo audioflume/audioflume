@@ -341,7 +341,7 @@
   }
 }
 
-.discover-page-root.has-player .discover-artist-hero {
+.discover-page-root.has-player:not(.is-discover2) .discover-artist-hero {
   --discover-artist-hero-height: calc(
     100dvh - var(--filmwave-header-height, 60px) -
       var(--filmwave-searchbar-height, 75px) -
