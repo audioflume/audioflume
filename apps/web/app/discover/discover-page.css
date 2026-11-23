@@ -1517,7 +1517,7 @@
 
 @media (max-width: 980px) {
 
-  .discover-artist-hero {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero {
     --discover-artist-featured-intro-bottom: 240px;
     --discover-artist-hero-height: max(
       680px,
@@ -1529,7 +1529,7 @@
     min-height: var(--discover-artist-hero-height);
   }
 
-  .discover-page-root.has-player .discover-artist-hero {
+  .discover-page-root.has-player:not(.is-discover2) .discover-artist-hero {
     --discover-artist-hero-height: max(
       620px,
       calc(
@@ -1626,7 +1626,7 @@
     --discover-artist-gutter: var(--filmwave-page-gutter);
   }
 
-  .discover-artist-hero {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero {
     --discover-artist-featured-intro-bottom: 0px;
     --discover-artist-hero-height: max(
       640px,
@@ -1636,7 +1636,7 @@
     background-position: var(--discover-artist-hero-position, 54% 38%);
   }
 
-  .discover-page-root.has-player .discover-artist-hero {
+  .discover-page-root.has-player:not(.is-discover2) .discover-artist-hero {
     --discover-artist-hero-height: max(
       580px,
       calc(
@@ -1700,7 +1700,7 @@
     font-size: 18px;
   }
 
-  .discover-artist-hero-detail > p {
+  .discover-page-root:not(.is-discover2) .discover-artist-hero-detail > p {
     max-width: 560px;
     font-size: clamp(14px, 3.7vw, 17px);
     line-height: 1.4;
