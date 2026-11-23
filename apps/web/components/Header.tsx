@@ -550,12 +550,12 @@ export default function Header() {
 
         .filmwave-header-playlists-chevron {
           display: block;
-          width: 12px;
-          height: 12px;
-          flex: 0 0 12px;
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
           fill: none;
           stroke: currentColor;
-          stroke-width: 1.6;
+          stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
         }
