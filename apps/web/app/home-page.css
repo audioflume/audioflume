@@ -6649,7 +6649,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   margin: 0;
   color: light-dark(#c5c5c5, #303030);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(48px, 4.6vw, 76px);
+  font-size: clamp(56px, 8vw, 128px);
   font-weight: 400;
   letter-spacing: -0.05em;
   line-height: 1.1;
