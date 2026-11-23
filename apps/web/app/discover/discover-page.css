@@ -590,6 +590,29 @@
   transform: scale(1.03);
 }
 
+.discover-page-root.is-discover2 .discover-artist-play-badge.is-mini-player-trigger {
+  display: inline-grid;
+  place-items: center;
+}
+
+.discover-page-root.is-discover2 .is-mini-player-trigger .discover-artist-play-icon,
+.discover-page-root.is-discover2 .is-mini-player-trigger .discover-artist-list-icon {
+  grid-area: 1 / 1;
+}
+
+.discover-page-root.is-discover2 .is-mini-player-trigger .discover-artist-list-icon {
+  display: none;
+}
+
+.discover-page-root.is-discover2 .discover-artist-hero-listen:is(:hover, :focus-visible) .is-mini-player-trigger .discover-artist-play-icon {
+  display: none;
+}
+
+.discover-page-root.is-discover2 .discover-artist-hero-listen:is(:hover, :focus-visible) .is-mini-player-trigger .discover-artist-list-icon {
+  display: inline-grid;
+  place-items: center;
+}
+
 .discover-artist-hero-listen > span:last-child {
   align-self: center;
 }
