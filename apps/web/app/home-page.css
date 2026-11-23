@@ -55,7 +55,7 @@ body:has(.audioflume-home-landing)
   padding-top: var(--filmwave-header-height, 75px);
 }
 
-.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter):not(.audioflume-experiment-curated > a):not(.audioflume-discover-featured-artist-link) {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter):not(.audioflume-experiment-curated > a):not(.audioflume-discover-featured-artist-link):not(.audioflume-home-intro-primary) {
   color: inherit;
 }
 
@@ -6553,7 +6553,7 @@ body:has(.audioflume-home-experiment) {
   gap: 25px;
   padding: 0 21px;
   background: #111;
-  color: #fff !important;
+  color: #fff;
   font-size: 14px;
   text-decoration: none;
   transition: background-color 160ms ease;
@@ -6741,7 +6741,7 @@ body:has(.audioflume-home-experiment) {
 
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-intro-primary {
   background: #e5e5df;
-  color: #111 !important;
+  color: #111;
 }
 
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-intro-primary:hover {
