@@ -358,6 +358,9 @@
     overflow-y: auto;
     overscroll-behavior-y: contain;
     margin-top: 0;
+    box-sizing: border-box;
+    padding-top: 16px;
+    scroll-padding-top: 16px;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
