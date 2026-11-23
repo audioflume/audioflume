@@ -45,6 +45,12 @@ export default function Discover2WatchingArtists() {
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
+    const closePreview = () => setPreviewArtistId(null);
+    window.addEventListener("audioflume:discover2-preview-open", closePreview);
+    return () => window.removeEventListener("audioflume:discover2-preview-open", closePreview);
+  }, []);
+
+  useEffect(() => {
     const controller = new AbortController();
     fetch("/api/artists/directory", { signal: controller.signal })
       .then((response) => {
@@ -101,6 +107,7 @@ export default function Discover2WatchingArtists() {
     const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
     if (playable.length === 0) return;
     setSelected(artists.findIndex((item) => item.id === artist.id));
+    window.dispatchEvent(new Event("audioflume:discover2-preview-open"));
     setPreviewArtistId(artist.id);
     // Opening the preview does not start playback; controls inside the mini-player do.
   }
