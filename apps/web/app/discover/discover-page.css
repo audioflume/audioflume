@@ -57,6 +57,10 @@
   transition: opacity 160ms ease;
 }
 
+.discover-page-root.is-discover2 .discover2-hero-card.is-preview-open {
+  container-type: inline-size;
+}
+
 .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
   font-size: clamp(11px, 1.6vw, 16px);
 }
