@@ -56,6 +56,10 @@
   transition: opacity 160ms ease;
 }
 
+.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
+  font-size: clamp(11px, 1.6vw, 16px);
+}
+
 /* Laptop/tablet: intentional left-aligned editorial stack. */
 @media (max-width: 1250px) {
   .discover-page-root.is-discover2 .discover2-hero-card {
@@ -67,23 +71,32 @@
     display: flex;
     height: auto;
     min-height: var(--discover-artist-hero-height);
-    align-items: center;
+    align-items: stretch;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
     width: 100%;
     max-width: none;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    justify-content: stretch;
-    padding: 48px;
-    row-gap: 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: var(--discover-artist-hero-height);
+    align-self: stretch;
+    justify-content: flex-start;
+    padding: 64px;
+    gap: 28px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-identity,
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
     display: block;
     min-width: 0;
+  }
+
+  .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-detail {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow,
@@ -117,15 +130,16 @@
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
     flex-wrap: wrap;
     gap: 24px;
-    margin-top: 24px;
+    margin-top: auto;
+    padding-top: 28px;
   }
 }
 
 /* Mobile: smaller, readable type and consistent internal spacing. */
 @media (max-width: 640px) {
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-feature {
-    padding: 24px;
-    row-gap: 22px;
+    padding: 36px;
+    gap: 22px;
   }
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
@@ -149,13 +163,9 @@
 
   .discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-actions {
     gap: 16px 24px;
-    margin-top: 20px;
+    padding-top: 24px;
     font-size: 10.5px;
   }
-}
-
-.discover-page-root.is-discover2 .discover2-hero-card .discover-artist-hero-eyebrow {
-  font-size: clamp(11px, 1.6vw, 16px);
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card:not(.is-shelf-primary) {
