@@ -763,18 +763,220 @@ export function DiscoverArchivedSections({
   );
 }
 
+export function Discover2FeaturedHero({ featuredArtists, featuredArtistsLoading, heroStyle }: { featuredArtists: DiscoverFeaturedArtist[]; featuredArtistsLoading: boolean; heroStyle: CSSProperties }) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
+  const discover2HeroScrollerRef = useRef<HTMLDivElement>(null);
+  const [heroPreviewArtistId, setHeroPreviewArtistId] = useState<string | null>(null);
+  useEffect(() => {
+    const closePreview = () => setHeroPreviewArtistId(null);
+    window.addEventListener("audioflume:discover2-preview-open", closePreview);
+    return () => window.removeEventListener("audioflume:discover2-preview-open", closePreview);
+  }, []);
+  useEffect(() => {
+    const scroller = discover2HeroScrollerRef.current;
+    if (!scroller) return;
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function updatePrimary() {
+      if (!scroller) return;
+      const cards = Array.from(scroller.children) as HTMLElement[];
+      const viewport = scroller.getBoundingClientRect();
+      const center = (viewport.left + viewport.right) / 2;
+      let closest = -1;
+      let distance = Infinity;
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const delta = Math.abs((rect.left + rect.right) / 2 - center);
+        if (delta < distance) {
+          closest = index;
+          distance = delta;
+        }
+      });
+      cards.forEach((card, index) => card.classList.toggle("is-shelf-primary", index === closest));
+    }
+
+    function onScroll() {
+      if (!scroller) return;
+      scroller.classList.add("is-scrolling");
+      updatePrimary();
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        scroller.classList.remove("is-scrolling");
+        idleTimer = null;
+      }, 180);
+    }
+
+    updatePrimary();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updatePrimary);
+    const observer = new ResizeObserver(updatePrimary);
+    observer.observe(scroller);
+    return () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updatePrimary);
+      observer.disconnect();
+    };
+  }, [featuredArtists.length]);
+
+  function moveDiscover2Hero(direction: "prev" | "next") {
+    const scroller = discover2HeroScrollerRef.current;
+    if (!scroller) return;
+    const cards = Array.from(scroller.children) as HTMLElement[];
+    if (!cards.length) return;
+    const current = scroller.scrollLeft;
+    const inset = parseFloat(getComputedStyle(scroller).paddingLeft) || 0;
+    const bounds = scroller.getBoundingClientRect();
+    const positions = cards.map((card) => card.getBoundingClientRect().left - bounds.left + current - inset);
+    const nearest = positions.reduce((best, value, index) =>
+      Math.abs(value - current) < Math.abs(positions[best] - current) ? index : best, 0);
+    const destination = Math.max(0, Math.min(cards.length - 1, nearest + (direction === "next" ? 1 : -1)));
+    scroller.scrollTo({ left: positions[destination], behavior: "smooth" });
+  }
+
+  return (
+    <>
+        <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
+          <header className={artist2Styles.artist2Intro}>
+            <div className={artist2Styles.headingSlot}>
+              <h1>Human made music &amp; SFX for film.</h1>
+            </div>
+            <div className={artist2Styles.introMeta}>
+              <p>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
+            </div>
+          </header>
+        </div>
+        <div className="discover2-hero-shelf audioflume-home-reference-shelf group/home-reference-shelf">
+          <div className="discover2-hero-scroller audioflume-home-reference-shelf-scroller" ref={discover2HeroScrollerRef}>
+            {featuredArtistsLoading ? (
+              <section className="discover-artist-hero discover2-hero-card is-loading" aria-hidden="true" style={heroStyle}>
+                <div className="discover-artist-hero-inner">
+                  <div className="discover-artist-hero-feature discover-artist-hero-skeleton">
+                    <span className="discover-artist-hero-skeleton-block is-eyebrow" />
+                    <span className="discover-artist-hero-skeleton-block is-title" />
+                  </div>
+                </div>
+              </section>
+            ) : featuredArtists.map((artist, index) => {
+              const genres = Array.from(new Set(artist.songs.flatMap((song) =>
+                Array.isArray(song.genres) ? song.genres.filter(Boolean) : [],
+              ))).slice(0, 3);
+              const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+              const activeSong = Boolean(isPlaying && currentSong && playable.some((song) => song.id === currentSong.id));
+              const previewOpen = heroPreviewArtistId === artist.id;
+              return (
+                <section
+                  className={`discover-artist-hero discover2-hero-card${index === 0 ? " is-shelf-primary" : ""}${previewOpen ? " is-preview-open" : ""}`}
+                  key={artist.id}
+                  aria-label={`Featured artist ${artist.name}`}
+                  style={{
+                    "--discover-artist-hero-image": artist.hero_image_url
+                      ? `url("${artist.hero_image_url.replaceAll('"', '\\\"')}")`
+                      : "linear-gradient(var(--bg-tertiary), var(--bg-tertiary))",
+                    "--discover-artist-hero-position": `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
+                  } as CSSProperties}
+                >
+                  {!previewOpen ? <div className="discover-artist-hero-inner">
+                    <img className="discover2-hero-founding-mark" src="/founding-artist-mark.svg" alt="Founding Artist" />
+                    <div className="discover-artist-hero-feature">
+                      <div className="discover-artist-hero-identity">
+                        <span className="discover-artist-hero-eyebrow">Featured Artist</span>
+                        <h1>{artist.name}</h1>
+                        {artist.designation ? <span className="discover2-hero-artist-designation">{artist.designation}</span> : null}
+                        <div className="discover-artist-hero-genres">
+                          {genres.length ? genres.map((genre) => <span key={genre}>{genre}</span>) : (
+                            <>
+                              <span className="is-placeholder" aria-hidden="true" />
+                              <span className="is-placeholder" aria-hidden="true" />
+                              <span className="is-placeholder" aria-hidden="true" />
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="discover-artist-hero-detail">
+                        <p>{artist.intro_text || ""}</p>
+                        <div className="discover-artist-hero-actions">
+                          <button
+                            type="button"
+                            className="discover-artist-hero-listen"
+                            disabled={!playable.length}
+                            aria-label={`Preview music by ${artist.name}`}
+                            onClick={() => {
+                              window.dispatchEvent(new Event("audioflume:discover2-preview-open"));
+                              setHeroPreviewArtistId(artist.id);
+                            }}
+                          >
+                            <PlayBadge isPlaying={activeSong} hoverList />
+                            <span>Listen now</span>
+                          </button>
+                          <Link href={`/artists/${artist.slug}`}>View license catalogue</Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div> : (
+                    <CardMiniPlayer
+                      wideHero
+                      artistName={artist.name}
+                      trackCount={playable.length}
+                      songs={playable}
+                      currentSongId={currentSong?.id}
+                      isPlaying={isPlaying}
+                      onPlay={(song) => {
+                        setQueue(playable);
+                        togglePlayPause(song);
+                      }}
+                      onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+                      onClose={() => setHeroPreviewArtistId(null)}
+                    />
+                  )}
+                </section>
+              );
+            })}
+          </div>
+          {featuredArtists.length > 0 ? (
+            <ShelfIndicatorNavigation
+              label="featured artists"
+              scrollerRef={discover2HeroScrollerRef}
+              itemCount={featuredArtists.length}
+              onPrev={() => moveDiscover2Hero("prev")}
+              onNext={() => moveDiscover2Hero("next")}
+              className="audioflume-home-reference-width"
+              progressScrollbar
+            />
+          ) : null}
+        </div>
+
+    </>
+  );
+}
+
+export function ActiveDiscoverFeaturedHero() {
+  const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
+  const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/discover-featured-artists", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load featured artists");
+        const data = await response.json();
+        if (!controller.signal.aborted) setFeaturedArtists(Array.isArray(data?.artists) ? data.artists : []);
+      })
+      .catch(() => {})
+      .finally(() => { if (!controller.signal.aborted) setFeaturedArtistsLoading(false); });
+    return () => controller.abort();
+  }, []);
+  return (
+    <div className="discover-page-root is-discover2 is-embedded-featured-hero">
+      <Discover2FeaturedHero featuredArtists={featuredArtists} featuredArtistsLoading={featuredArtistsLoading} heroStyle={{} as CSSProperties} />
+    </div>
+  );
+}
+
 export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBanner, liveContent = false, moveWatchingAndPlaylistsAfterReadyToCut = false, discover2Layout = false }: { afterPlaylists?: ReactNode; afterFeaturedSongs?: ReactNode; topBanner?: ReactNode; liveContent?: boolean; moveWatchingAndPlaylistsAfterReadyToCut?: boolean; discover2Layout?: boolean } = {}) {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
-  const [heroPreviewArtistId, setHeroPreviewArtistId] = useState<string | null>(null);
-  useEffect(() => {
-    if (!discover2Layout) return;
-    const closePreview = () => setHeroPreviewArtistId(null);
-    window.addEventListener("audioflume:discover2-preview-open", closePreview);
-    return () => window.removeEventListener("audioflume:discover2-preview-open", closePreview);
-  }, [discover2Layout]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
@@ -786,7 +988,6 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
   const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
   const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
   const featureCardShelfRef = useRef<HTMLDivElement>(null);
-  const discover2HeroScrollerRef = useRef<HTMLDivElement>(null);
   const playerVisible = Boolean(currentSong);
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -993,69 +1194,6 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
     };
   }, [featureCardArtists.length]);
 
-  useEffect(() => {
-    if (!discover2Layout) return;
-    const scroller = discover2HeroScrollerRef.current;
-    if (!scroller) return;
-    let idleTimer: ReturnType<typeof setTimeout> | null = null;
-
-    function updatePrimary() {
-      if (!scroller) return;
-      const cards = Array.from(scroller.children) as HTMLElement[];
-      const viewport = scroller.getBoundingClientRect();
-      const center = (viewport.left + viewport.right) / 2;
-      let closest = -1;
-      let distance = Infinity;
-      cards.forEach((card, index) => {
-        const rect = card.getBoundingClientRect();
-        const delta = Math.abs((rect.left + rect.right) / 2 - center);
-        if (delta < distance) {
-          closest = index;
-          distance = delta;
-        }
-      });
-      cards.forEach((card, index) => card.classList.toggle("is-shelf-primary", index === closest));
-    }
-
-    function onScroll() {
-      if (!scroller) return;
-      scroller.classList.add("is-scrolling");
-      updatePrimary();
-      if (idleTimer) clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        scroller.classList.remove("is-scrolling");
-        idleTimer = null;
-      }, 180);
-    }
-
-    updatePrimary();
-    scroller.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", updatePrimary);
-    const observer = new ResizeObserver(updatePrimary);
-    observer.observe(scroller);
-    return () => {
-      if (idleTimer) clearTimeout(idleTimer);
-      scroller.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", updatePrimary);
-      observer.disconnect();
-    };
-  }, [discover2Layout, featuredArtists.length]);
-
-  function moveDiscover2Hero(direction: "prev" | "next") {
-    const scroller = discover2HeroScrollerRef.current;
-    if (!scroller) return;
-    const cards = Array.from(scroller.children) as HTMLElement[];
-    if (!cards.length) return;
-    const current = scroller.scrollLeft;
-    const inset = parseFloat(getComputedStyle(scroller).paddingLeft) || 0;
-    const bounds = scroller.getBoundingClientRect();
-    const positions = cards.map((card) => card.getBoundingClientRect().left - bounds.left + current - inset);
-    const nearest = positions.reduce((best, value, index) =>
-      Math.abs(value - current) < Math.abs(positions[best] - current) ? index : best, 0);
-    const destination = Math.max(0, Math.min(cards.length - 1, nearest + (direction === "next" ? 1 : -1)));
-    scroller.scrollTo({ left: positions[destination], behavior: "smooth" });
-  }
-
   function moveFeaturedArtist(direction: "prev" | "next") {
     if (featuredArtists.length <= 1) return;
 
@@ -1108,118 +1246,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
       )}
 
       {discover2Layout ? (
-        <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
-          <header className={artist2Styles.artist2Intro}>
-            <div className={artist2Styles.headingSlot}>
-              <h1>Human made music &amp; SFX for film.</h1>
-            </div>
-            <div className={artist2Styles.introMeta}>
-              <p>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
-            </div>
-          </header>
-        </div>
-      ) : null}
-
-      {discover2Layout ? (
-        <div className="discover2-hero-shelf audioflume-home-reference-shelf group/home-reference-shelf">
-          <div className="discover2-hero-scroller audioflume-home-reference-shelf-scroller" ref={discover2HeroScrollerRef}>
-            {featuredArtistsLoading ? (
-              <section className="discover-artist-hero discover2-hero-card is-loading" aria-hidden="true" style={heroStyle}>
-                <div className="discover-artist-hero-inner">
-                  <div className="discover-artist-hero-feature discover-artist-hero-skeleton">
-                    <span className="discover-artist-hero-skeleton-block is-eyebrow" />
-                    <span className="discover-artist-hero-skeleton-block is-title" />
-                  </div>
-                </div>
-              </section>
-            ) : featuredArtists.map((artist, index) => {
-              const genres = Array.from(new Set(artist.songs.flatMap((song) =>
-                Array.isArray(song.genres) ? song.genres.filter(Boolean) : [],
-              ))).slice(0, 3);
-              const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
-              const activeSong = Boolean(isPlaying && currentSong && playable.some((song) => song.id === currentSong.id));
-              const previewOpen = heroPreviewArtistId === artist.id;
-              return (
-                <section
-                  className={`discover-artist-hero discover2-hero-card${index === 0 ? " is-shelf-primary" : ""}${previewOpen ? " is-preview-open" : ""}`}
-                  key={artist.id}
-                  aria-label={`Featured artist ${artist.name}`}
-                  style={{
-                    "--discover-artist-hero-image": artist.hero_image_url
-                      ? `url("${artist.hero_image_url.replaceAll('"', '\\\"')}")`
-                      : "linear-gradient(var(--bg-tertiary), var(--bg-tertiary))",
-                    "--discover-artist-hero-position": `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
-                  } as CSSProperties}
-                >
-                  {!previewOpen ? <div className="discover-artist-hero-inner">
-                    <img className="discover2-hero-founding-mark" src="/founding-artist-mark.svg" alt="Founding Artist" />
-                    <div className="discover-artist-hero-feature">
-                      <div className="discover-artist-hero-identity">
-                        <span className="discover-artist-hero-eyebrow">Featured Artist</span>
-                        <h1>{artist.name}</h1>
-                        {artist.designation ? <span className="discover2-hero-artist-designation">{artist.designation}</span> : null}
-                        <div className="discover-artist-hero-genres">
-                          {genres.length ? genres.map((genre) => <span key={genre}>{genre}</span>) : (
-                            <>
-                              <span className="is-placeholder" aria-hidden="true" />
-                              <span className="is-placeholder" aria-hidden="true" />
-                              <span className="is-placeholder" aria-hidden="true" />
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <div className="discover-artist-hero-detail">
-                        <p>{artist.intro_text || ""}</p>
-                        <div className="discover-artist-hero-actions">
-                          <button
-                            type="button"
-                            className="discover-artist-hero-listen"
-                            disabled={!playable.length}
-                            aria-label={`Preview music by ${artist.name}`}
-                            onClick={() => {
-                              window.dispatchEvent(new Event("audioflume:discover2-preview-open"));
-                              setHeroPreviewArtistId(artist.id);
-                            }}
-                          >
-                            <PlayBadge isPlaying={activeSong} hoverList />
-                            <span>Listen now</span>
-                          </button>
-                          <Link href={`/artists/${artist.slug}`}>View license catalogue</Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div> : (
-                    <CardMiniPlayer
-                      wideHero
-                      artistName={artist.name}
-                      trackCount={playable.length}
-                      songs={playable}
-                      currentSongId={currentSong?.id}
-                      isPlaying={isPlaying}
-                      onPlay={(song) => {
-                        setQueue(playable);
-                        togglePlayPause(song);
-                      }}
-                      onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
-                      onClose={() => setHeroPreviewArtistId(null)}
-                    />
-                  )}
-                </section>
-              );
-            })}
-          </div>
-          {featuredArtists.length > 0 ? (
-            <ShelfIndicatorNavigation
-              label="featured artists"
-              scrollerRef={discover2HeroScrollerRef}
-              itemCount={featuredArtists.length}
-              onPrev={() => moveDiscover2Hero("prev")}
-              onNext={() => moveDiscover2Hero("next")}
-              className="audioflume-home-reference-width"
-              progressScrollbar
-            />
-          ) : null}
-        </div>
+        <Discover2FeaturedHero featuredArtists={featuredArtists} featuredArtistsLoading={featuredArtistsLoading} heroStyle={heroStyle} />
       ) : (
       <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
