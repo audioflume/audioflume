@@ -1,7 +1,7 @@
 .shelf {
   --card-width: clamp(260px, 26.6vw, 620px);
   --lift: clamp(60px, 4.15vw, 92px);
-  --inset: clamp(20px, 1.65vw, 38px);
+  --inset: clamp(26px, 2.1vw, 48px);
   position: relative;
   width: 100vw;
   margin: calc(-1 * var(--lift)) 0 90px calc(50% - 50vw);
@@ -73,7 +73,7 @@
 .playlistTitle { margin: 20px 0 18px; max-width: 100%; font-size: clamp(24px, 1.65vw, 38px); line-height: 1.08; letter-spacing: -.045em; }
 .songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
 .songArt { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; aspect-ratio: 1; object-fit: cover; }
-.songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: calc(var(--inset) + 40px); display: flex; align-items: center; gap: 18px; }
+.songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: var(--inset); display: flex; align-items: center; gap: 18px; }
 .play { flex: 0 0 auto; display: grid; place-items: center; width: clamp(44px, 2.8vw, 64px); aspect-ratio: 1; border: 0; border-radius: 50%; background: #fff; color: #111; cursor: pointer; padding: 0; }
 .songCopy { min-width: 0; display: grid; gap: 4px; font-size: 15px; }
 .songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
