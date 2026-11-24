@@ -73,6 +73,7 @@
 .playlistTitle { margin: 20px 0 18px; max-width: 100%; font-size: clamp(24px, 1.65vw, 38px); line-height: 1.08; letter-spacing: -.045em; }
 .songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
 .songArt { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; aspect-ratio: 1; object-fit: cover; }
+.songWaveform { position: absolute; top: calc(50% + var(--card-width) / 4 + 4px); left: 25%; width: 50%; height: clamp(10px, 1vw, 20px); display: block; color: rgba(255,255,255,.75); pointer-events: none; }
 .songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: var(--inset); display: flex; align-items: center; gap: 18px; }
 .play { flex: 0 0 auto; display: grid; place-items: center; width: clamp(44px, 2.8vw, 64px); aspect-ratio: 1; border: 0; border-radius: 50%; background: #fff; color: #111; cursor: pointer; padding: 0; }
 .songCopy { min-width: 0; display: grid; gap: 4px; font-size: 15px; }
