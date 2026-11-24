@@ -2149,8 +2149,15 @@
 }
 
 .discover-page-root.is-discover2 .discover2-song-section {
-  margin-top: 125px;
   margin-bottom: 90px;
+}
+
+.discover-page-root.is-discover2 .discover2-song-section:not(.is-before-playlists) {
+  margin-top: 168px;
+}
+
+.discover-page-root.is-discover2 .discover2-song-section.is-before-playlists {
+  margin-top: 125px;
 }
 
 .discover-page-root.is-discover2 .discover2-song-section.is-before-playlists {
@@ -2166,7 +2173,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-song-intro {
-  margin: 0 auto 160px;
+  margin: 0 auto 168px;
   max-width: 850px;
   color: var(--text-primary);
   font-size: 36px;
