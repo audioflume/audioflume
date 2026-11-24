@@ -164,7 +164,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
             return (
               <article className={styles.item} key={"playlist-" + playlist.id + "-" + index}>
                 <Link className={styles.card} href={"/curated-playlists/" + playlist.id}>
-                  <span className={styles.playlistTop}>Discover</span>
+                  <span className={styles.playlistTop}>Playlists</span>
                   <div className={styles.playlistBottom}>
                     <div className={styles.circles}>{playlist.songs.filter((song) => song.coverArt).slice(0, 3).map((song, index) => <img key={index} src={song.coverArt || ""} alt="" />)}</div>
                     <span className={styles.playlistLabel}><svg width={18} height={18} viewBox="59.9 2.59 21.97 20.34" fill="currentColor" aria-hidden="true">
