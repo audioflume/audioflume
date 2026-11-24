@@ -60,7 +60,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
       <Discover2MixedCarousel songs={songs} />
       </>
       ) : null}
-      {loading ? (
+      {beforePlaylists ? (loading ? (
         <div className="discover2-song-grid" aria-label="Loading tracks">
           {Array.from({ length: 12 }, (_, index) => (
             <div className="discover2-compact-song" key={index} aria-hidden="true">
@@ -75,7 +75,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
             <Discover2CompactSong key={song.id} song={song} queue={recentSongs} />
           ))}
         </div>
-      )}
+      )) : null}
     </section>
   );
 }
