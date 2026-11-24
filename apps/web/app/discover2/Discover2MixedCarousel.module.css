@@ -10,6 +10,8 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
   padding: 0 max(16px, calc((100vw - var(--card-width)) / 2)) 0;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
@@ -78,9 +80,6 @@
 .songCopy { min-width: 0; display: grid; gap: 4px; font-size: 15px; }
 .songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .songCopy span:last-child { font-size: 13px; }
-.controls { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
-.controls button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid color-mix(in srgb,currentColor 18%,transparent); border-radius: 50%; background: transparent; color: var(--text-primary); cursor: pointer; }
-.controls button:disabled { opacity: .3; cursor: default; }
 @media (hover: none) {
   .item { padding-top: 0; padding-bottom: var(--lift); }
   .caption { opacity: 1; transform: none; }
