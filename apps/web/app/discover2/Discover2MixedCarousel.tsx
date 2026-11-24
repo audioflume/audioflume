@@ -82,7 +82,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
     if (loading || initialized.current || !scroller.current || items.length < 3) return;
     const element = scroller.current;
     const card = element.children[2] as HTMLElement;
-    element.scrollLeft = card.offsetLeft - element.offsetLeft - (element.clientWidth - card.offsetWidth) / 2;
+    element.scrollLeft = card.getBoundingClientRect().left - element.getBoundingClientRect().left + element.scrollLeft - (element.clientWidth - card.offsetWidth) / 2;
     initialized.current = true;
   }, [loading, items.length]);
 
