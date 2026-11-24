@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
-import WaveformIcon from "@/components/icons/WaveformIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import styles from "./Discover2MixedCarousel.module.css";
@@ -116,7 +115,14 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
                   <span className={styles.playlistTop}>Discover</span>
                   <div className={styles.playlistBottom}>
                     <div className={styles.circles}>{playlist.songs.filter((song) => song.coverArt).slice(0, 3).map((song, index) => <img key={index} src={song.coverArt || ""} alt="" />)}</div>
-                    <span className={styles.playlistLabel}><WaveformIcon size={18} /> Discover</span>
+                    <span className={styles.playlistLabel}><svg width={18} height={18} viewBox="59.9 2.59 21.97 20.34" fill="currentColor" aria-hidden="true">
+                      <path d="M71.49,2.59h1.93v10.17h-1.93V2.59Z"/>
+                      <path d="M68.36,12.76h1.93v10.17h-1.93v-10.17Z"/>
+                      <path d="M65.22,6.61h1.93v6.15h-1.93v-6.15Z"/>
+                      <path d="M74.62,12.77h1.93v6.15h-1.93v-6.15Z"/>
+                      <path d="M77.75,9.37h1.93v3.39h-1.93v-3.39Z"/>
+                      <path d="M62.09,12.77h1.93v3.39h-1.93v-3.39Z"/>
+                    </svg> Discover</span>
                     <div className={styles.playlistTitle}>{playlist.name}</div>
                     <span className={styles.pill}>{playlist.song_count ?? playlist.songs.length} songs</span>
                   </div>
