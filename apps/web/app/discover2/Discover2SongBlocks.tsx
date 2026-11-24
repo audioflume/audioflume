@@ -7,6 +7,7 @@ import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import SongCard from "@/components/SongCard";
 import HomeSectionWithHeading from "../HomeSectionWithHeading";
 import type { Song } from "@/lib/types";
+import Discover2MixedCarousel from "./Discover2MixedCarousel";
 
 function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
@@ -54,7 +55,10 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
     <section className={`discover2-song-section${beforePlaylists ? " is-before-playlists" : ""}`} aria-label="Featured tracks">
       {beforePlaylists ? <h2 className="discover2-song-section-title">Tracks made for storytelling.</h2> : null}
       {!beforePlaylists ? (
+      <>
       <h2 className="discover2-song-intro">Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</h2>
+      <Discover2MixedCarousel songs={songs} />
+      </>
       ) : null}
       {loading ? (
         <div className="discover2-song-grid" aria-label="Loading tracks">
