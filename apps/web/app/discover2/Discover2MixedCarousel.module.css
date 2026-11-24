@@ -1,0 +1,91 @@
+.shelf {
+  --card-width: clamp(260px, 26.6vw, 620px);
+  --lift: clamp(60px, 4.15vw, 92px);
+  --inset: clamp(20px, 1.65vw, 38px);
+  position: relative;
+  width: 100vw;
+  margin: 0 0 90px calc(50% - 50vw);
+}
+.scroller {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 max(16px, calc((100vw - var(--card-width)) / 2)) 0;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar { display: none; }
+.item {
+  position: relative;
+  flex: 0 0 var(--card-width);
+  min-width: 0;
+  padding-top: var(--lift);
+  scroll-snap-align: center;
+}
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 510 / 604;
+  overflow: hidden;
+  color: #fff;
+  background: #131313;
+  text-decoration: none;
+  transition: transform 260ms cubic-bezier(.2,.7,.2,1);
+}
+.item:is(:hover, :focus-within) .card { transform: translateY(calc(-1 * var(--lift))); }
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  font-size: clamp(21px, 1.6vw, 36px);
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 200ms ease, transform 260ms ease;
+  pointer-events: none;
+}
+.caption span:last-child { color: light-dark(#c0c0c0, #777); }
+.item:is(:hover, :focus-within) .caption { opacity: 1; transform: none; }
+.artistImage, .songBackdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  inset: 0;
+}
+.artistImage { object-position: center; }
+.artistShade { position: absolute; inset: 0; background: linear-gradient(transparent 55%,rgba(0,0,0,.65)); }
+.mark { position: absolute; top: var(--inset); right: var(--inset); width: 116px; height: auto; }
+.pill { display: inline-flex; align-items: center; justify-content: center; background: #252525; color: white; border-radius: 99px; min-width: 124px; padding: 8px 14px; font-size: 11px; line-height: 1.15; }
+.artistName { position: absolute; bottom: var(--inset); left: var(--inset); }
+.arrow { position: absolute; bottom: var(--inset); right: var(--inset); opacity: .28; transition: opacity 180ms ease; }
+.item:is(:hover,:focus-within) .arrow { opacity: 1; }
+.playlistTop { position: absolute; top: var(--inset); left: var(--inset); font-size: 15px; }
+.playlistBottom { position: absolute; bottom: var(--inset); left: var(--inset); right: calc(var(--inset) + 34px); }
+.circles { display: flex; margin-bottom: 24px; }
+.circles img { width: clamp(38px, 2.7vw, 62px); aspect-ratio: 1; border-radius: 50%; object-fit: cover; }
+.circles img + img { margin-left: -9px; }
+.playlistLabel { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.playlistTitle { margin: 20px 0 18px; max-width: 100%; font-size: clamp(24px, 1.65vw, 38px); line-height: 1.08; letter-spacing: -.045em; }
+.songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
+.songArt { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; aspect-ratio: 1; object-fit: cover; }
+.songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: calc(var(--inset) + 40px); display: flex; align-items: center; gap: 18px; }
+.play { flex: 0 0 auto; display: grid; place-items: center; width: clamp(44px, 2.8vw, 64px); aspect-ratio: 1; border: 0; border-radius: 50%; background: #fff; color: #111; cursor: pointer; padding: 0; }
+.songCopy { min-width: 0; display: grid; gap: 4px; font-size: 15px; }
+.songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.songCopy span:last-child { font-size: 13px; }
+.controls { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+.controls button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid color-mix(in srgb,currentColor 18%,transparent); border-radius: 50%; background: transparent; color: var(--text-primary); cursor: pointer; }
+.controls button:disabled { opacity: .3; cursor: default; }
+@media (hover: none) {
+  .item { padding-top: 0; padding-bottom: var(--lift); }
+  .caption { opacity: 1; transform: none; }
+  .item:is(:hover,:focus-within) .card { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .caption, .arrow { transition: none; }
+}
