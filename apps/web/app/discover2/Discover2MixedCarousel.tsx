@@ -1,0 +1,159 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
+import WaveformIcon from "@/components/icons/WaveformIcon";
+import { usePlayer } from "@/context/PlayerContext";
+import type { Song } from "@/lib/types";
+import styles from "./Discover2MixedCarousel.module.css";
+
+type Artist = {
+  id: string;
+  name: string;
+  slug: string;
+  designation: string | null;
+  hero_image_url: string | null;
+  profile_image_url: string | null;
+  hero_image_position_x: number;
+  hero_image_position_y: number;
+};
+type Playlist = { id: number; name: string; song_count: number; songs: Song[] };
+type Item = { kind: "artist"; data: Artist } | { kind: "playlist"; data: Playlist } | { kind: "song"; data: Song };
+
+export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
+  const [artists, setArtists] = useState<Artist[]>([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const scroller = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const get = async (url: string) => {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error("Unable to load carousel content");
+      return response.json();
+    };
+    const artistRequest = get("/api/artists/directory").then((data) => {
+      if (!controller.signal.aborted && Array.isArray(data?.artists)) {
+        const available: Artist[] = data.artists.filter((artist: Artist) => artist.hero_image_url || artist.profile_image_url);
+        const judah = available.find((artist) => artist.name.toLowerCase() === "judah earl");
+        const others = available.filter((artist) => artist !== judah);
+        setArtists(judah ? [...others.slice(0, 1), judah, ...others.slice(1, 5)] : available.slice(0, 6));
+      }
+    });
+    const playlistRequest = get("/api/curated-playlists").then(async (data) => {
+      if (!Array.isArray(data)) return;
+      const preferred = data.find((playlist) => /emotive.*cinematic/i.test(playlist.name));
+      const selected = (preferred ? [preferred, ...data.filter((playlist) => playlist.id !== preferred.id)] : data).slice(0, 3);
+      const entries = await Promise.all(selected.map(async (playlist) => {
+        try {
+          const tracks = await get("/api/curated-playlists/" + encodeURIComponent(String(playlist.id)) + "/songs");
+          return { ...playlist, songs: Array.isArray(tracks) ? tracks : [] } as Playlist;
+        } catch { return null; }
+      }));
+      if (!controller.signal.aborted) setPlaylists(entries.filter((entry): entry is Playlist => entry !== null));
+    });
+    void Promise.allSettled([artistRequest, playlistRequest]).then(() => {
+      if (!controller.signal.aborted) setLoading(false);
+    });
+    return () => controller.abort();
+  }, []);
+
+  const playable = useMemo(() => {
+    const available = songs.filter((song) => song.audioUrl && song.coverArt);
+    const preferred = available.find((song) => song.title.toLowerCase() === "the final crossing");
+    return (preferred ? [preferred, ...available.filter((song) => song.id !== preferred.id)] : available).slice(0, 5);
+  }, [songs]);
+  const items = useMemo(() => {
+    const result: Item[] = [];
+    if (artists[0]) result.push({ kind: "artist", data: artists[0] });
+    for (let index = 0; index < Math.max(artists.length - 1, playlists.length, playable.length); index++) {
+      if (playlists[index]) result.push({ kind: "playlist", data: playlists[index] });
+      if (artists[index + 1]) result.push({ kind: "artist", data: artists[index + 1] });
+      if (playable[index]) result.push({ kind: "song", data: playable[index] });
+    }
+    return result;
+  }, [artists, playlists, playable]);
+
+  useEffect(() => {
+    if (loading || initialized.current || !scroller.current || items.length < 3) return;
+    const element = scroller.current;
+    const card = element.children[2] as HTMLElement;
+    element.scrollLeft = card.offsetLeft - element.offsetLeft - (element.clientWidth - card.offsetWidth) / 2;
+    initialized.current = true;
+  }, [loading, items.length]);
+
+  function move(direction: number) {
+    const element = scroller.current;
+    if (!element) return;
+    const card = element.firstElementChild;
+    element.scrollBy({ left: direction * ((card?.getBoundingClientRect().width ?? 300) + 10), behavior: "smooth" });
+  }
+
+  if (loading || !items.length) return null;
+  return (
+    <section className={styles.shelf} aria-label="Discover artists, songs and playlists">
+      <div className={styles.scroller} ref={scroller} tabIndex={0} aria-label="Scroll to explore">
+        {items.map((item) => {
+          const arrow = <span className={styles.arrow}><ArrowUpRightIcon size={30} strokeWidth={1.5} /></span>;
+          if (item.kind === "artist") {
+            const artist = item.data;
+            return (
+              <article className={styles.item} key={"artist-" + artist.id}>
+                <Link className={styles.card} href={"/artists/" + artist.slug}>
+                  <img className={styles.artistImage} src={artist.hero_image_url || artist.profile_image_url || ""} alt="" style={{ objectPosition: artist.hero_image_position_x + "% " + artist.hero_image_position_y + "%" }} />
+                  <span className={styles.artistShade} />
+                  {/founding/i.test(artist.designation || "") ? <img className={styles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
+                  <span className={styles.artistName}><span className={styles.pill}>{artist.name}</span></span>
+                  {arrow}
+                </Link>
+                <div className={styles.caption}><span>Explore</span><span>View Artist Page</span></div>
+              </article>
+            );
+          }
+          if (item.kind === "playlist") {
+            const playlist = item.data;
+            return (
+              <article className={styles.item} key={"playlist-" + playlist.id}>
+                <Link className={styles.card} href={"/curated-playlists/" + playlist.id}>
+                  <span className={styles.playlistTop}>Discover</span>
+                  <div className={styles.playlistBottom}>
+                    <div className={styles.circles}>{playlist.songs.filter((song) => song.coverArt).slice(0, 3).map((song, index) => <img key={index} src={song.coverArt || ""} alt="" />)}</div>
+                    <span className={styles.playlistLabel}><WaveformIcon size={18} /> Discover</span>
+                    <div className={styles.playlistTitle}>{playlist.name}</div>
+                    <span className={styles.pill}>{playlist.song_count ?? playlist.songs.length} songs</span>
+                  </div>
+                  {arrow}
+                </Link>
+                <div className={styles.caption}><span>Discover</span><span>Explore Playlist</span></div>
+              </article>
+            );
+          }
+          const song = item.data;
+          const playing = currentSong?.id === song.id && isPlaying;
+          return (
+            <article className={styles.item} key={"song-" + song.id}>
+              <div className={styles.card}>
+                <img className={styles.songBackdrop} src={song.coverArt || ""} alt="" />
+                <img className={styles.songArt} src={song.coverArt || ""} alt="" />
+                <div className={styles.songInfo}>
+                  <button className={styles.play} type="button" aria-label={(playing ? "Pause " : "Play ") + song.title} onClick={() => { setQueue(playable); togglePlayPause(song); }}><PlaybackStateIcon playing={playing} size={17} /></button>
+                  <span className={styles.songCopy}><span>{song.title}</span><span>{song.artist}</span></span>
+                </div>
+              </div>
+              <div className={styles.caption}><span>Listen</span><span>{song.title}</span></div>
+            </article>
+          );
+        })}
+      </div>
+      <div className={styles.controls}>
+        <button type="button" onClick={() => move(-1)} aria-label="Previous card">←</button>
+        <button type="button" onClick={() => move(1)} aria-label="Next card">→</button>
+      </div>
+    </section>
+  );
+}
