@@ -78,24 +78,58 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
     return result;
   }, [artists, playlists, playable]);
 
+  const loopEnabled = items.length >= 5;
+  const loopItems = useMemo(() => loopEnabled ? [...items, ...items, ...items] : items, [items, loopEnabled]);
+
   useEffect(() => {
-    if (loading || initialized.current || !scroller.current || items.length < 3) return;
+    if (loading || !scroller.current || !items.length) return;
     const element = scroller.current;
-    const card = element.children[2] as HTMLElement;
-    element.scrollLeft = card.getBoundingClientRect().left - element.getBoundingClientRect().left + element.scrollLeft - (element.clientWidth - card.offsetWidth) / 2;
+    const cycleWidth = () => {
+      const first = element.children[0];
+      const repeat = element.children[items.length];
+      return first && repeat ? repeat.getBoundingClientRect().left - first.getBoundingClientRect().left : 0;
+    };
+    const centerCard = (index: number) => {
+      const card = element.children[index] as HTMLElement | undefined;
+      if (!card) return;
+      element.scrollLeft += card.getBoundingClientRect().left - element.getBoundingClientRect().left - (element.clientWidth - card.offsetWidth) / 2;
+    };
+
+    if (loopEnabled) {
+      if (!initialized.current || element.scrollLeft < cycleWidth() / 2) {
+        centerCard(items.length + Math.min(2, items.length - 1));
+      }
+    } else if (!initialized.current) {
+      centerCard(Math.min(2, items.length - 1));
+    }
     initialized.current = true;
-  }, [loading, items.length]);
+
+    if (!loopEnabled) return;
+    const wrap = () => {
+      const width = cycleWidth();
+      if (!width || width <= element.clientWidth) return;
+      const left = element.scrollLeft;
+      const middle = left + element.clientWidth / 2;
+      if (middle < width) {
+        element.scrollLeft = left + width;
+      } else if (middle >= width * 2) {
+        element.scrollLeft = left - width;
+      }
+    };
+    element.addEventListener("scroll", wrap, { passive: true });
+    return () => element.removeEventListener("scroll", wrap);
+  }, [loading, items.length, loopEnabled]);
 
   if (loading || !items.length) return null;
   return (
     <section className={styles.shelf} aria-label="Discover artists, songs and playlists">
       <div className={styles.scroller} ref={scroller} tabIndex={0} aria-label="Scroll to explore">
-        {items.map((item) => {
+        {loopItems.map((item, index) => {
           const arrow = <span className={styles.arrow}><ArrowUpRightIcon size={30} strokeWidth={1.5} /></span>;
           if (item.kind === "artist") {
             const artist = item.data;
             return (
-              <article className={styles.item} key={"artist-" + artist.id}>
+              <article className={styles.item} key={"artist-" + artist.id + "-" + index}>
                 <Link className={styles.card} href={"/artists/" + artist.slug}>
                   <img className={styles.artistImage} src={artist.hero_image_url || artist.profile_image_url || ""} alt="" style={{ objectPosition: artist.hero_image_position_x + "% " + artist.hero_image_position_y + "%" }} />
                   <span className={styles.artistShade} />
@@ -110,7 +144,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
           if (item.kind === "playlist") {
             const playlist = item.data;
             return (
-              <article className={styles.item} key={"playlist-" + playlist.id}>
+              <article className={styles.item} key={"playlist-" + playlist.id + "-" + index}>
                 <Link className={styles.card} href={"/curated-playlists/" + playlist.id}>
                   <span className={styles.playlistTop}>Discover</span>
                   <div className={styles.playlistBottom}>
@@ -135,7 +169,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
           const song = item.data;
           const playing = currentSong?.id === song.id && isPlaying;
           return (
-            <article className={styles.item} key={"song-" + song.id}>
+            <article className={styles.item} key={"song-" + song.id + "-" + index}>
               <div className={styles.card}>
                 <img className={styles.songBackdrop} src={song.coverArt || ""} alt="" />
                 <img className={styles.songArt} src={song.coverArt || ""} alt="" />
