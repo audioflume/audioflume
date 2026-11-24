@@ -64,12 +64,12 @@
 .artistName { position: absolute; bottom: var(--inset); left: var(--inset); }
 .arrow { position: absolute; bottom: var(--inset); right: var(--inset); opacity: .28; transition: opacity 180ms ease; }
 .item:is(:hover,:focus-within) .arrow { opacity: 1; }
-.playlistTop { position: absolute; top: var(--inset); left: var(--inset); font-size: 15px; }
+.playlistTop { position: absolute; top: var(--inset); left: var(--inset); font-size: 15px; font-weight: 300; }
 .playlistBottom { position: absolute; bottom: var(--inset); left: var(--inset); right: calc(var(--inset) + 34px); }
 .circles { display: flex; margin-bottom: 24px; }
 .circles img { width: clamp(38px, 2.7vw, 62px); aspect-ratio: 1; border-radius: 50%; object-fit: cover; }
 .circles img + img { margin-left: -9px; }
-.playlistLabel { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.playlistLabel { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 300; }
 .playlistTitle { margin: 20px 0 18px; max-width: 100%; font-size: clamp(24px, 1.65vw, 38px); line-height: 1.08; letter-spacing: -.045em; }
 .songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
 .songVisual { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; display: flex; flex-direction: column; gap: 20px; }
