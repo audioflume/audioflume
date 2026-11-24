@@ -70,7 +70,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
   }, [songs]);
   const waveformBars = useMemo(() => new Map(playable.map((song) => [
     song.id,
-    buildWaveformBars(parseWaveformPeaks(song.waveformPeaks), 160, { minBarHeight: 1, maxBarHeight: 24 }),
+    buildWaveformBars(parseWaveformPeaks(song.waveformPeaks), 160, { barWidth: 1, barGap: 0.6, minBarHeight: 1, maxBarHeight: 24 }),
   ])), [playable]);
   const items = useMemo(() => {
     const result: Item[] = [];
@@ -200,7 +200,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
                   {(waveformBars.get(song.id)?.length ?? 0) > 0 ? (
                     <svg className={styles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
                       {waveformBars.get(song.id)?.map((height, barIndex) => (
-                        <rect key={barIndex} x={barIndex * 2.5} y={(24 - height) / 2} width={1.5} height={height} />
+                        <rect key={barIndex} x={barIndex * 1.6} y={(24 - height) / 2} width={1} height={height} />
                       ))}
                     </svg>
                   ) : null}
