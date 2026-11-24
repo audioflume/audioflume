@@ -28,7 +28,7 @@ import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
-import { DiscoverArchivedSections } from "./discover/ShelvedDiscoverPage";
+import { DiscoverArchivedSections, ActiveDiscoverFeaturedHero } from "./discover/ShelvedDiscoverPage";
 import FeaturedArtistShelf, { type DiscoverFeatureCardArtist } from "@/components/discover/FeaturedArtistShelf";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
@@ -1486,6 +1486,7 @@ export default function HomePageContent({
           </div>
         </section> : null}
 
+      {showHero ? (
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
         {showHero ? (
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
@@ -1499,6 +1500,7 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon />
         ) : null}
       </section>
+      ) : <ActiveDiscoverFeaturedHero />}
         {!showHero ? (
           <div className="discover-artist-content">
             <FeaturedArtistShelf
@@ -1625,7 +1627,7 @@ export default function HomePageContent({
           </section>
           <div className="discover-artist-content">
             <DiscoverArchivedSections
-              sections="artistsOnly"
+              sections="watchingOnly"
               albumsTitle="Featured songs"
               activeDiscoverTypography
               watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
