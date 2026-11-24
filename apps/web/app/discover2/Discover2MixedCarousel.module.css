@@ -13,7 +13,6 @@
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   padding: 0;
-  scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
 .scroller::-webkit-scrollbar { display: none; }
@@ -22,7 +21,6 @@
   flex: 0 0 var(--card-width);
   min-width: 0;
   padding-top: var(--lift);
-  scroll-snap-align: center;
 }
 .card {
   position: relative;
