@@ -87,13 +87,6 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
     initialized.current = true;
   }, [loading, items.length]);
 
-  function move(direction: number) {
-    const element = scroller.current;
-    if (!element) return;
-    const card = element.firstElementChild;
-    element.scrollBy({ left: direction * ((card?.getBoundingClientRect().width ?? 300) + 10), behavior: "smooth" });
-  }
-
   if (loading || !items.length) return null;
   return (
     <section className={styles.shelf} aria-label="Discover artists, songs and playlists">
@@ -149,10 +142,6 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
             </article>
           );
         })}
-      </div>
-      <div className={styles.controls}>
-        <button type="button" onClick={() => move(-1)} aria-label="Previous card">←</button>
-        <button type="button" onClick={() => move(1)} aria-label="Next card">→</button>
       </div>
     </section>
   );
