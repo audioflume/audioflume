@@ -12,7 +12,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  padding: 0 max(16px, calc((100vw - var(--card-width)) / 2)) 0;
+  padding: 0;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
