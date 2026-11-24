@@ -99,7 +99,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
                 <Link className={styles.card} href={"/artists/" + artist.slug}>
                   <img className={styles.artistImage} src={artist.hero_image_url || artist.profile_image_url || ""} alt="" style={{ objectPosition: artist.hero_image_position_x + "% " + artist.hero_image_position_y + "%" }} />
                   <span className={styles.artistShade} />
-                  {/founding/i.test(artist.designation || "") ? <img className={styles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
+                  {(artist.name.trim().toLowerCase() === "judah earl" || /founding/i.test(artist.designation || "")) ? <img className={styles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
                   <span className={styles.artistName}><span className={styles.pill}>{artist.name}</span></span>
                   {arrow}
                 </Link>
