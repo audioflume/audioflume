@@ -195,14 +195,16 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
             <article className={styles.item} key={"song-" + song.id + "-" + index}>
               <div className={styles.card}>
                 <img className={styles.songBackdrop} src={song.coverArt || ""} alt="" />
-                <img className={styles.songArt} src={song.coverArt || ""} alt="" />
-                {(waveformBars.get(song.id)?.length ?? 0) > 0 ? (
-                  <svg className={styles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
-                    {waveformBars.get(song.id)?.map((height, barIndex) => (
-                      <rect key={barIndex} x={barIndex * 2.5} y={(24 - height) / 2} width={1.5} height={height} />
-                    ))}
-                  </svg>
-                ) : null}
+                <div className={styles.songVisual}>
+                  <img className={styles.songArt} src={song.coverArt || ""} alt="" />
+                  {(waveformBars.get(song.id)?.length ?? 0) > 0 ? (
+                    <svg className={styles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
+                      {waveformBars.get(song.id)?.map((height, barIndex) => (
+                        <rect key={barIndex} x={barIndex * 2.5} y={(24 - height) / 2} width={1.5} height={height} />
+                      ))}
+                    </svg>
+                  ) : null}
+                </div>
                 <div className={styles.songInfo}>
                   <button className={styles.play} type="button" aria-label={(playing ? "Pause " : "Play ") + song.title} onClick={() => { setQueue(playable); togglePlayPause(song); }}><PlaybackStateIcon playing={playing} size={17} /></button>
                   <span className={styles.songCopy}><span>{song.title}</span><span>{song.artist}</span></span>
