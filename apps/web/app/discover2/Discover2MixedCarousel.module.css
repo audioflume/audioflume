@@ -74,7 +74,7 @@
 .songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
 .songVisual { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; display: flex; flex-direction: column; gap: 20px; }
 .songArt { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
-.songWaveform { width: 100%; height: clamp(10px, 1vw, 20px); display: block; color: rgba(255,255,255,.75); pointer-events: none; }
+.songWaveform { width: 100%; height: clamp(10px, 1vw, 20px); display: block; color: rgba(255,255,255,.5); pointer-events: none; }
 .songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: var(--inset); display: flex; align-items: center; gap: 18px; }
 .play { flex: 0 0 auto; display: grid; place-items: center; width: clamp(44px, 2.8vw, 64px); aspect-ratio: 1; border: 0; border-radius: 50%; background: #fff; color: #111; cursor: pointer; padding: 0; }
 .songCopy { min-width: 0; display: grid; gap: 4px; font-size: 15px; }
