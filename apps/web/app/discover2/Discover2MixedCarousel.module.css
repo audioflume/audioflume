@@ -1,5 +1,5 @@
 .shelf {
-  --card-width: clamp(260px, 26.6vw, 620px);
+  --card-width: clamp(320px, max(26.6vw, calc(220px + 12.05vw)), 620px);
   --lift: clamp(60px, 4.15vw, 92px);
   --inset: clamp(26px, 2.1vw, 48px);
   position: relative;
