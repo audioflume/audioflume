@@ -6,6 +6,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
+import { buildWaveformBars, parseWaveformPeaks } from "@filmwave/shared";
 import styles from "./Discover2MixedCarousel.module.css";
 
 type Artist = {
@@ -67,6 +68,10 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
     const preferred = available.find((song) => song.title.toLowerCase() === "the final crossing");
     return (preferred ? [preferred, ...available.filter((song) => song.id !== preferred.id)] : available).slice(0, 5);
   }, [songs]);
+  const waveformBars = useMemo(() => new Map(playable.map((song) => [
+    song.id,
+    buildWaveformBars(parseWaveformPeaks(song.waveformPeaks), 160, { minBarHeight: 1, maxBarHeight: 24 }),
+  ])), [playable]);
   const items = useMemo(() => {
     const result: Item[] = [];
     if (artists[0]) result.push({ kind: "artist", data: artists[0] });
@@ -191,6 +196,13 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
               <div className={styles.card}>
                 <img className={styles.songBackdrop} src={song.coverArt || ""} alt="" />
                 <img className={styles.songArt} src={song.coverArt || ""} alt="" />
+                {(waveformBars.get(song.id)?.length ?? 0) > 0 ? (
+                  <svg className={styles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
+                    {waveformBars.get(song.id)?.map((height, barIndex) => (
+                      <rect key={barIndex} x={barIndex * 2.5} y={(24 - height) / 2} width={1.5} height={height} />
+                    ))}
+                  </svg>
+                ) : null}
                 <div className={styles.songInfo}>
                   <button className={styles.play} type="button" aria-label={(playing ? "Pause " : "Play ") + song.title} onClick={() => { setQueue(playable); togglePlayPause(song); }}><PlaybackStateIcon playing={playing} size={17} /></button>
                   <span className={styles.songCopy}><span>{song.title}</span><span>{song.artist}</span></span>
