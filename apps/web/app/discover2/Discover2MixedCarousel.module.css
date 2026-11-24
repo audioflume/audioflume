@@ -4,7 +4,7 @@
   --inset: clamp(20px, 1.65vw, 38px);
   position: relative;
   width: 100vw;
-  margin: 0 0 90px calc(50% - 50vw);
+  margin: calc(-1 * var(--lift)) 0 90px calc(50% - 50vw);
 }
 .scroller {
   display: flex;
@@ -79,6 +79,7 @@
 .songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .songCopy span:last-child { font-size: 13px; }
 @media (hover: none) {
+  .shelf { margin-top: 0; }
   .item { padding-top: 0; padding-bottom: var(--lift); }
   .caption { opacity: 1; transform: none; }
   .item:is(:hover,:focus-within) .card { transform: none; }
