@@ -116,8 +116,26 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
         element.scrollLeft = left - width;
       }
     };
-    element.addEventListener("scroll", wrap, { passive: true });
-    return () => element.removeEventListener("scroll", wrap);
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+    const onScrollEnd = () => {
+      clearTimeout(settleTimer);
+      wrap();
+    };
+    const onScroll = () => {
+      clearTimeout(settleTimer);
+      // Preserve native trackpad momentum; normalize only after scrolling settles.
+      settleTimer = setTimeout(onScrollEnd, 180);
+    };
+    if ("onscrollend" in element) {
+      element.addEventListener("scrollend", onScrollEnd);
+    } else {
+      element.addEventListener("scroll", onScroll, { passive: true });
+    }
+    return () => {
+      clearTimeout(settleTimer);
+      element.removeEventListener("scrollend", onScrollEnd);
+      element.removeEventListener("scroll", onScroll);
+    };
   }, [loading, items.length, loopEnabled]);
 
   if (loading || !items.length) return null;
