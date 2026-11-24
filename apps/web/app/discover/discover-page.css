@@ -2039,8 +2039,7 @@
 .discover-page-root.is-discover2 .discover2-playlist-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 40px;
-  row-gap: 40px;
+  gap: clamp(12px, 2.6455vw, 40px);
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-item {
@@ -2279,9 +2278,6 @@
 }
 
 @media (max-width: 690px) {
-  .discover-page-root.is-discover2 .discover2-playlist-grid {
-    row-gap: 40px;
-  }
 }
 
 @media (max-width: 900px) {
