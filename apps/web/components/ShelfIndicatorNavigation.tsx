@@ -12,6 +12,7 @@ type Props = {
   disabled?: boolean;
   className?: string;
   progressScrollbar?: boolean;
+  loopItemCount?: number;
   onProgressPointerDown?: () => void;
   onProgressPointerUp?: () => void;
 };
@@ -25,6 +26,7 @@ export default function ShelfIndicatorNavigation({
   disabled = false,
   className = "",
   progressScrollbar = true,
+  loopItemCount,
   onProgressPointerDown,
   onProgressPointerUp,
 }: Props) {
@@ -35,12 +37,27 @@ export default function ShelfIndicatorNavigation({
     ratio: 0,
   });
 
+  function getLoopWidth(scroller: HTMLDivElement) {
+    if (!loopItemCount) return 0;
+    const first = scroller.children[0];
+    const repeat = scroller.children[loopItemCount];
+    const width = first && repeat ? repeat.getBoundingClientRect().left - first.getBoundingClientRect().left : 0;
+    return width > scroller.clientWidth ? width : 0;
+  }
+
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
     const update = () => {
       const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      const loopWidth = getLoopWidth(scroller);
+      if (loopWidth > 0) {
+        const center = scroller.scrollLeft + scroller.clientWidth / 2;
+        const ratio = ((center % loopWidth + loopWidth) % loopWidth) / loopWidth;
+        setPosition({ canPrev: true, canNext: true, current: Math.round(ratio * 3), ratio });
+        return;
+      }
       const current = maxScroll > 0
         ? Math.round((scroller.scrollLeft / maxScroll) * 3)
         : 0;
@@ -63,7 +80,7 @@ export default function ShelfIndicatorNavigation({
       window.removeEventListener("resize", update);
       observer.disconnect();
     };
-  }, [scrollerRef, itemCount]);
+  }, [scrollerRef, itemCount, loopItemCount]);
 
   function dragProgress(event: PointerEvent<HTMLDivElement>) {
     const scroller = scrollerRef.current;
@@ -74,6 +91,12 @@ export default function ShelfIndicatorNavigation({
     const bounds = track.getBoundingClientRect();
     const travel = Math.max(0, bounds.width - thumb.getBoundingClientRect().width);
     const position = Math.max(0, Math.min(travel, event.clientX - bounds.left - thumb.getBoundingClientRect().width / 2));
+    const loopWidth = getLoopWidth(scroller);
+    if (loopWidth > 0) {
+      const ratio = travel > 0 ? position / travel : 0;
+      scroller.scrollLeft = loopWidth + Math.min(loopWidth - 1, ratio * loopWidth) - scroller.clientWidth / 2;
+      return;
+    }
     scroller.scrollLeft = travel > 0
       ? (position / travel) * Math.max(0, scroller.scrollWidth - scroller.clientWidth)
       : 0;
@@ -125,6 +148,14 @@ export default function ShelfIndicatorNavigation({
             if (!scroller || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
             event.preventDefault();
             const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+            const loopWidth = getLoopWidth(scroller);
+            if (loopWidth > 0) {
+              if (event.key === "Home" || event.key === "End") {
+                scroller.scrollTo({ left: loopWidth + (event.key === "End" ? loopWidth - 1 : 0) - scroller.clientWidth / 2 });
+              } else if (event.key === "ArrowRight") onNext();
+              else onPrev();
+              return;
+            }
             if (event.key === "Home") scroller.scrollTo({ left: 0 });
             else if (event.key === "End") scroller.scrollTo({ left: maxScroll });
             else scroller.scrollBy({ left: (event.key === "ArrowRight" ? 1 : -1) * Math.max(60, scroller.clientWidth / 3) });
