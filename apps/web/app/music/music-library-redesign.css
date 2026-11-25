@@ -1358,7 +1358,6 @@ main
   justify-content: center;
   overflow: hidden;
   margin: 24px 0 18px;
-  border-radius: 15px;
   background: #e5e5dd;
 }
 
@@ -1666,7 +1665,7 @@ main
   height: 320px;
   min-height: 0;
   aspect-ratio: auto;
-  border-radius: 15px;
+  border-radius: 0;
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero-eyebrow {
