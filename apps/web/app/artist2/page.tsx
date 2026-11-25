@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { MusicLibraryEmptyState } from "@filmwave/shared";
 import Footer from "@/components/Footer";
@@ -12,7 +12,7 @@ import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
-import XIcon from "@/components/icons/XIcon";
+import CatalogueHeadingSearch from "@/components/CatalogueHeadingSearch";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import type { Song } from "@/lib/types";
 import "@/components/curated/curated-browse-filters.css";
@@ -162,17 +162,7 @@ export default function Artist2Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openArtistId, setOpenArtistId] = useState<string | null>(null);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const searchRef = useRef<HTMLInputElement>(null);
-
-  function closeHeadingSearch() {
-    setQuery("");
-    setSearchOpen(false);
-  }
-  useEffect(() => {
-    if (searchOpen) searchRef.current?.focus();
-  }, [searchOpen]);
   useEffect(() => {
     const controller = new AbortController();
 
@@ -216,56 +206,14 @@ export default function Artist2Page() {
         <GlobalSearchBar musicFieldStyle darkSimilarButton />
       </div>
       <div className={styles.content}>
-          <header className={styles.artist2Intro}>
-          <div className={styles.headingSlot}>
-          {searchOpen ? (
-            <div className={styles.headingSearchWrap}>
-              <span className={`${styles.headingSearchMeasure}${query ? ` ${styles.headingSearchMeasureHidden}` : ""}`} aria-hidden="true">
-                search by artist, genre, or keyword
-              </span>
-              <input
-                ref={searchRef}
-                className={styles.headingSearch}
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                onBlur={() => { if (!query.trim()) closeHeadingSearch(); }}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") {
-                    closeHeadingSearch();
-                  }
-                }}
-                aria-label="Search by artist, genre, or keyword"
-              />
-            </div>
-          ) : (
-            <h1>Discover the artists behind the sound.</h1>
-          )}
-          </div>
-          <div className={styles.introMeta}>
-            <button
-              type="button"
-              className={styles.searchLink}
-              onMouseDown={(event) => { if (searchOpen) event.preventDefault(); }}
-              onClick={() => {
-                if (searchOpen) closeHeadingSearch();
-                else setSearchOpen(true);
-              }}
-              aria-label={searchOpen ? "Close artist search" : "Search artists"}
-            >
-              {searchOpen ? (
-                <XIcon size={16} strokeWidth={1.4} />
-              ) : (
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="6.5" />
-                  <path d="m16 16 4.5 4.5" />
-                </svg>
-              )}
-              <span>Search</span>
-            </button>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-          </div>
-        </header>
+          <CatalogueHeadingSearch
+            title="Discover the artists behind the sound."
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore."
+            placeholder="search by artist, genre, or keyword"
+            searchLabel="Search artists"
+            query={query}
+            onQueryChange={setQuery}
+          />
         {loading ? (
           <div className={styles.grid} aria-label="Loading artists">
             {Array.from({ length: 9 }, (_, index) => (
