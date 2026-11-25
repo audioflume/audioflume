@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import FeaturedArtistCard from "@/components/discover/FeaturedArtistCard";
@@ -24,11 +25,13 @@ export default function FeaturedArtistShelf({
   loading = false,
   showHeading,
   matchBannerGenres = false,
+  shelf,
 }: {
   artists: DiscoverFeatureCardArtist[];
   loading?: boolean;
   showHeading?: boolean;
   matchBannerGenres?: boolean;
+  shelf?: ReactNode;
 }) {
   const headingVisible = showHeading ?? (loading || artists.length > 0);
 
@@ -50,7 +53,7 @@ export default function FeaturedArtistShelf({
         </div>
       ) : null}
 
-      <SlidingShelfShell label="featured artists" itemCount={loading ? 4 : artists.length} disabled={loading}>
+      {shelf ?? <SlidingShelfShell label="featured artists" itemCount={loading ? 4 : artists.length} disabled={loading}>
           {loading
             ? Array.from({ length: 4 }, (_, index) => (
                 <article
@@ -77,7 +80,7 @@ export default function FeaturedArtistShelf({
             : artists.map((artist) => (
                 <FeaturedArtistCard key={artist.id} artist={artist} matchBannerGenres={matchBannerGenres} />
               ))}
-      </SlidingShelfShell>
+      </SlidingShelfShell>}
     </section>
   );
 }
