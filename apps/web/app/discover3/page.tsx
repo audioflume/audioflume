@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import SongCard from "@/components/SongCard";
+import { MusicListShell } from "@filmwave/shared";
 import { useSongs } from "@/hooks/useSongs";
 import Discover2MixedCarousel from "../discover2/Discover2MixedCarousel";
 import Discover3ArtistShelves from "./Discover3ArtistShelves";
@@ -38,7 +39,7 @@ export default function Discover3Page() {
         <h2>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</h2>
         <Discover2MixedCarousel songs={songs} variant="discover3" />
       </section>
-      <section className={styles.newMusic} aria-label="Newly added music">
+      <section className={`${styles.newMusic} audioflume-home-reference-new-songs`} aria-label="Newly added music">
         <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
         <Link className="discover2-watching-heading-link" href="/music" aria-label="Explore new music">
           <span className="discover2-watching-heading-default" aria-hidden="true">Newly added music</span>
@@ -51,7 +52,13 @@ export default function Discover3Page() {
         </Link>
       </h2>
         <div className={styles.songRows}>
-          {loading ? <p className={styles.loading} role="status">Loading new music…</p> : recentSongs.map((song) => <SongCard key={song.id} song={song} showDivider={false} />)}
+          {loading ? <p className={styles.loading} role="status">Loading new music…</p> : (
+            <MusicListShell title={null}>
+              {recentSongs.map((song) => (
+                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
+              ))}
+            </MusicListShell>
+          )}
         </div>
       </section>
     </main>
