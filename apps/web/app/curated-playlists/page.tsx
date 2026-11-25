@@ -10,14 +10,11 @@ import CatalogueHeadingSearch from "@/components/CatalogueHeadingSearch";
 import styles from "../artist2/page.module.css";
 import { MusicLibraryEmptyState } from "@filmwave/shared";
 import type {
-  CuratedBrowseTag,
   CuratedPlaylist,
 } from "@/lib/curatedPlaylists";
 import type {
   CuratedBrowseAssignment,
-  CuratedBrowseTaxonomy,
 } from "@/lib/curatedBrowseTaxonomy";
-import CuratedFeatureFilters from "./CuratedFeatureFilters";
 import "../home-page.css";
 
 type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
@@ -48,14 +45,8 @@ function CuratedPlaylistsLoadingSkeleton() {
 
 export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
-  const [browseTaxonomy, setBrowseTaxonomy] =
-    useState<CuratedBrowseTaxonomy | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeBrowseFilter, setActiveBrowseFilter] =
-    useState<CuratedBrowseTag | null>(null);
-  const [activeBrowseSubcategoryId, setActiveBrowseSubcategoryId] =
-    useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -66,23 +57,12 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, taxonomyRes] = await Promise.all([
-          fetch("/api/curated-playlists"),
-          fetch("/api/curated-browse-taxonomy"),
-        ]);
+        const playlistRes = await fetch("/api/curated-playlists");
 
         const playlistData = await playlistRes.json();
-        const taxonomyData = (await taxonomyRes.json()) as CuratedBrowseTaxonomy & {
-          error?: string;
-        };
 
         if (!playlistRes.ok) {
           throw new Error(playlistData?.error || "Failed to load playlists");
-        }
-        if (!taxonomyRes.ok) {
-          throw new Error(
-            taxonomyData?.error || "Failed to load browse subcategories",
-          );
         }
 
         const visiblePlaylists: CuratedPlaylistWithBrowseAssignments[] =
@@ -92,7 +72,6 @@ export default function CuratedPlaylistsPage() {
 
         if (!cancelled) {
           setPlaylists(visiblePlaylists);
-          setBrowseTaxonomy(taxonomyData);
         }
       } catch (err) {
         if (!cancelled) {
@@ -116,7 +95,7 @@ export default function CuratedPlaylistsPage() {
 
   const visiblePlaylists = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-    let results = normalizedSearchQuery
+    const results = normalizedSearchQuery
       ? playlists.filter((playlist) =>
           [playlist.name, playlist.description, playlist.kicker].some((value) =>
             String(value || "")
@@ -126,28 +105,8 @@ export default function CuratedPlaylistsPage() {
         )
       : [...playlists];
 
-    if (activeBrowseFilter) {
-      results = results.filter((playlist) =>
-        playlist.browse_tags.includes(activeBrowseFilter),
-      );
-
-      if (activeBrowseSubcategoryId !== null) {
-        results = results.filter((playlist) =>
-          (playlist.browse_assignments ?? []).some(
-            (assignment) =>
-              assignment.browse_filter === activeBrowseFilter &&
-              assignment.subcategory_id === activeBrowseSubcategoryId,
-          ),
-        );
-      }
-
-      return results.sort((a, b) => a.position - b.position);
-    }
-
     return results.sort(sortNewestFirst);
   }, [
-    activeBrowseFilter,
-    activeBrowseSubcategoryId,
     playlists,
     searchQuery,
   ]);
@@ -168,21 +127,6 @@ export default function CuratedPlaylistsPage() {
           query={searchQuery}
           onQueryChange={setSearchQuery}
         />
-          {!loading && !error && playlists.length > 0 && (
-            <CuratedFeatureFilters
-              activeFilter={activeBrowseFilter}
-              activeSubcategoryId={activeBrowseSubcategoryId}
-              browseTaxonomy={browseTaxonomy}
-              onFilterChange={(filter) => {
-                setActiveBrowseFilter(filter);
-                setActiveBrowseSubcategoryId(null);
-              }}
-              onSubcategoryChange={setActiveBrowseSubcategoryId}
-              showSearch={false}
-              showDescription={false}
-            />
-          )}
-
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
           {!loading && error && (
@@ -207,11 +151,11 @@ export default function CuratedPlaylistsPage() {
           {!loading &&
             !error &&
             playlists.length > 0 &&
-            (activeBrowseFilter || hasActiveSearch) &&
+            hasActiveSearch &&
             visiblePlaylists.length === 0 && (
               <MusicLibraryEmptyState
                 title="No playlists found"
-                description={hasActiveSearch ? "Search for something different." : "No playlists are assigned to this filter yet."}
+                description="Search for something different."
               />
             )}
 
