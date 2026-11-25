@@ -1613,7 +1613,7 @@ export default function Header() {
                 </svg>
               ) : (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 7H20M4 12H20M4 17H20" />
+                  <path d="M1 9H23M1 15H23" strokeLinecap="butt" />
                 </svg>
               )}
             </button>
