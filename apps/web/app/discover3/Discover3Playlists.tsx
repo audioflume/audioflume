@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import styles from "./Discover3.module.css";
 
-export default function Discover3Playlists({ source, showHeading = true }: { source?: { playlists: CuratedPlaylist[]; loading: boolean }; showHeading?: boolean } = {}) {
+export default function Discover3Playlists({ source, showHeading = true, circleArrows = false }: { source?: { playlists: CuratedPlaylist[]; loading: boolean }; showHeading?: boolean; circleArrows?: boolean } = {}) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [fetchedPlaylists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [fetchLoading, setLoading] = useState(true);
@@ -15,6 +17,9 @@ export default function Discover3Playlists({ source, showHeading = true }: { sou
   const loading = source?.loading ?? fetchLoading;
   const hasSource = source !== undefined;
   const [error, setError] = useState(false);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
 
   useEffect(() => {
     if (hasSource) return;
@@ -38,9 +43,36 @@ export default function Discover3Playlists({ source, showHeading = true }: { sou
     return () => controller.abort();
   }, [hasSource]);
 
+  useEffect(() => {
+    if (!circleArrows || loading || error) return;
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const image = scroller.querySelector<HTMLElement>("[data-curated-playlist-image]");
+    const update = () => {
+      setCanScrollPrev(scroller.scrollLeft > 4);
+      setCanScrollNext(scroller.scrollLeft < scroller.scrollWidth - scroller.clientWidth - 4);
+      setImageCenterY(image ? image.getBoundingClientRect().height / 2 : null);
+    };
+    update();
+    scroller.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    const observer = new ResizeObserver(update);
+    observer.observe(scroller);
+    if (image) observer.observe(image);
+    return () => {
+      scroller.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      observer.disconnect();
+    };
+  }, [circleArrows, loading, error, playlists.length]);
+
   function moveShelf(direction: number) {
     const scroller = scrollerRef.current;
     if (!scroller) return;
+    if (circleArrows) {
+      scroller.scrollBy({ left: direction * Math.max(scroller.clientWidth * 0.78, 360), behavior: "smooth" });
+      return;
+    }
     const first = scroller.children[0];
     const second = scroller.children[1];
     if (!first || !second) return;
@@ -66,13 +98,37 @@ export default function Discover3Playlists({ source, showHeading = true }: { sou
           <p className={styles.loading} role="status">{loading ? "Loading playlists…" : "Unable to load curated playlists."}</p>
         </div>
       ) : (
-        <div className={styles.playlistShelf}>
+        <div className={`${styles.playlistShelf}${circleArrows ? " group/discover-shelf" : ""}`}>
+          {circleArrows && imageCenterY !== null ? (
+            <>
+              <button
+                type="button"
+                onClick={() => moveShelf(-1)}
+                disabled={!canScrollPrev}
+                className="absolute left-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/discover-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                style={{ top: imageCenterY }}
+                aria-label="Scroll curated playlists left"
+              >
+                <ChevronLeftIcon size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={() => moveShelf(1)}
+                disabled={!canScrollNext}
+                className="absolute right-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/discover-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                style={{ top: imageCenterY }}
+                aria-label="Scroll curated playlists right"
+              >
+                <ChevronRightIcon size={18} />
+              </button>
+            </>
+          ) : null}
           <div className={`${styles.artistScroller} ${styles.playlistScroller}`} ref={scrollerRef} tabIndex={0} aria-label="Scroll through curated playlists">
             {playlists.map((playlist, index) => (
               <CuratedPlaylistCard key={playlist.id} playlist={playlist} index={index} variant="curatedPage" />
             ))}
           </div>
-          {playlists.length > 1 ? (
+          {!circleArrows && playlists.length > 1 ? (
             <div className={styles.shelfNavigation}>
               <ShelfIndicatorNavigation
                 label="curated playlists"
