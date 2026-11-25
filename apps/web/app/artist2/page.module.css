@@ -904,6 +904,10 @@
     width: 100%;
   }
 
+  .headingSearchMeasure {
+    text-align: center;
+  }
+
   .introMeta {
     flex-direction: column;
     gap: 12px;
