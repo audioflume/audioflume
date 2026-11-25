@@ -902,9 +902,11 @@
 @media (max-width: 690px) {
   .headingSearchWrap {
     width: 100%;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .headingSearchMeasure {
+    justify-self: stretch;
     text-align: center;
   }
 
