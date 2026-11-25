@@ -93,6 +93,7 @@ export default function Header() {
     pathname === "/" ||
     pathname === "/discover" ||
     pathname === "/discover2" ||
+    pathname === "/discover3" ||
     pathname === "/artist2" ||
     pathname === "/music" ||
     pathname === "/artists" ||
