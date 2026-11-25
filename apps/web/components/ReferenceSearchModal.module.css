@@ -139,8 +139,8 @@
   max-width: 620px;
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(32px, 4.2vw, 52px);
-  font-weight: 300;
+  font-size: 42px;
+  font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 0.96;
 }
@@ -420,9 +420,6 @@
     padding: 32px 22px 22px;
   }
 
-  .content h2 {
-    font-size: 36px;
-  }
 
   .field {
     height: 62px;
