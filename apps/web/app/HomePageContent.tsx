@@ -29,6 +29,9 @@ import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import { DiscoverArchivedSections, ActiveDiscoverFeaturedHero } from "./discover/ShelvedDiscoverPage";
+import Discover3ArtistShelves from "./discover3/Discover3ArtistShelves";
+import Discover3Playlists from "./discover3/Discover3Playlists";
+import discover3Styles from "./discover3/Discover3.module.css";
 import FeaturedArtistShelf, { type DiscoverFeatureCardArtist } from "@/components/discover/FeaturedArtistShelf";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
@@ -1370,7 +1373,7 @@ export default function HomePageContent({
         if (!showHero) {
           const allPlaylists: CuratedPlaylist[] = Array.isArray(data) ? data : [];
           const remaining = allPlaylists.filter((playlist) => !selectedPlaylists.some((selected) => selected.id === playlist.id));
-          setEditorialPlaylists([...selectedPlaylists, ...remaining].slice(0, 3));
+          setEditorialPlaylists([...selectedPlaylists, ...remaining.filter((playlist) => !playlist.discover_section)].slice(0, 9));
         }
       })
       .catch(() => {
@@ -1508,6 +1511,9 @@ export default function HomePageContent({
               loading={discoverFeatureCardArtistsLoading}
               matchBannerGenres
               showHeading
+              shelf={<div className={discover3Styles.activeDiscoverShelf}>
+                <Discover3ArtistShelves source={{ artists: discoverFeatureCardArtists, loading: discoverFeatureCardArtistsLoading }} />
+              </div>}
             />
             <DiscoverArchivedSections
               sections="featuredSongs"
@@ -1610,13 +1616,9 @@ export default function HomePageContent({
       {!showHero ? (
         <>
           <div className="discover-artist-content">
-            <DiscoverArchivedSections
-              sections="playlists"
-              featuredPlaylists={editorialPlaylists.map((playlist) => ({
-                name: playlist.name,
-                image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
-              }))}
-            />
+            <div className={`${discover3Styles.activeDiscoverShelf} ${discover3Styles.activeDiscoverPlaylistShelf}`}>
+              <Discover3Playlists source={{ playlists: editorialPlaylists, loading: curatedPlaylistsLoading }} showHeading={false} />
+            </div>
           </div>
           <section className="audioflume-home-mockup-artists is-discover-featured-artists is-discover-secondary-banner">
             {artistsLoading ? (
