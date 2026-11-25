@@ -186,8 +186,8 @@
 .loading { color: var(--text-muted); padding: 32px 0; }
 
 @media (max-width: 690px) {
-  .featured .artistCard { flex-basis: 320px; }
-  .watching .artistCard { flex-basis: 280px; }
+  .featured .artistCard { flex-basis: 800px; }
+  .watching .artistCard { flex-basis: 480px; }
   .sectionHeading { font-size: 48px; }
 }
 @media (prefers-reduced-motion: reduce) {
