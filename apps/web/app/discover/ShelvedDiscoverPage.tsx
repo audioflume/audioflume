@@ -970,7 +970,7 @@ export function ActiveDiscoverFeaturedHero() {
   return (
     <div className="discover-page-root is-discover2 is-embedded-featured-hero">
       <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
-          <header className={artist2Styles.artist2Intro}>
+          <header className={artist2Styles.artist2Intro} style={{ marginBottom: 22 }}>
             <div className={artist2Styles.headingSlot}>
               <h1>Human made music &amp; SFX for film.</h1>
             </div>
