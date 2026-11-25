@@ -214,7 +214,7 @@ export default function CardMiniPlayer({
               void handleDownloadSong();
             }}
           >
-            <DownloadIcon size={15} />
+            <DownloadIcon size={14.5} />
           </button>
         </div>
         <input
