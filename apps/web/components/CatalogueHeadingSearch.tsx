@@ -20,7 +20,7 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
     setSearchOpen(false);
   }
   useEffect(() => {
-    if (searchOpen) searchRef.current?.focus();
+    if (searchOpen) searchRef.current?.focus({ preventScroll: true });
   }, [searchOpen]);
 
   return (
