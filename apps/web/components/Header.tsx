@@ -1093,6 +1093,7 @@ export default function Header() {
 
         @media (max-width: 690px) {
           .filmwave-web-header.has-open-mobile-nav {
+            --audioflume-home-header-border: transparent;
             z-index: calc(var(--filmwave-z-header) + 3) !important;
           }
 
