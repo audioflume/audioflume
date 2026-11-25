@@ -106,7 +106,7 @@ export default function Header() {
     pathname === "/playlists" ||
     pathname?.startsWith("/playlists/")
   );
-  const homeChromeRoute = pathname === "/" || pathname === "/discover" || pathname === "/curated-playlists" || pathname === "/community-playlists" || pathname === "/artists" || pathname === "/pricing";
+  const homeChromeRoute = pathname === "/" || pathname === "/discover3" || pathname === "/curated-playlists" || pathname === "/community-playlists" || pathname === "/artists" || pathname === "/pricing";
   const transparentAtTop = pathname === "/founding-artists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
