@@ -181,7 +181,7 @@
   right: 26px;
   z-index: 3;
   display: block;
-  width: min(94px, 36%);
+  width: 100px;
   height: auto;
   pointer-events: none;
 }
