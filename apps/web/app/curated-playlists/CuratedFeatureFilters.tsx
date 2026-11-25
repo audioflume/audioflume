@@ -34,6 +34,8 @@ export default function CuratedFeatureFilters({
   searchValue = "",
   onSearchChange,
   onSearchSubmit,
+  showSearch = true,
+  showDescription = true,
 }: {
   activeFilter: CuratedBrowseTag | null;
   activeSubcategoryId: number | null;
@@ -43,6 +45,8 @@ export default function CuratedFeatureFilters({
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   onSearchSubmit?: () => void;
+  showSearch?: boolean;
+  showDescription?: boolean;
 }) {
   const appliedLinkedFilterRef = useRef(false);
   const [displayedSubcategories, setDisplayedSubcategories] = useState<
@@ -105,17 +109,17 @@ export default function CuratedFeatureFilters({
 
   return (
     <div className="discover-mood-browser curated-page-pill-browser">
-      <p className="discover-category-description">
+      {showDescription ? <p className="discover-category-description">
         A highly curated collection of playlists built around moods, genres,
         scenes, and production styles.
-      </p>
+      </p> : null}
 
       <div
         className="discover-mood-pill-list"
         role="group"
         aria-label="Curated playlist filters"
       >
-        <form
+        {showSearch ? <form
           className="curated-pill-search is-open"
           role="search"
           onSubmit={(event) => {
@@ -152,7 +156,7 @@ export default function CuratedFeatureFilters({
               </button>
             )}
           </div>
-        </form>
+        </form> : null}
 
         {mainFilters.map((filter) => {
           const isActive = activeFilter === filter.value;
