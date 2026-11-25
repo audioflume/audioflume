@@ -207,7 +207,7 @@ export default function Artist2Page() {
       </div>
       <div className={styles.content}>
           <CatalogueHeadingSearch
-            title="Discover the artists behind the sound."
+            title="Discover the artists behind the sounds."
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore."
             placeholder="search by artist, genre, or keyword"
             searchLabel="Search artists"
