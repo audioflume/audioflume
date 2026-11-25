@@ -2,12 +2,12 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  padding: 0;
+  padding: var(--web-appearance-padding, 0);
 }
 
 .appearanceOption {
   display: flex;
-  height: 30px;
+  height: var(--web-appearance-height, 30px);
   align-items: center;
   justify-content: center;
   border: 0;
@@ -74,4 +74,9 @@
 .appearanceOption:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
+}
+
+:global(.filmwave-mobile-account-menu) .appearanceOptions {
+  --web-appearance-padding: 0 20px;
+  --web-appearance-height: 44px;
 }
