@@ -234,29 +234,6 @@
   line-height: 1.12;
   letter-spacing: -.058em;
 }
-.cta p {
-  margin: 22px auto 30px;
-  max-width: 540px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-}
-.ctaLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 24px;
-  background: light-dark(#111, #fff);
-  color: light-dark(#fff, #111);
-  text-decoration: none;
-  font-size: 13px;
-  transition: opacity 180ms ease;
-}
-.ctaLink:is(:hover, :focus-visible) {
-  opacity: .75;
-}
 .footer {
   margin-inline: var(--discover3-gutter);
 }
