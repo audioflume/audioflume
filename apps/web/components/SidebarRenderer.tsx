@@ -25,7 +25,7 @@ export default function SidebarRenderer({
 }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
-  const isDiscoverPage = pathname === "/discover";
+  const isDiscoverPage = pathname === "/discover" || pathname === "/discover3";
   const [resolvedInitialCollapsed, setResolvedInitialCollapsed] =
     useState(initialCollapsed);
 
