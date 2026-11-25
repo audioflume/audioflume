@@ -1213,10 +1213,10 @@ export default function Header() {
 
           .filmwave-mobile-nav-link {
             display: flex;
-            min-height: 44px;
+            min-height: 30px;
             align-items: center;
             color: var(--filmwave-mobile-menu-link-color);
-            font-size: 21px;
+            font-size: 18px;
             font-weight: 400;
             text-decoration: none;
             transition: color 180ms ease;
