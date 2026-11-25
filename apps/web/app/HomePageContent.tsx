@@ -18,6 +18,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import SectionTitle from "@/components/SectionTitle";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
@@ -1617,6 +1618,11 @@ export default function HomePageContent({
         <>
           <div className="discover-artist-content">
             <div className={`${discover3Styles.activeDiscoverShelf} ${discover3Styles.activeDiscoverPlaylistShelf}`}>
+              <div className={`discover-artist-shelf-heading ${discover3Styles.activeDiscoverPlaylistHeading}`}>
+                <div className="min-w-0">
+                  <SectionTitle>Curated playlists</SectionTitle>
+                </div>
+              </div>
               <Discover3Playlists source={{ playlists: editorialPlaylists, loading: curatedPlaylistsLoading }} showHeading={false} />
             </div>
           </div>
