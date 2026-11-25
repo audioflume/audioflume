@@ -916,16 +916,16 @@
     padding-inline: min(28px, 1cqw);
   }
 
+}
+
+@media (max-width: 960px) {
   .introMeta {
     flex-direction: column;
     gap: 12px;
-    margin-top: var(--catalogue-intro-gap, 64px);
   }
 
   .searchLink {
-    position: absolute;
-    bottom: calc(100% + 12px);
-    left: 0;
+    position: static;
+    align-self: center;
   }
-
 }
