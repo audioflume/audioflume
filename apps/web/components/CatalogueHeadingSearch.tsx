@@ -26,8 +26,9 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
   return (
     <header className={styles.artist2Intro}>
           <div className={styles.headingSlot}>
-          {searchOpen ? (
-            <div className={styles.headingSearchWrap}>
+            <div className={styles.headingTransition} data-search-open={searchOpen}>
+              <h1 aria-hidden={searchOpen}>{title}</h1>
+              <div className={styles.headingSearchWrap} aria-hidden={!searchOpen}>
               <span className={`${styles.headingSearchMeasure}${query ? ` ${styles.headingSearchMeasureHidden}` : ""}`} aria-hidden="true">
                 {placeholder}
               </span>
@@ -35,6 +36,7 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
                 ref={searchRef}
                 className={styles.headingSearch}
                 type="search"
+                disabled={!searchOpen}
                 value={query}
                 onChange={(event) => onQueryChange(event.target.value)}
                 onKeyDown={(event) => {
@@ -44,10 +46,8 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
                 }}
                 aria-label={placeholder}
               />
+              </div>
             </div>
-          ) : (
-            <h1>{title}</h1>
-          )}
           </div>
           <div className={styles.introMeta}>
             <button
