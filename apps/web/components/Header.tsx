@@ -1347,14 +1347,17 @@ export default function Header() {
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
+            .filmwave-dropdown-item.filmwave-web-user-menu-new-project-button {
+            height: 44px;
+            min-height: 44px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
             .filmwave-web-user-menu-new-project-icon {
-            order: 1;
-            width: 20px;
-            height: 20px;
-            flex-basis: 20px;
-            border-radius: 0;
-            background: transparent;
-            color: currentColor;
+            width: 44px;
+            height: 44px;
+            flex-basis: 44px;
           }
 
           .filmwave-mobile-account-menu
