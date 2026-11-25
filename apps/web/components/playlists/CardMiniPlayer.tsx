@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import XIcon from "@/components/icons/XIcon";
-import DownloadIcon from "@/components/icons/DownloadIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
@@ -45,22 +44,6 @@ export default function CardMiniPlayer({
   const { currentTime, duration } = usePlayerProgress();
   const { repeatSongId, toggleRepeatSong } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
-  async function licenseSong(song: Song) {
-    try {
-      const response = await fetch(`/api/songs/${encodeURIComponent(song.id)}/download`, {
-        method: "POST",
-      });
-      const data = await response.json();
-      if (!response.ok || !data?.downloadUrl) {
-        console.error("Failed to prepare song download", data);
-        return;
-      }
-      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to download song", error);
-    }
-  }
-
   const [previewIndex, setPreviewIndex] = useState(0);
   const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
@@ -132,18 +115,6 @@ export default function CardMiniPlayer({
                     {wideHero ? <span className={styles.miniPlayerCompactArtist}>{previewSong.artist || artistName}</span> : null}
                     <span className={styles.miniPlayerCompactDuration}>{formatPreviewDuration(previewSong.duration)}</span>
                     {discoverPlaybackIcon ? <PlaybackStateIcon playing={Boolean(active && isPlaying)} size={12} /> : active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.miniPlayerCompactLicense}
-                    aria-label={`License ${previewSong.title}`}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      void licenseSong(previewSong);
-                    }}
-                  >
-                    <span>License</span>
-                    <DownloadIcon size={13} />
                   </button>
                 </div>
               );
