@@ -39,6 +39,10 @@
   margin-top: calc(clamp(46px, 3.6vw, 60px) + 20px);
   padding-bottom: 0;
 }
+.activeDiscoverPlaylistHeading {
+  margin-inline: var(--discover3-gutter);
+}
+
 
 .featured, .watching, .playlistShelf {
   position: relative;
