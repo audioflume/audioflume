@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import Footer from "@/components/Footer";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SongCard from "@/components/SongCard";
 import { MusicListShell } from "@filmwave/shared";
 import { useSongs } from "@/hooks/useSongs";
@@ -63,6 +65,16 @@ export default function Discover3Page() {
         </div>
       </section>
       <Discover3Playlists />
+      <section className={styles.cta} aria-label="Explore membership">
+        <h2>Find the right sound for your next story.</h2>
+        <p>Explore a growing collection of human-made music and sound effects for film.</p>
+        <Link href="/pricing" className={styles.ctaLink}>
+          Explore membership <ArrowUpRightIcon size={16} strokeWidth={1.5} />
+        </Link>
+      </section>
+      <div className={styles.footer}>
+        <Footer pageGutter={false} />
+      </div>
     </main>
   );
 }
