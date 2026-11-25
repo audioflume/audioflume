@@ -9,6 +9,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import { buildWaveformBars, parseWaveformPeaks } from "@filmwave/shared";
 import styles from "./Discover2MixedCarousel.module.css";
+import discover3Styles from "../discover3/Discover3MixedCarousel.module.css";
 
 type Artist = {
   id: string;
@@ -23,7 +24,8 @@ type Artist = {
 type Playlist = { id: number; name: string; song_count: number; songs: Song[] };
 type Item = { kind: "artist"; data: Artist } | { kind: "playlist"; data: Playlist } | { kind: "song"; data: Song };
 
-export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
+export default function Discover2MixedCarousel({ songs, variant = "discover2" }: { songs: Song[]; variant?: "discover2" | "discover3" }) {
+  const carouselStyles = variant === "discover3" ? discover3Styles : styles;
   const [artists, setArtists] = useState<Artist[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,34 +160,34 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
 
   if (loading || !items.length) return null;
   return (
-    <section className={styles.shelf} aria-label="Discover artists, songs and playlists">
-      <div className={styles.scroller} ref={scroller} tabIndex={0} aria-label="Scroll to explore">
+    <section className={carouselStyles.shelf} aria-label="Discover artists, songs and playlists">
+      <div className={carouselStyles.scroller} ref={scroller} tabIndex={0} aria-label="Scroll to explore">
         {loopItems.map((item, index) => {
-          const arrow = <span className={styles.arrow}><ArrowUpRightIcon size={30} strokeWidth={1.5} /></span>;
+          const arrow = <span className={carouselStyles.arrow}><ArrowUpRightIcon size={30} strokeWidth={1.5} /></span>;
           if (item.kind === "artist") {
             const artist = item.data;
             return (
-              <article className={styles.item} key={"artist-" + artist.id + "-" + index}>
-                <Link className={styles.card} href={"/artists/" + artist.slug}>
-                  <img className={styles.artistImage} src={artist.hero_image_url || artist.profile_image_url || ""} alt="" style={{ objectPosition: artist.hero_image_position_x + "% " + artist.hero_image_position_y + "%" }} />
-                  <span className={styles.artistShade} />
-                  {(artist.name.trim().toLowerCase() === "judah earl" || /founding/i.test(artist.designation || "")) ? <img className={styles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
-                  <span className={styles.artistName}><span className={styles.pill}>{artist.name}</span></span>
+              <article className={carouselStyles.item} key={"artist-" + artist.id + "-" + index}>
+                <Link className={carouselStyles.card} href={"/artists/" + artist.slug}>
+                  <img className={carouselStyles.artistImage} src={artist.hero_image_url || artist.profile_image_url || ""} alt="" style={{ objectPosition: artist.hero_image_position_x + "% " + artist.hero_image_position_y + "%" }} />
+                  <span className={carouselStyles.artistShade} />
+                  {(artist.name.trim().toLowerCase() === "judah earl" || /founding/i.test(artist.designation || "")) ? <img className={carouselStyles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
+                  <span className={carouselStyles.artistName}><span className={carouselStyles.pill}>{artist.name}</span></span>
                   {arrow}
                 </Link>
-                <div className={styles.caption}><span>Explore</span><span>View Artist Page</span></div>
+                <div className={carouselStyles.caption}><span>Explore</span><span>View Artist Page</span></div>
               </article>
             );
           }
           if (item.kind === "playlist") {
             const playlist = item.data;
             return (
-              <article className={styles.item} key={"playlist-" + playlist.id + "-" + index}>
-                <Link className={styles.card} href={"/curated-playlists/" + playlist.id}>
-                  <span className={styles.playlistTop}>Playlists</span>
-                  <div className={styles.playlistBottom}>
-                    <div className={styles.circles}>{playlist.songs.filter((song) => song.coverArt).slice(0, 3).map((song, index) => <img key={index} src={song.coverArt || ""} alt="" />)}</div>
-                    <span className={styles.playlistLabel}><svg width={18} height={18} viewBox="59.9 2.59 21.97 20.34" fill="currentColor" aria-hidden="true">
+              <article className={carouselStyles.item} key={"playlist-" + playlist.id + "-" + index}>
+                <Link className={carouselStyles.card} href={"/curated-playlists/" + playlist.id}>
+                  <span className={carouselStyles.playlistTop}>Playlists</span>
+                  <div className={carouselStyles.playlistBottom}>
+                    <div className={carouselStyles.circles}>{playlist.songs.filter((song) => song.coverArt).slice(0, 3).map((song, index) => <img key={index} src={song.coverArt || ""} alt="" />)}</div>
+                    <span className={carouselStyles.playlistLabel}><svg width={18} height={18} viewBox="59.9 2.59 21.97 20.34" fill="currentColor" aria-hidden="true">
                       <path d="M71.49,2.59h1.93v10.17h-1.93V2.59Z"/>
                       <path d="M68.36,12.76h1.93v10.17h-1.93v-10.17Z"/>
                       <path d="M65.22,6.61h1.93v6.15h-1.93v-6.15Z"/>
@@ -193,42 +195,42 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
                       <path d="M77.75,9.37h1.93v3.39h-1.93v-3.39Z"/>
                       <path d="M62.09,12.77h1.93v3.39h-1.93v-3.39Z"/>
                     </svg> Discover</span>
-                    <div className={styles.playlistTitle}>{playlist.name}</div>
-                    <span className={styles.pill}>{playlist.song_count ?? playlist.songs.length} songs</span>
+                    <div className={carouselStyles.playlistTitle}>{playlist.name}</div>
+                    <span className={carouselStyles.pill}>{playlist.song_count ?? playlist.songs.length} songs</span>
                   </div>
                   {arrow}
                 </Link>
-                <div className={styles.caption}><span>Discover</span><span>Explore Playlist</span></div>
+                <div className={carouselStyles.caption}><span>Discover</span><span>Explore Playlist</span></div>
               </article>
             );
           }
           const song = item.data;
           const playing = currentSong?.id === song.id && isPlaying;
           return (
-            <article className={styles.item} key={"song-" + song.id + "-" + index}>
-              <div className={styles.card}>
-                <img className={styles.songBackdrop} src={song.coverArt || ""} alt="" />
-                <div className={styles.songVisual}>
-                  <img className={styles.songArt} src={song.coverArt || ""} alt="" />
+            <article className={carouselStyles.item} key={"song-" + song.id + "-" + index}>
+              <div className={carouselStyles.card}>
+                <img className={carouselStyles.songBackdrop} src={song.coverArt || ""} alt="" />
+                <div className={carouselStyles.songVisual}>
+                  <img className={carouselStyles.songArt} src={song.coverArt || ""} alt="" />
                   {(waveformBars.get(song.id)?.length ?? 0) > 0 ? (
-                    <svg className={styles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
+                    <svg className={carouselStyles.songWaveform} viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">
                       {waveformBars.get(song.id)?.map((height, barIndex) => (
                         <rect key={barIndex} x={barIndex * 1.6} y={(24 - height) / 2} width={1} height={height} />
                       ))}
                     </svg>
                   ) : null}
                 </div>
-                <div className={styles.songInfo}>
-                  <button className={styles.play} type="button" aria-label={(playing ? "Pause " : "Play ") + song.title} onClick={() => { setQueue(playable); togglePlayPause(song); }}><PlaybackStateIcon playing={playing} size={17} /></button>
-                  <span className={styles.songCopy}><span>{song.title}</span><span>{song.artist}</span></span>
+                <div className={carouselStyles.songInfo}>
+                  <button className={carouselStyles.play} type="button" aria-label={(playing ? "Pause " : "Play ") + song.title} onClick={() => { setQueue(playable); togglePlayPause(song); }}><PlaybackStateIcon playing={playing} size={17} /></button>
+                  <span className={carouselStyles.songCopy}><span>{song.title}</span><span>{song.artist}</span></span>
                 </div>
               </div>
-              <div className={styles.caption}><span>Listen</span><span>{song.title}</span></div>
+              <div className={carouselStyles.caption}><span>Listen</span><span>{song.title}</span></div>
             </article>
           );
         })}
       </div>
-      <ShelfIndicatorNavigation
+      {variant === "discover2" ? <ShelfIndicatorNavigation
         label="discover cards"
         scrollerRef={scroller}
         itemCount={items.length}
@@ -239,7 +241,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
         progressScrollbar
         onProgressPointerDown={() => { scrollbarDragging.current = true; }}
         onProgressPointerUp={() => { scrollbarDragging.current = false; }}
-      />
+      /> : null}
     </section>
   );
 }
