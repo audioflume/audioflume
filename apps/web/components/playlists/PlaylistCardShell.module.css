@@ -10,7 +10,7 @@
   display: grid;
   width: 100%;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: var(--catalogue-card-image-radius, 0px);
   background: var(--bg-secondary);
 }
 
