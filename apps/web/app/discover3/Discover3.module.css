@@ -29,6 +29,17 @@
   color: light-dark(#aaa, #555);
 }
 
+.activeDiscoverShelf {
+  --discover3-gutter: var(--filmwave-page-gutter);
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding-bottom: 38px;
+}
+.activeDiscoverPlaylistShelf {
+  margin-top: calc(clamp(46px, 3.6vw, 60px) + 20px);
+  padding-bottom: 0;
+}
+
 .featured, .watching, .playlistShelf {
   position: relative;
   width: 100%;
