@@ -15,17 +15,20 @@ type Artist = {
   slug: string;
   designation: string | null;
   hero_image_url: string | null;
-  profile_image_url: string | null;
+  profile_image_url?: string | null;
   hero_image_position_x: number;
   hero_image_position_y: number;
   genres?: string[];
   songs: Song[];
 };
 
-export default function Discover3ArtistShelves({ featured = false }: { featured?: boolean }) {
+export default function Discover3ArtistShelves({ featured = false, source }: { featured?: boolean; source?: { artists: Artist[]; loading: boolean } }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [artists, setArtists] = useState<Artist[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [fetchedArtists, setArtists] = useState<Artist[]>([]);
+  const [fetchLoading, setLoading] = useState(true);
+  const artists = source?.artists ?? fetchedArtists;
+  const loading = source?.loading ?? fetchLoading;
+  const hasSource = source !== undefined;
   const [preview, setPreview] = useState<string | null>(null);
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
@@ -36,6 +39,7 @@ export default function Discover3ArtistShelves({ featured = false }: { featured?
   }, []);
 
   useEffect(() => {
+    if (hasSource) return;
     const controller = new AbortController();
     fetch(featured ? "/api/discover-featured-artists" : "/api/artists/directory", { signal: controller.signal })
       .then(async (response) => {
@@ -50,7 +54,7 @@ export default function Discover3ArtistShelves({ featured = false }: { featured?
       .catch(() => {})
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [featured]);
+  }, [featured, hasSource]);
 
   function moveShelf(direction: number) {
     const scroller = scrollerRef.current;
