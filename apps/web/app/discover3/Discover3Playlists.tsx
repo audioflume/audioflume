@@ -35,7 +35,7 @@ export default function Discover3Playlists() {
 
   return (
     <section aria-label="Curated playlists">
-      <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
+      <h2 className={`${styles.playlistHeading} discover3-heading-scope`}>
         <Link className="discover2-watching-heading-link" href="/curated-playlists" aria-label="Explore curated playlists">
           <span className="discover2-watching-heading-default" aria-hidden="true">Curated playlists made for the edit</span>
           <span className="discover2-watching-heading-hover" aria-hidden="true">
