@@ -763,7 +763,7 @@ export function DiscoverArchivedSections({
   );
 }
 
-export function Discover2FeaturedHero({ featuredArtists, featuredArtistsLoading, heroStyle }: { featuredArtists: DiscoverFeaturedArtist[]; featuredArtistsLoading: boolean; heroStyle: CSSProperties }) {
+export function Discover2FeaturedHero({ featuredArtists, featuredArtistsLoading, heroStyle, artistLabel = "Featured Artist" }: { featuredArtists: DiscoverFeaturedArtist[]; featuredArtistsLoading: boolean; heroStyle: CSSProperties; artistLabel?: string }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const discover2HeroScrollerRef = useRef<HTMLDivElement>(null);
   const [heroPreviewArtistId, setHeroPreviewArtistId] = useState<string | null>(null);
@@ -880,7 +880,7 @@ export function Discover2FeaturedHero({ featuredArtists, featuredArtistsLoading,
                     <img className="discover2-hero-founding-mark" src="/founding-artist-mark.svg" alt="Founding Artist" />
                     <div className="discover-artist-hero-feature">
                       <div className="discover-artist-hero-identity">
-                        <span className="discover-artist-hero-eyebrow">Featured Artist</span>
+                        <span className="discover-artist-hero-eyebrow">{artistLabel}</span>
                         <h1>{artist.name}</h1>
                         {artist.designation ? <span className="discover2-hero-artist-designation">{artist.designation}</span> : null}
                         <div className="discover-artist-hero-genres">
@@ -1246,7 +1246,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
       )}
 
       {discover2Layout ? (
-        <Discover2FeaturedHero featuredArtists={featuredArtists} featuredArtistsLoading={featuredArtistsLoading} heroStyle={heroStyle} />
+        <Discover2FeaturedHero featuredArtists={featuredArtists} featuredArtistsLoading={featuredArtistsLoading} heroStyle={heroStyle} artistLabel="Founding Artist" />
       ) : (
       <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
