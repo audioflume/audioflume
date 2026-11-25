@@ -407,7 +407,7 @@
     display: grid;
     width: 100%;
     min-width: 0;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
     gap: 6px;
     min-height: 0;
@@ -433,49 +433,6 @@
     color: inherit;
     text-align: left;
     cursor: pointer;
-  }
-
-  .miniPlayerCompactLicense {
-    display: inline-flex;
-    width: 28px;
-    height: 28px;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0;
-    border: 0;
-    background: #fff;
-    color: #111;
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: opacity 160ms ease;
-  }
-
-  .miniPlayerCompactLicense:is(:hover, :focus-visible) {
-    opacity: .8;
-  }
-
-  .miniPlayerCompactLicense > span {
-    display: none;
-  }
-
-  @container card-mini-player (min-width: 390px) {
-    .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
-      gap: 10px;
-    }
-
-    .miniPlayerCompactLicense {
-      width: auto;
-      padding: 0 10px;
-    }
-
-    .miniPlayerCompactLicense > span {
-      display: inline;
-    }
   }
 
   .miniPlayerCompactPlaceholder {
@@ -689,11 +646,6 @@
     height: clamp(120px, 12cqw, 192px);
   }
 
-  .miniPlayerWideHero .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder) {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: clamp(10px, 0.75cqw, 12px);
-  }
-
   .miniPlayerWideHero .miniPlayerCompactPlayTarget {
     grid-template-columns: clamp(26px, 2.375cqw, 38px) minmax(0, 1fr) minmax(0, .65fr) clamp(35px, 2.625cqw, 42px) 20px;
     gap: clamp(10px, 0.75cqw, 12px);
@@ -703,15 +655,6 @@
   .miniPlayerWideHero .miniPlayerCompactPlaceholder {
     grid-template-columns: clamp(26px, 2.375cqw, 38px) minmax(0, 1fr) clamp(35px, 2.625cqw, 42px) 20px;
     gap: clamp(10px, 0.75cqw, 12px);
-  }
-
-  .miniPlayerWideHero .miniPlayerCompactLicense {
-    width: auto;
-    padding: 0 10px;
-  }
-
-  .miniPlayerWideHero .miniPlayerCompactLicense > span {
-    display: inline;
   }
 
   .miniPlayerWideHero .miniPlayerCompactCover {
