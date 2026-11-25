@@ -1353,7 +1353,7 @@ main
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  height: clamp(220px, 23vw, 320px);
+  height: 320px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -1432,7 +1432,7 @@ main
 
 /* Reuse the homepage hero with the shorter historical Music-page frame. */
 .audioflume-music-page .audioflume-music-home-hero {
-  --audioflume-music-hero-padding: clamp(20px, 2.6vw, 40px);
+  --audioflume-music-hero-padding: 39px;
   --audioflume-music-banner-left-extension: var(--filmwave-page-gutter);
   --audioflume-music-banner-right-extension: var(--filmwave-page-gutter);
   --sliding-shelf-width: calc(100% + var(--audioflume-music-banner-left-extension) + var(--audioflume-music-banner-right-extension));
@@ -1598,8 +1598,8 @@ main
 
 .audioflume-music-page .audioflume-music-home-hero-mark {
   align-self: flex-end;
-  width: clamp(24px, 2.2vw, 34px);
-  height: clamp(24px, 2.2vw, 34px);
+  width: 33px;
+  height: 33px;
   color: #fff;
   transform: translate(4px, -4px);
 }
@@ -1617,7 +1617,7 @@ main
 .audioflume-music-page .audioflume-music-home-hero-credit {
   margin-left: auto;
   color: #fff;
-  font-size: clamp(10px, .75vw, 12px);
+  font-size: 11.34px;
   font-weight: 400;
   line-height: 1.3;
   white-space: nowrap;
@@ -1638,7 +1638,7 @@ main
   text-align: left;
   cursor: pointer;
   color: #fff;
-  font-size: clamp(14px, 1.2vw, 18px);
+  font-size: 18px;
   font-weight: 300;
   letter-spacing: -.035em;
   text-decoration: none;
@@ -1662,7 +1662,7 @@ main
   box-sizing: border-box;
   padding: var(--audioflume-music-hero-padding);
   width: 100%;
-  height: clamp(220px, 23vw, 320px);
+  height: 320px;
   min-height: 0;
   aspect-ratio: auto;
   border-radius: 0;
@@ -1671,7 +1671,7 @@ main
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero-eyebrow {
   position: relative;
   z-index: 4;
-  font-size: clamp(15px, 1.2vw, 21px);
+  font-size: 18px;
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero::before {
@@ -1699,18 +1699,6 @@ main
   border-radius: inherit;
   box-shadow: inset 0 0 0 1px light-dark(transparent, rgba(255,255,255,.08));
   pointer-events: none;
-}
-
-@media (max-width: 750px) {
-  .audioflume-music-page .audioflume-music-originals-summary {
-    height: 280px;
-  }
-
-  .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
-    height: 280px;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
 }
 
 .audioflume-music-page .audioflume-music-featured-songs {
