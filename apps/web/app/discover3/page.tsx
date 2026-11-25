@@ -22,14 +22,34 @@ export default function Discover3Page() {
         <p>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
       </header>
       <Discover3ArtistShelves featured />
-      <h2 className={styles.sectionHeading}><Link href="/artists">Artists we’re watching</Link></h2>
+      <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
+        <Link className="discover2-watching-heading-link" href="/artist2" aria-label="Explore artists">
+          <span className="discover2-watching-heading-default" aria-hidden="true">Artists we’re watching</span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">
+            Explore artists
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M4 21 19 5M4 5h15v15" />
+            </svg>
+          </span>
+        </Link>
+      </h2>
       <Discover3ArtistShelves />
       <section className={styles.collection} aria-label="Discover music, artists and playlists">
         <h2>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</h2>
         <Discover2MixedCarousel songs={songs} variant="discover3" />
       </section>
       <section className={styles.newMusic} aria-label="Newly added music">
-        <h2 className={styles.sectionHeading}><Link href="/music">Newly added music</Link></h2>
+        <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
+        <Link className="discover2-watching-heading-link" href="/music" aria-label="Explore new music">
+          <span className="discover2-watching-heading-default" aria-hidden="true">Newly added music</span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">
+            Explore new music
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M4 21 19 5M4 5h15v15" />
+            </svg>
+          </span>
+        </Link>
+      </h2>
         <div className={styles.songRows}>
           {loading ? <p className={styles.loading} role="status">Loading new music…</p> : recentSongs.map((song) => <SongCard key={song.id} song={song} showDivider={false} />)}
         </div>
