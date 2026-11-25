@@ -3,7 +3,8 @@
   --catalogue-intro-gap: 118px;
   --catalogue-intro-bottom: 32px;
   --catalogue-heading-font-size: 55px;
-  --catalogue-heading-height: 61.6px;
+  --catalogue-heading-height: auto;
+  --catalogue-heading-min-height: 61.6px;
   --curated-main-pill-hover-background: transparent;
   --curated-main-pill-active-background: transparent;
   --curated-main-pill-active-color: var(--text-primary);
@@ -736,12 +737,15 @@
 .headingSlot {
   display: flex;
   height: var(--catalogue-heading-height, clamp(42px, 4.1vw, 65px));
+  min-height: var(--catalogue-heading-min-height, 0px);
   align-items: center;
   justify-content: center;
 }
 
 .headingTransition {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   width: 100%;
   place-items: center;
   overflow: hidden;
@@ -755,6 +759,7 @@
 .headingTransition > h1,
 .headingTransition > .headingSearchWrap {
   grid-area: 1 / 1;
+  min-width: 0;
   transition: opacity 420ms ease-in-out, transform 420ms cubic-bezier(.76, 0, .24, 1);
 }
 
@@ -786,9 +791,10 @@
 .headingSearchWrap {
   display: inline-grid;
   position: relative;
-  max-width: none;
+  box-sizing: border-box;
+  max-width: 100%;
   padding-inline: 40px;
-  grid-template-columns: max-content;
+  grid-template-columns: minmax(0, max-content);
   margin: 0 auto;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: var(--catalogue-heading-font-size, clamp(34px, 3.65vw, 58px));
@@ -894,7 +900,17 @@
 
 @media (max-width: 690px) {
   .headingSearchWrap {
-    font-size: clamp(16px, 3vw, 28px);
+    font-size: clamp(20px, 4.5vw, 32px);
+    padding-inline: 8px;
+  }
+
+  .headingSearchMeasure {
+    padding-inline: 8px;
+    overflow: hidden;
+  }
+
+  .headingSearch {
+    padding-inline: 16px;
   }
 
   .introMeta {
@@ -904,8 +920,9 @@
   }
 
   .searchLink {
-    position: static;
-    align-self: flex-start;
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 0;
   }
 
 }
