@@ -77,6 +77,5 @@
 }
 
 :global(.filmwave-mobile-account-menu) .appearanceOptions {
-  --web-appearance-padding: 20px;
   --web-appearance-height: 44px;
 }

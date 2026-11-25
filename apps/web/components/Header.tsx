@@ -42,6 +42,26 @@ const PLAYLIST_PAGE_LINKS = [
   },
 ];
 
+const MOBILE_NAV_GROUPS = [
+  {
+    label: "Explore",
+    links: [
+      { href: "/discover", label: "Discover" },
+      { href: "/music", label: "Music" },
+      { href: "/artists", label: "Artists" },
+      { href: "/sound-fx", label: "Sound FX" },
+    ],
+  },
+  { label: "Playlists", links: PLAYLIST_PAGE_LINKS },
+  {
+    label: "Membership",
+    links: [
+      { href: "/pricing", label: "Pricing" },
+      { href: "mailto:hello@filmwave.io", label: "Need Enterprise?" },
+    ],
+  },
+];
+
 const PLAYLIST_QUICK_SECTIONS = [
   { title: "My Playlists", href: "/playlists" },
   { title: "Curated Playlists", href: "/curated-playlists" },
@@ -88,6 +108,12 @@ export default function Header() {
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileCommunityActive =
+    mobileNavOpen &&
+    (pathname === "/playlists/community" ||
+      (pathname === "/playlists" &&
+        new URLSearchParams(window.location.search).get("tab") === "community-playlists"));
+
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
   const useCombinedHeaderHeight = isBackendPage || (
     pathname === "/" ||
@@ -1116,6 +1142,11 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-panel {
+            --filmwave-mobile-menu-link-color: color-mix(
+              in srgb,
+              var(--text-primary) 60%,
+              var(--text-secondary)
+            );
             position: fixed;
             top: var(
               --filmwave-web-header-bottom,
@@ -1151,20 +1182,35 @@ export default function Header() {
               visibility 0s linear 0s;
           }
 
-          .filmwave-mobile-nav-panel a {
+          .filmwave-mobile-nav-content {
             display: flex;
-            min-height: 30px;
-            align-items: center;
-            border-bottom: var(--filmwave-border-width) solid var(--border);
-            padding: 0 20px;
-            color: inherit;
-            font-size: 18px;
-            font-weight: 400;
-            text-decoration: none;
+            flex-direction: column;
+            gap: 36px;
+            padding: 28px 32px 32px;
           }
 
-          .filmwave-mobile-nav-panel .filmwave-mobile-nav-secondary {
-            font-size: 18px;
+          .filmwave-mobile-nav-label {
+            margin: 0 0 14px;
+            color: color-mix(in srgb, var(--text-primary) 20%, var(--text-secondary));
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+          }
+
+          .filmwave-mobile-nav-link {
+            display: flex;
+            min-height: 44px;
+            align-items: center;
+            color: var(--filmwave-mobile-menu-link-color);
+            font-size: 21px;
+            font-weight: 400;
+            text-decoration: none;
+            transition: color 180ms ease;
+          }
+
+          .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]) {
+            color: var(--text-primary);
           }
 
           .filmwave-mobile-nav-account-trigger,
@@ -1219,10 +1265,13 @@ export default function Header() {
 
           .filmwave-mobile-account-menu
             .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
+            display: grid;
+            --filmwave-mobile-account-group-gap: 24px;
+            gap: var(--filmwave-mobile-account-group-gap);
             width: 100%;
             border: 0;
             background: var(--bg-primary);
-            padding: 0;
+            padding: 28px 32px var(--filmwave-mobile-account-group-gap);
             box-shadow: none;
           }
 
@@ -1230,7 +1279,7 @@ export default function Header() {
             .filmwave-web-user-menu
             > .filmwave-user-menu-profile-link {
             min-height: 0;
-            border-bottom: 1.25px solid var(--filmwave-menu-sep);
+            border-bottom: 0;
             padding: 0;
             font-size: inherit;
           }
@@ -1238,9 +1287,8 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-profile {
-            min-height: 84px;
             gap: 14px;
-            padding: 16px 20px;
+            padding: 0;
           }
 
           .filmwave-mobile-account-menu
@@ -1272,26 +1320,20 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-dropdown-item {
-            height: 60px;
-            min-height: 60px;
+            height: 44px;
+            min-height: 44px;
             border-bottom: 0;
-            padding-right: 20px;
-            padding-left: 20px;
-            font-size: 18px;
+            padding: 0;
+            color: var(--filmwave-mobile-menu-link-color);
+            font-size: 21px;
             font-weight: 400;
             line-height: normal;
+            transition: color 180ms ease;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu-new-project {
-            border-bottom: 1.25px solid var(--filmwave-menu-sep);
-          }
-
-          .filmwave-mobile-account-menu
-            .filmwave-web-user-menu
-            .filmwave-web-user-menu-new-project-button {
-            min-height: 72px;
-            padding: 0 20px;
+            border-bottom: 0;
           }
 
           .filmwave-mobile-account-menu
@@ -1304,23 +1346,20 @@ export default function Header() {
             .filmwave-web-user-menu
             .filmwave-user-menu-signout {
             border-top: 0;
-            border-bottom: 1.25px solid var(--filmwave-menu-sep);
-          }
-
-          .filmwave-mobile-account-menu
-            .filmwave-web-user-menu
-            .filmwave-user-menu-signout {
             border-bottom: 0;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
-            .filmwave-user-menu-theme-value {
-            font-size: 14px;
+            .filmwave-dropdown-item:is(:hover:not(:disabled), :focus-visible) {
+            background: transparent;
+            color: var(--text-primary);
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
-            margin: 20px;
+            display: flex;
+            align-items: center;
+            margin-top: 14px;
             min-height: 48px;
             justify-content: center;
             border: 0;
@@ -1328,6 +1367,7 @@ export default function Header() {
             color: var(--bg-primary);
             font-size: 13px;
             font-weight: 500;
+            text-decoration: none;
           }
         }
       `}</style>
@@ -1659,49 +1699,49 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <>
-              {TOP_NAV_LINKS.map((link) =>
-                link.href === "/playlists" ? (
-                  <div key={link.href} className="filmwave-mobile-playlists">
-                    <Link href="/curated-playlists" onClick={() => setMobileNavOpen(false)}>
-                      Playlists
-                    </Link>
-                    <div className="filmwave-mobile-playlists-links">
-                      {PLAYLIST_PAGE_LINKS.map((pageLink) => (
-                        <Link key={pageLink.href} href={pageLink.href} onClick={() => setMobileNavOpen(false)}>
-                          {pageLink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Link key={link.href} href={link.href} onClick={() => setMobileNavOpen(false)}>
-                    {link.label}
-                  </Link>
-                )
-              )}
+            <div className="filmwave-mobile-nav-content">
+              {MOBILE_NAV_GROUPS.map((group) => (
+                <section key={group.label} aria-label={group.label}>
+                  <h2 className="filmwave-mobile-nav-label">{group.label}</h2>
+                  {group.links.map((link) => {
+                    if (link.href.startsWith("mailto:")) {
+                      return (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          className="filmwave-mobile-nav-link"
+                          onClick={() => setMobileNavOpen(false)}
+                        >
+                          {link.label}
+                        </a>
+                      );
+                    }
 
-              <Link
-                href="/pricing"
-                className="filmwave-mobile-nav-secondary"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Pricing
-              </Link>
+                    const isActive = link.href === "/playlists?tab=community-playlists"
+                      ? mobileCommunityActive
+                      : (pathname === link.href || pathname?.startsWith(`${link.href}/`)) &&
+                        (link.href !== "/playlists" || !mobileCommunityActive);
 
-              <a
-                href="mailto:hello@filmwave.io"
-                className="filmwave-mobile-nav-secondary"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Need Enterprise?
-              </a>
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="filmwave-mobile-nav-link"
+                        aria-current={isActive ? "page" : undefined}
+                        onClick={() => setMobileNavOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
+                </section>
+              ))}
 
               {isLoaded && !user ? (
-                <>
+                <div>
                   <Link
                     href="/sign-in"
-                    className="filmwave-mobile-nav-secondary"
+                    className="filmwave-mobile-nav-link"
                     onClick={() => setMobileNavOpen(false)}
                   >
                     Login
@@ -1713,9 +1753,9 @@ export default function Header() {
                   >
                     Create Free Account
                   </Link>
-                </>
+                </div>
               ) : null}
-            </>
+            </div>
           )}
         </nav>
     </>
