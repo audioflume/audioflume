@@ -30,7 +30,6 @@
   overflow: hidden;
   color: #fff;
   background: #131313;
-  border-radius: 15px;
   text-decoration: none;
   transition: transform 260ms cubic-bezier(.2,.7,.2,1);
 }
