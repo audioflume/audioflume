@@ -1334,12 +1334,12 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-dropdown-item {
-            height: 44px;
-            min-height: 44px;
+            height: 30px;
+            min-height: 30px;
             border-bottom: 0;
             padding: 0;
             color: var(--filmwave-mobile-menu-link-color);
-            font-size: 21px;
+            font-size: 18px;
             font-weight: 400;
             line-height: normal;
             transition: color 180ms ease;
