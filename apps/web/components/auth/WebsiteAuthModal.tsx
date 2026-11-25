@@ -96,7 +96,7 @@ export default function WebsiteAuthModal({ provider }: { provider: "clerk" | "su
         </div>
         <div className={styles.imagePanel} aria-hidden="true">
           <div className={styles.imageCaption}>
-            <p className={styles.imageHeadline}>Human made music.<br />Story driven sound.</p>
+            <p className={styles.imageHeadline}>Human made music &amp; SFX for film.</p>
             <p>Find the sound that brings your story to life.</p>
           </div>
         </div>
