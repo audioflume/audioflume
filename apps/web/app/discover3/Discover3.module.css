@@ -92,7 +92,7 @@
   isolation: isolate;
 }
 @media (max-width: 690px) {
-  .playlistScroller {
+  .activeDiscoverShelf .playlistScroller {
     --filmwave-curated-shelf-card-width: calc(100% - 28px + var(--discover3-gutter));
   }
 }
