@@ -8,6 +8,7 @@ import { MusicListShell } from "@filmwave/shared";
 import { useSongs } from "@/hooks/useSongs";
 import Discover2MixedCarousel from "../discover2/Discover2MixedCarousel";
 import Discover3ArtistShelves from "./Discover3ArtistShelves";
+import Discover3Playlists from "./Discover3Playlists";
 import styles from "./Discover3.module.css";
 import "../home-page.css";
 
@@ -61,6 +62,7 @@ export default function Discover3Page() {
           )}
         </div>
       </section>
+      <Discover3Playlists />
     </main>
   );
 }
