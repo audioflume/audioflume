@@ -7,13 +7,17 @@ import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import styles from "./Discover3.module.css";
 
-export default function Discover3Playlists() {
+export default function Discover3Playlists({ source, showHeading = true }: { source?: { playlists: CuratedPlaylist[]; loading: boolean }; showHeading?: boolean } = {}) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [fetchedPlaylists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [fetchLoading, setLoading] = useState(true);
+  const playlists = source?.playlists ?? fetchedPlaylists;
+  const loading = source?.loading ?? fetchLoading;
+  const hasSource = source !== undefined;
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (hasSource) return;
     const controller = new AbortController();
     fetch("/api/curated-playlists", { signal: controller.signal })
       .then(async (response) => {
@@ -32,7 +36,7 @@ export default function Discover3Playlists() {
       .catch(() => { if (!controller.signal.aborted) setError(true); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, []);
+  }, [hasSource]);
 
   function moveShelf(direction: number) {
     const scroller = scrollerRef.current;
@@ -46,7 +50,7 @@ export default function Discover3Playlists() {
 
   return (
     <section aria-label="Curated playlists">
-      <h2 className={`${styles.playlistHeading} discover3-heading-scope`}>
+      {showHeading ? <h2 className={`${styles.playlistHeading} discover3-heading-scope`}>
         <Link className="discover2-watching-heading-link" href="/curated-playlists" aria-label="Explore curated playlists">
           <span className="discover2-watching-heading-default" aria-hidden="true">Curated playlists made for the edit</span>
           <span className="discover2-watching-heading-hover" aria-hidden="true">
@@ -56,7 +60,7 @@ export default function Discover3Playlists() {
             </svg>
           </span>
         </Link>
-      </h2>
+      </h2> : null}
       {loading || error ? (
         <div className={styles.songRows}>
           <p className={styles.loading} role="status">{loading ? "Loading playlists…" : "Unable to load curated playlists."}</p>
