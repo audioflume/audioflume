@@ -1,0 +1,60 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import styles from "./Discover3.module.css";
+import "../curated-playlists/curated-playlists.css";
+
+export default function Discover3Playlists() {
+  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/curated-playlists", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load curated playlists");
+        return response.json();
+      })
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        const available: CuratedPlaylist[] = Array.isArray(data) ? data.filter((playlist) => !playlist.discover_section) : [];
+        setPlaylists(available.sort((a, b) => {
+          const aTime = a.created_at ? Date.parse(a.created_at) : 0;
+          const bTime = b.created_at ? Date.parse(b.created_at) : 0;
+          return aTime !== bTime ? bTime - aTime : b.id - a.id;
+        }).slice(0, 9));
+      })
+      .catch(() => { if (!controller.signal.aborted) setError(true); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, []);
+
+  return (
+    <section aria-label="Curated playlists">
+      <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
+        <Link className="discover2-watching-heading-link" href="/curated-playlists" aria-label="Explore curated playlists">
+          <span className="discover2-watching-heading-default" aria-hidden="true">Curated playlists made for the edit</span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">
+            Explore curated playlists
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M4 21 19 5M4 5h15v15" />
+            </svg>
+          </span>
+        </Link>
+      </h2>
+      <div className={styles.songRows}>
+        {loading ? <p className={styles.loading} role="status">Loading playlists…</p> : error ? <p className={styles.loading} role="status">Unable to load curated playlists.</p> : (
+          <div className="curated-page-playlist-grid">
+            {playlists.map((playlist, index) => (
+              <CuratedPlaylistCard key={playlist.id} playlist={playlist} index={index} variant="curatedPage" />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
