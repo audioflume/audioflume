@@ -230,7 +230,19 @@ export default function Discover2MixedCarousel({ songs, variant = "discover2" }:
           );
         })}
       </div>
-      {variant === "discover2" ? <ShelfIndicatorNavigation
+      {variant === "discover3" ? <div className={discover3Styles.shelfNavigation}>
+        <ShelfIndicatorNavigation
+          label="discover cards"
+          scrollerRef={scroller}
+          itemCount={items.length}
+          loopItemCount={loopEnabled ? items.length : undefined}
+          onPrev={() => moveCarousel("prev")}
+          onNext={() => moveCarousel("next")}
+          progressScrollbar
+          onProgressPointerDown={() => { scrollbarDragging.current = true; }}
+          onProgressPointerUp={() => { scrollbarDragging.current = false; }}
+        />
+      </div> : <ShelfIndicatorNavigation
         label="discover cards"
         scrollerRef={scroller}
         itemCount={items.length}
@@ -241,7 +253,7 @@ export default function Discover2MixedCarousel({ songs, variant = "discover2" }:
         progressScrollbar
         onProgressPointerDown={() => { scrollbarDragging.current = true; }}
         onProgressPointerUp={() => { scrollbarDragging.current = false; }}
-      /> : null}
+      />}
     </section>
   );
 }
