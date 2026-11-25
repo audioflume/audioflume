@@ -27,6 +27,7 @@ import ShortenTrackModal from "@/components/ShortenTrackModal";
 import PremiumLabel from "@/components/PremiumLabel";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import SongLicenseModal from "@/components/SongLicenseModal";
 import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
@@ -106,6 +107,7 @@ export default function SongCard({
   const [stemsOpen, setStemsOpen] = useState(false);
   const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
   const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const [licenseOpen, setLicenseOpen] = useState(false);
   const [shortenTrackOpen, setShortenTrackOpen] = useState(false);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
@@ -187,23 +189,6 @@ export default function SongCard({
     setMoreOpen(false);
   }
 
-  async function handleDownloadSong() {
-    try {
-      const res = await fetch(`/api/songs/${encodeURIComponent(song.id)}/download`, {
-        method: "POST",
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data?.downloadUrl) {
-        console.error("Failed to prepare song download", data);
-        return;
-      }
-
-      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to download song", error);
-    }
-  }
 
   const coverArtUrl =
     typeof song.coverArt === "string" && song.coverArt.trim()
@@ -314,7 +299,7 @@ export default function SongCard({
             <button
               type="button"
               aria-label="License song"
-              onClick={handleDownloadSong}
+              onClick={() => setLicenseOpen(true)}
               className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-medium leading-none text-[var(--bg-primary)] transition hover:opacity-80"
             >
               <span>License</span>
@@ -323,6 +308,8 @@ export default function SongCard({
           </>
         }
       />
+
+      {licenseOpen && <SongLicenseModal song={song} onClose={() => setLicenseOpen(false)} />}
 
       {playlistModalOpen && (
         <AddToPlaylistModal
