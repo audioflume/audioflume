@@ -1,9 +1,4 @@
-:global(body):has(.page) {
-  --audioflume-home-header-background: light-dark(#f7f7f5, var(--bg-primary));
-}
-
 .page {
-  --global-music-field-light-background: #fff;
   --discover3-founding-mark-width: 134px;
   --discover3-image-radius: 15px;
   --discover3-featured-card-width: min(1204px, calc(100% - 28px + var(--discover3-gutter)));
@@ -14,7 +9,7 @@
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
-  background: light-dark(#f7f7f5, #111111);
+  background: light-dark(#fff, #111111);
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
 }
