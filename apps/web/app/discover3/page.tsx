@@ -73,7 +73,7 @@ export default function Discover3Page() {
         </Link>
       </section>
       <div className={styles.footer}>
-        <Footer pageGutter={false} />
+        <Footer pageGutter={false} showTopBorder={false} />
       </div>
     </main>
   );
