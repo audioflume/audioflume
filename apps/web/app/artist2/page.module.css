@@ -1,7 +1,7 @@
 .page {
   --catalogue-intro-top: 115px;
   --catalogue-intro-gap: 118px;
-  --catalogue-intro-bottom: 22px;
+  --catalogue-intro-bottom: 32px;
   --catalogue-heading-height: clamp(38.08px, 4.088vw, 64.96px);
   --curated-main-pill-hover-background: transparent;
   --curated-main-pill-active-background: transparent;
