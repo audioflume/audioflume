@@ -1,4 +1,8 @@
 .page {
+  --catalogue-intro-top: 115px;
+  --catalogue-intro-gap: 118px;
+  --catalogue-intro-bottom: 22px;
+  --catalogue-heading-height: clamp(38.08px, 4.088vw, 64.96px);
   --curated-main-pill-hover-background: transparent;
   --curated-main-pill-active-background: transparent;
   --curated-main-pill-active-color: var(--text-primary);
@@ -15,7 +19,7 @@
 .content {
   width: min(calc(100% - 2 * var(--filmwave-page-gutter)), 1535px);
   margin: 0 auto;
-  padding-top: clamp(108px, 9vw, 150px);
+  padding-top: var(--catalogue-intro-top, clamp(108px, 9vw, 150px));
   padding-bottom: 110px;
 }
 
@@ -689,7 +693,7 @@
 
 .artist2Intro {
   text-align: center;
-  margin: 0 auto 32px;
+  margin: 0 auto var(--catalogue-intro-bottom, 32px);
 }
 
 .artist2Intro h1 {
@@ -711,7 +715,7 @@
 }
 
 @media (max-width: 690px) {
-  .content { padding-top: 76px; }
+  .content { padding-top: var(--catalogue-intro-top, 76px); }
   .artist2Intro p { margin-top: 64px; }
 }
 
@@ -722,7 +726,7 @@
 /* Artist2-only headline search. */
 .headingSlot {
   display: flex;
-  height: clamp(42px, 4.1vw, 65px);
+  height: var(--catalogue-heading-height, clamp(42px, 4.1vw, 65px));
   align-items: center;
   justify-content: center;
 }
@@ -797,7 +801,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: clamp(75px, 9.5vw, 145px);
+  margin-top: var(--catalogue-intro-gap, clamp(75px, 9.5vw, 145px));
 }
 
 .artist2Intro .introMeta p {
@@ -844,7 +848,7 @@
   .introMeta {
     flex-direction: column;
     gap: 12px;
-    margin-top: 64px;
+    margin-top: var(--catalogue-intro-gap, 64px);
   }
 
   .searchLink {
