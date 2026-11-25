@@ -74,7 +74,8 @@
   color: #fff;
   background: #202020;
 }
-.artistCard::after {
+.artistCard::after,
+.songRows :global([data-curated-playlist-image])::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -206,14 +207,8 @@
 .songRows {
   margin-inline: var(--discover3-gutter);
 }
-.songRows :global([data-curated-playlist-image])::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 8;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px light-dark(rgba(0,0,0,.10), rgba(255,255,255,.08));
-  pointer-events: none;
+.songRows :global([data-curated-playlist-image]) {
+  isolation: isolate;
 }
 .loading { color: var(--text-muted); padding: 32px 0; }
 
