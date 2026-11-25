@@ -13,6 +13,8 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import Discover3ArtistShelves from "../discover3/Discover3ArtistShelves";
+import discover3Styles from "../discover3/Discover3.module.css";
 import FeaturedArtistShelf from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
@@ -967,7 +969,19 @@ export function ActiveDiscoverFeaturedHero() {
   }, []);
   return (
     <div className="discover-page-root is-discover2 is-embedded-featured-hero">
-      <Discover2FeaturedHero featuredArtists={featuredArtists} featuredArtistsLoading={featuredArtistsLoading} heroStyle={{} as CSSProperties} />
+      <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
+          <header className={artist2Styles.artist2Intro}>
+            <div className={artist2Styles.headingSlot}>
+              <h1>Human made music &amp; SFX for film.</h1>
+            </div>
+            <div className={artist2Styles.introMeta}>
+              <p>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
+            </div>
+          </header>
+        </div>
+      <div className={discover3Styles.activeDiscoverShelf}>
+        <Discover3ArtistShelves featured source={{ artists: featuredArtists, loading: featuredArtistsLoading }} />
+      </div>
     </div>
   );
 }
