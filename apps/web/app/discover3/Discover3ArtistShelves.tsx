@@ -74,7 +74,7 @@ export default function Discover3ArtistShelves({ featured = false }: { featured?
                     {featured && genres.length ? <div className={styles.genres}>{genres.map((genre) => <Link key={genre} href={`/music?genre=${encodeURIComponent(genre)}`}>{genre}</Link>)}</div> : null}
                     {founding ? <img className={styles.mark} src="/founding-artist-mark.svg" alt="Founding Artist" /> : null}
                     <div className={styles.identity}>
-                      <Link href={`/artists/${artist.slug}`}>{artist.name}</Link>
+                      <span>{artist.name}</span>
                       <span>{artist.designation || "Musician / Composer"}</span>
                     </div>
                     <button className={styles.artistPlay} type="button" disabled={!playable.length} aria-label={`Preview music by ${artist.name}`} onClick={() => { window.dispatchEvent(new Event("audioflume:discover3-preview-open")); setPreview(artist.id); }}>
