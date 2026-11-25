@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayer } from "@/context/PlayerContext";
@@ -22,6 +23,7 @@ type Artist = {
 };
 
 export default function Discover3ArtistShelves({ featured = false }: { featured?: boolean }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
@@ -50,9 +52,19 @@ export default function Discover3ArtistShelves({ featured = false }: { featured?
     return () => controller.abort();
   }, [featured]);
 
+  function moveShelf(direction: number) {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const first = scroller.children[0];
+    const second = scroller.children[1];
+    if (!first || !second) return;
+    const step = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
+    scroller.scrollBy({ left: direction * step, behavior: "smooth" });
+  }
+
   return (
     <section className={featured ? styles.featured : styles.watching} aria-label={featured ? "Founding artists" : "Artists we're watching"}>
-      <div className={styles.artistScroller} tabIndex={0} aria-label="Scroll through artists">
+      <div className={styles.artistScroller} ref={scrollerRef} tabIndex={0} aria-label="Scroll through artists">
         {loading ? Array.from({ length: featured ? 2 : 3 }, (_, index) => <article className={styles.artistCard} key={index} aria-hidden="true" />) :
           artists.map((artist, index) => {
             const playable = (artist.songs || []).filter((song) => Boolean(song.audioUrl));
@@ -86,6 +98,18 @@ export default function Discover3ArtistShelves({ featured = false }: { featured?
             );
           })}
       </div>
+      {!loading && artists.length > 1 ? (
+        <div className={styles.shelfNavigation}>
+          <ShelfIndicatorNavigation
+            label={featured ? "founding artists" : "artists we're watching"}
+            scrollerRef={scrollerRef}
+            itemCount={artists.length}
+            onPrev={() => moveShelf(-1)}
+            onNext={() => moveShelf(1)}
+            progressScrollbar
+          />
+        </div>
+      ) : null}
     </section>
   );
 }
