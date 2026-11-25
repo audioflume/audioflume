@@ -174,17 +174,18 @@
 .artistPlay:hover:not(:disabled) { transform: scale(1.06); }
 .artistPlay:disabled { opacity: .45; cursor: default; }
 
-.sectionHeading {
+.sectionHeading, .playlistHeading {
   margin: 112px var(--discover3-gutter) 122px;
-  font-size: 119px;
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -.06em;
   text-align: center;
   color: light-dark(#d0d0d0, #383838);
 }
-.sectionHeading a { color: inherit; text-decoration: none; }
-.sectionHeading a:hover { color: var(--text-primary); }
+.sectionHeading { font-size: 119px; }
+.playlistHeading { font-size: clamp(48px, 4.6vw, 76px); }
+:is(.sectionHeading, .playlistHeading) a { color: inherit; text-decoration: none; }
+:is(.sectionHeading, .playlistHeading) a:hover { color: var(--text-primary); }
 
 .collection {
   margin-top: 139px;
