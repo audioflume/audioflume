@@ -73,6 +73,7 @@ export default function CardMiniPlayer({
     : 0;
 
   return (
+    <div className={styles.miniPlayerContainer}>
     <div className={`${styles.miniPlayer}${wideHero ? ` ${styles.miniPlayerWideHero}` : ""}`} aria-label={`Preview music by ${artistName}`}>
       {onClose ? (
         <button
@@ -245,6 +246,7 @@ export default function CardMiniPlayer({
         />
         <span className={styles.miniPlayerListCount}>{trackCount} {trackCount === 1 ? "song" : "songs"}</span>
       </div>
+    </div>
     </div>
   );
 }
