@@ -4,7 +4,6 @@
   --audioflume-music-field-placeholder-color: light-dark(#aaa, #555);
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 75px);
-  padding-bottom: clamp(100px, 14vw, 210px);
   overflow-x: clip;
   background: light-dark(#fff, #111111);
   color: var(--text-primary);
@@ -216,4 +215,47 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .artistImage, .artistPlay { transition: none; }
+}
+
+.cta {
+  margin: 0 var(--discover3-gutter);
+  padding: 148px 0 122px;
+  text-align: center;
+}
+.cta h2 {
+  max-width: 870px;
+  margin: 0 auto;
+  font-size: 55px;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.058em;
+}
+.cta p {
+  margin: 22px auto 30px;
+  max-width: 540px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+.ctaLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: light-dark(#111, #fff);
+  color: light-dark(#fff, #111);
+  text-decoration: none;
+  font-size: 13px;
+  transition: opacity 180ms ease;
+}
+.ctaLink:is(:hover, :focus-visible) {
+  opacity: .75;
+}
+.footer {
+  margin-inline: var(--discover3-gutter);
+}
+@media (max-width: 690px) {
+  .cta h2 { font-size: 36px; }
 }
