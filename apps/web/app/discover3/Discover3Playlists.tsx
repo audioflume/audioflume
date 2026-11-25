@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import styles from "./Discover3.module.css";
-import "../curated-playlists/curated-playlists.css";
 
 export default function Discover3Playlists() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -33,6 +34,16 @@ export default function Discover3Playlists() {
     return () => controller.abort();
   }, []);
 
+  function moveShelf(direction: number) {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const first = scroller.children[0];
+    const second = scroller.children[1];
+    if (!first || !second) return;
+    const step = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
+    scroller.scrollBy({ left: direction * step, behavior: "smooth" });
+  }
+
   return (
     <section aria-label="Curated playlists">
       <h2 className={`${styles.playlistHeading} discover3-heading-scope`}>
@@ -46,15 +57,31 @@ export default function Discover3Playlists() {
           </span>
         </Link>
       </h2>
-      <div className={styles.songRows}>
-        {loading ? <p className={styles.loading} role="status">Loading playlists…</p> : error ? <p className={styles.loading} role="status">Unable to load curated playlists.</p> : (
-          <div className="curated-page-playlist-grid">
+      {loading || error ? (
+        <div className={styles.songRows}>
+          <p className={styles.loading} role="status">{loading ? "Loading playlists…" : "Unable to load curated playlists."}</p>
+        </div>
+      ) : (
+        <div className={styles.playlistShelf}>
+          <div className={`${styles.artistScroller} ${styles.playlistScroller}`} ref={scrollerRef} tabIndex={0} aria-label="Scroll through curated playlists">
             {playlists.map((playlist, index) => (
               <CuratedPlaylistCard key={playlist.id} playlist={playlist} index={index} variant="curatedPage" />
             ))}
           </div>
-        )}
-      </div>
+          {playlists.length > 1 ? (
+            <div className={styles.shelfNavigation}>
+              <ShelfIndicatorNavigation
+                label="curated playlists"
+                scrollerRef={scrollerRef}
+                itemCount={playlists.length}
+                onPrev={() => moveShelf(-1)}
+                onNext={() => moveShelf(1)}
+                progressScrollbar
+              />
+            </div>
+          ) : null}
+        </div>
+      )}
     </section>
   );
 }
