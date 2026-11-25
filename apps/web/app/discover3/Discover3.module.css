@@ -76,18 +76,20 @@
   container: discover-artist-shelf / inline-size;
 }
 .page > :is(.featured, .watching) .artistScroller {
-  --discover3-shelf-padding: max(0px, calc((100cqw - var(--discover3-snap-width)) / 2));
   --discover3-shelf-snap-type: x mandatory;
-  --discover3-shelf-scroll-padding: 0px;
   --discover3-card-snap-align: center;
   --discover3-card-snap-stop: always;
 }
-.page > .featured .artistScroller {
-  --discover3-snap-width: var(--discover3-featured-card-width);
+.page > :is(.featured, .watching) .artistScroller > .artistCard:first-child {
+  --discover3-card-snap-align: start;
+  --discover3-card-snap-margin-end: 0px;
+}
+.page > :is(.featured, .watching) .artistScroller > .artistCard:last-child {
+  --discover3-card-snap-align: end;
+  --discover3-card-snap-margin-end: 0px;
 }
 .page > .watching .artistScroller {
   --discover3-watching-card-width: 579px;
-  --discover3-snap-width: var(--discover3-watching-card-width);
 }
 @container discover-artist-shelf (max-width: 690px) {
   .page > .watching .artistScroller {
@@ -96,11 +98,7 @@
 }
 @container discover-artist-shelf (min-width: 1168px) {
   .page > .watching .artistScroller:has(> .artistCard:nth-child(2)) {
-    --discover3-snap-width: 1168px;
     --discover3-card-snap-margin-end: 589px;
-  }
-  .page > .watching .artistScroller:has(> .artistCard:nth-child(2)) > .artistCard:last-child {
-    --discover3-card-snap-align: none;
   }
 }
 .artistScroller {
@@ -108,10 +106,10 @@
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-inline: var(--discover3-shelf-padding, var(--discover3-gutter));
+  padding-inline: var(--discover3-gutter);
   scrollbar-width: none;
   scroll-snap-type: var(--discover3-shelf-snap-type, x proximity);
-  scroll-padding-inline: var(--discover3-shelf-scroll-padding, var(--discover3-gutter));
+  scroll-padding-inline: var(--discover3-gutter);
   overscroll-behavior-x: contain;
 }
 .artistScroller::-webkit-scrollbar { display: none; }
