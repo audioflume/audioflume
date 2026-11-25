@@ -120,7 +120,7 @@ export default function CuratedPlaylistsPage() {
       </div>
       <div className={styles.content}>
         <CatalogueHeadingSearch
-          title="Discover playlists made for the edit."
+          title="Curated playlists made for the edit."
           description="A highly curated collection of playlists built around moods, genres, scenes, and production styles."
           placeholder="search by playlist, genre, or keyword"
           searchLabel="Search playlists"
