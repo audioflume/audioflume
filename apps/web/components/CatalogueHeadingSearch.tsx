@@ -37,7 +37,10 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
                 type="search"
                 value={query}
                 onChange={(event) => onQueryChange(event.target.value)}
-                onBlur={() => { if (!query.trim()) closeHeadingSearch(); }}
+                onBlur={(event) => {
+                  if (!event.relatedTarget && (!document.hasFocus() || document.visibilityState !== "visible")) return;
+                  if (!query.trim()) closeHeadingSearch();
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Escape") {
                     closeHeadingSearch();
