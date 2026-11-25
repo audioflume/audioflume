@@ -48,6 +48,7 @@
 .artistScroller::-webkit-scrollbar { display: none; }
 .artistCard {
   position: relative;
+  container-type: inline-size;
   isolation: isolate;
   overflow: hidden;
   scroll-snap-align: start;
@@ -120,8 +121,6 @@
   z-index: 2;
   pointer-events: none;
 }
-.identity a { width: fit-content; color: #fff; text-decoration: none; pointer-events: auto; }
-.identity a:hover { text-decoration: underline; }
 .identity span { font-weight: 300; }
 .artistPlay {
   position: absolute;
