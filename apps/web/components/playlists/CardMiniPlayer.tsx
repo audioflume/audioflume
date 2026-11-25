@@ -6,8 +6,9 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
+import DownloadIcon from "@/components/icons/DownloadIcon";
 import { useFavorites } from "@/context/FavoritesContext";
-import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
+import { usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import styles from "./CardMiniPlayer.module.css";
 
@@ -42,9 +43,9 @@ export default function CardMiniPlayer({
   wideHero?: boolean;
 }) {
   const { currentTime, duration } = usePlayerProgress();
-  const { repeatSongId, toggleRepeatSong } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
   const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
   const activeSongIndex = previews.findIndex((preview) => preview.id === currentSongId);
@@ -54,6 +55,28 @@ export default function CardMiniPlayer({
   const listProgress = listSong && currentSongId === listSong.id && duration > 0
     ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
     : 0;
+
+  async function handleDownloadSong() {
+    if (!listSong || isDownloading) return;
+    setIsDownloading(true);
+    try {
+      const res = await fetch(`/api/songs/${encodeURIComponent(listSong.id)}/download`, {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data?.downloadUrl) {
+        console.error("Failed to prepare song download", data);
+        return;
+      }
+
+      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to download song", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  }
 
   return (
     <div className={styles.miniPlayerContainer}>
@@ -184,20 +207,14 @@ export default function CardMiniPlayer({
           <button
             type="button"
             className={styles.miniPlayerExtraControl}
-            aria-label={listSong && repeatSongId === listSong.id ? `Turn off repeat for ${listSong.title}` : listSong ? `Repeat ${listSong.title}` : "No song to repeat"}
-            aria-pressed={Boolean(listSong && repeatSongId === listSong.id)}
-            disabled={!listSong}
+            aria-label={listSong ? `License ${listSong.title}` : "No song to license"}
+            disabled={!listSong || isDownloading}
             onClick={(event) => {
               event.stopPropagation();
-              if (listSong) toggleRepeatSong(listSong.id);
+              void handleDownloadSong();
             }}
           >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M17 2l4 4-4 4" />
-              <path d="M3 11V9a3 3 0 0 1 3-3h15" />
-              <path d="M7 22l-4-4 4-4" />
-              <path d="M21 13v2a3 3 0 0 1-3 3H3" />
-            </svg>
+            <DownloadIcon size={14} />
           </button>
         </div>
         <input
