@@ -31,7 +31,28 @@
 }
 
 .featured, .watching {
+  position: relative;
   width: 100%;
+}
+.shelfNavigation {
+  position: absolute;
+  top: 100%;
+  left: var(--discover3-gutter);
+  right: var(--discover3-gutter);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+.featured:is(:hover, :focus-within) .shelfNavigation,
+.watching:is(:hover, :focus-within) .shelfNavigation {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none) {
+  .shelfNavigation { opacity: 1; pointer-events: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelfNavigation { transition: none; }
 }
 .artistScroller {
   display: flex;
