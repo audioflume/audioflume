@@ -7,6 +7,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import SongLicenseModal from "@/components/SongLicenseModal";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -45,7 +46,7 @@ export default function CardMiniPlayer({
   const { currentTime, duration } = usePlayerProgress();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [previewIndex, setPreviewIndex] = useState(0);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [licenseSong, setLicenseSong] = useState<Song | null>(null);
   const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
   const activeSongIndex = previews.findIndex((preview) => preview.id === currentSongId);
@@ -56,27 +57,6 @@ export default function CardMiniPlayer({
     ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
     : 0;
 
-  async function handleDownloadSong() {
-    if (!listSong || isDownloading) return;
-    setIsDownloading(true);
-    try {
-      const res = await fetch(`/api/songs/${encodeURIComponent(listSong.id)}/download`, {
-        method: "POST",
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data?.downloadUrl) {
-        console.error("Failed to prepare song download", data);
-        return;
-      }
-
-      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to download song", error);
-    } finally {
-      setIsDownloading(false);
-    }
-  }
 
   return (
     <div className={styles.miniPlayerContainer}>
@@ -208,10 +188,10 @@ export default function CardMiniPlayer({
             type="button"
             className={styles.miniPlayerExtraControl}
             aria-label={listSong ? `License ${listSong.title}` : "No song to license"}
-            disabled={!listSong || isDownloading}
+            disabled={!listSong}
             onClick={(event) => {
               event.stopPropagation();
-              void handleDownloadSong();
+              if (listSong) setLicenseSong(listSong);
             }}
           >
             <DownloadIcon size={14.5} />
@@ -235,6 +215,7 @@ export default function CardMiniPlayer({
         <span className={styles.miniPlayerListCount}>{trackCount} {trackCount === 1 ? "song" : "songs"}</span>
       </div>
     </div>
+    {licenseSong && <SongLicenseModal song={licenseSong} onClose={() => setLicenseSong(null)} />}
     </div>
   );
 }
