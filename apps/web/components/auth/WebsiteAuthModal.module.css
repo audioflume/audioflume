@@ -16,6 +16,7 @@
   max-height: min(860px, calc(100dvh - 36px));
   min-height: min(680px, calc(100dvh - 36px));
   grid-template-columns: 43% 57%;
+  grid-template-rows: minmax(0, 1fr);
   overflow: hidden;
   background: #fff;
   color: #111;
@@ -46,7 +47,7 @@
 
 .imagePanel {
   position: relative;
-  min-height: 100%;
+  min-height: 0;
   background: #101615 url("https://images.filmwave.io/images/home/judah-earl-background.png") center / cover no-repeat;
   color: #fff;
 }
@@ -61,7 +62,7 @@
 .imageCaption {
   position: absolute;
   right: 10%;
-  bottom: 8%;
+  bottom: clamp(36px, 5vw, 58px);
   left: 10%;
   z-index: 1;
   font-family: var(--font-aktiv-grotesk), sans-serif;
