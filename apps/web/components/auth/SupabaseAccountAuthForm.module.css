@@ -155,7 +155,7 @@
 
 .modalPage .title {
   margin-bottom: 10px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(36px, 3.8vw, 55px);
   font-weight: 400;
   letter-spacing: -.055em;
@@ -165,7 +165,9 @@
 .modalIntro {
   max-width: 300px;
   margin: 0 0 clamp(30px, 5vh, 60px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 17px;
+  font-weight: 300;
   line-height: 1.35;
 }
 
@@ -192,6 +194,16 @@
   background: transparent;
   padding: 0;
   color: #111;
+}
+
+.modalPage .input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: #111;
+  caret-color: #111;
+}
+
+.modalPage .input:autofill {
+  box-shadow: 0 0 0 1000px #fff inset;
 }
 
 .modalPage .input:focus-visible {
