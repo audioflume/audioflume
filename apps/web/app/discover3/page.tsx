@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import Footer from "@/components/Footer";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SongCard from "@/components/SongCard";
 import { MusicListShell } from "@filmwave/shared";
 import { useSongs } from "@/hooks/useSongs";
@@ -66,11 +65,17 @@ export default function Discover3Page() {
       </section>
       <Discover3Playlists />
       <section className={styles.cta} aria-label="Explore membership">
-        <h2>Find the right sound for your next story.</h2>
-        <p>Explore a growing collection of human-made music and sound effects for film.</p>
-        <Link href="/pricing" className={styles.ctaLink}>
-          Explore membership <ArrowUpRightIcon size={16} strokeWidth={1.5} />
-        </Link>
+        <h2 className="discover3-heading-scope">
+          <Link className="discover2-watching-heading-link" href="/pricing" aria-label="Explore membership">
+            <span className="discover2-watching-heading-default" aria-hidden="true">Find the right sound for your next story.</span>
+            <span className="discover2-watching-heading-hover" aria-hidden="true">
+              Explore membership
+              <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+                <path d="M4 21 19 5M4 5h15v15" />
+              </svg>
+            </span>
+          </Link>
+        </h2>
       </section>
       <div className={styles.footer}>
         <Footer pageGutter={false} showTopBorder={false} />
