@@ -1623,7 +1623,7 @@ export default function HomePageContent({
                   <SectionTitle>Curated playlists</SectionTitle>
                 </div>
               </div>
-              <Discover3Playlists source={{ playlists: editorialPlaylists, loading: curatedPlaylistsLoading }} showHeading={false} />
+              <Discover3Playlists source={{ playlists: editorialPlaylists, loading: curatedPlaylistsLoading }} showHeading={false} circleArrows />
             </div>
           </div>
           <section className="audioflume-home-mockup-artists is-discover-featured-artists is-discover-secondary-banner">
