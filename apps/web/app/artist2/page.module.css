@@ -161,7 +161,6 @@
 }
 
 .grid {
-  --catalogue-card-image-radius: 15px;
   --filmwave-curated-shelf-card-width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -181,7 +180,6 @@
 .grid :global([data-curated-playlist-image]),
 .artistMedia {
   isolation: isolate;
-  border-radius: 15px;
 }
 
 .foundingArtistMark {
