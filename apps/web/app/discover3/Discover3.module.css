@@ -98,6 +98,9 @@
   z-index: 2;
   pointer-events: none;
 }
+.watching .mark {
+  width: 90px;
+}
 .genres {
   position: absolute;
   top: 27px;
