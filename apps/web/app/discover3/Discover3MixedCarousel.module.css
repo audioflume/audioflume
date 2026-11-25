@@ -1,0 +1,91 @@
+.shelf {
+  --card-width: clamp(220px, 20.53vw, 420px);
+  --lift: clamp(38px, 3.04vw, 62px);
+  --inset: clamp(15px, 1.45vw, 30px);
+  position: relative;
+  width: 100vw;
+  margin: calc(-1 * var(--lift)) 0 0 calc(50% - 50vw);
+}
+.scroller {
+  display: flex;
+  gap: clamp(12px, 1.32vw, 27px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding: 0;
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar { display: none; }
+.item {
+  position: relative;
+  flex: 0 0 var(--card-width);
+  min-width: 0;
+  padding-top: var(--lift);
+}
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 510 / 604;
+  overflow: hidden;
+  color: #fff;
+  background: #131313;
+  text-decoration: none;
+  transition: transform 260ms cubic-bezier(.2,.7,.2,1);
+}
+.item:is(:hover, :focus-within) .card { transform: translateY(calc(-1 * var(--lift))); }
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  font-size: clamp(15px, 1.2vw, 24px);
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 200ms ease, transform 260ms ease;
+  pointer-events: none;
+}
+.caption span:last-child { color: light-dark(#c0c0c0, #777); }
+.item:is(:hover, :focus-within) .caption { opacity: 1; transform: none; }
+.artistImage, .songBackdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  inset: 0;
+}
+.artistImage { object-position: center; }
+.artistShade { position: absolute; inset: 0; background: linear-gradient(transparent 55%,rgba(0,0,0,.65)); }
+.mark { position: absolute; top: var(--inset); right: var(--inset); width: clamp(64px, 6.1vw, 116px); height: auto; }
+.pill { display: inline-flex; align-items: center; justify-content: center; background: #252525; color: white; border-radius: 99px; min-width: 64px; padding: 5px 9px; font-size: 9px; line-height: 1.15; }
+.artistName { position: absolute; bottom: var(--inset); left: var(--inset); }
+.arrow { position: absolute; bottom: var(--inset); right: var(--inset); opacity: .28; transition: opacity 180ms ease; }
+.item:is(:hover,:focus-within) .arrow { opacity: 1; }
+.playlistTop { position: absolute; top: var(--inset); left: var(--inset); font-size: 12px; font-weight: 300; }
+.playlistBottom { position: absolute; bottom: var(--inset); left: var(--inset); right: calc(var(--inset) + 34px); }
+.circles { display: flex; margin-bottom: 15px; }
+.circles img { width: clamp(38px, 2.7vw, 62px); aspect-ratio: 1; border-radius: 50%; object-fit: cover; }
+.circles img + img { margin-left: -9px; }
+.playlistLabel { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 300; }
+.playlistTitle { margin: 12px 0 10px; max-width: 100%; font-size: clamp(18px, 1.4vw, 28px); line-height: 1.08; letter-spacing: -.045em; }
+.songBackdrop { filter: blur(36px) brightness(.6); transform: scale(1.2); }
+.songVisual { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 50%; display: flex; flex-direction: column; gap: 12px; }
+.songArt { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.songWaveform { width: 100%; height: clamp(10px, 1vw, 20px); display: block; color: rgba(255,255,255,.5); pointer-events: none; }
+.songInfo { position: absolute; bottom: var(--inset); left: var(--inset); right: var(--inset); display: flex; align-items: center; gap: 10px; }
+.play { flex: 0 0 auto; display: grid; place-items: center; width: clamp(30px, 2.2vw, 44px); aspect-ratio: 1; border: 0; border-radius: 50%; background: #fff; color: #111; cursor: pointer; padding: 0; }
+.songCopy { min-width: 0; display: grid; gap: 3px; font-size: 12px; }
+.songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.songCopy span:last-child { font-size: 10px; }
+@media (hover: none) {
+  .shelf { margin-top: 0; }
+  .item { padding-top: 0; padding-bottom: var(--lift); }
+  .caption { opacity: 1; transform: none; }
+  .item:is(:hover,:focus-within) .card { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .caption, .arrow { transition: none; }
+}
