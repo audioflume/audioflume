@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import { buildWaveformBars, parseWaveformPeaks } from "@filmwave/shared";
@@ -28,6 +29,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
   const [loading, setLoading] = useState(true);
   const scroller = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
+  const scrollbarDragging = useRef(false);
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
   useEffect(() => {
@@ -111,6 +113,7 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
 
     if (!loopEnabled) return;
     const wrap = () => {
+      if (scrollbarDragging.current) return;
       const width = cycleWidth();
       if (!width || width <= element.clientWidth) return;
       const left = element.scrollLeft;
@@ -142,6 +145,16 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
       element.removeEventListener("scroll", onScroll);
     };
   }, [loading, items.length, loopEnabled]);
+
+  function moveCarousel(direction: "prev" | "next") {
+    const element = scroller.current;
+    if (!element) return;
+    const first = element.children[0];
+    const second = element.children[1];
+    if (!first || !second) return;
+    const step = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
+    element.scrollBy({ left: (direction === "next" ? 1 : -1) * step, behavior: "smooth" });
+  }
 
   if (loading || !items.length) return null;
   return (
@@ -215,6 +228,18 @@ export default function Discover2MixedCarousel({ songs }: { songs: Song[] }) {
           );
         })}
       </div>
+      <ShelfIndicatorNavigation
+        label="discover cards"
+        scrollerRef={scroller}
+        itemCount={items.length}
+        loopItemCount={loopEnabled ? items.length : undefined}
+        onPrev={() => moveCarousel("prev")}
+        onNext={() => moveCarousel("next")}
+        className="audioflume-home-reference-width"
+        progressScrollbar
+        onProgressPointerDown={() => { scrollbarDragging.current = true; }}
+        onProgressPointerUp={() => { scrollbarDragging.current = false; }}
+      />
     </section>
   );
 }
