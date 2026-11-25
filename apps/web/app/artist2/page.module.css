@@ -180,6 +180,7 @@
 .grid :global([data-curated-playlist-image]),
 .artistMedia {
   isolation: isolate;
+  border-radius: 15px;
 }
 
 .foundingArtistMark {
