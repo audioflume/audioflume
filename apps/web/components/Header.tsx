@@ -743,7 +743,7 @@ export default function Header() {
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent {
           --filmwave-chrome-surface: var(--audioflume-home-header-background, var(--bg-primary));
-          border-bottom-color: var(--audioflume-home-header-border, var(--border)) !important;
+          border-bottom-color: var(--audioflume-mobile-menu-header-border, var(--audioflume-home-header-border, var(--border))) !important;
           background: var(--audioflume-home-header-background, var(--bg-primary)) !important;
           background-color: var(--audioflume-home-header-background, var(--bg-primary)) !important;
           color: var(--audioflume-home-header-text, var(--text-primary)) !important;
@@ -1093,7 +1093,7 @@ export default function Header() {
 
         @media (max-width: 690px) {
           .filmwave-web-header.has-open-mobile-nav {
-            --audioflume-home-header-border: transparent;
+            --audioflume-mobile-menu-header-border: transparent;
             z-index: calc(var(--filmwave-z-header) + 3) !important;
           }
 
