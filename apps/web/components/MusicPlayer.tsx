@@ -15,6 +15,7 @@ import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import IconButton from "@/components/IconButton";
 import PremiumLabel from "@/components/PremiumLabel";
 import DownloadIcon from "@/components/icons/DownloadIcon";
+import SongLicenseModal from "@/components/SongLicenseModal";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import VolumeIcon from "@/components/icons/VolumeIcon";
@@ -224,6 +225,7 @@ export default function MusicPlayer() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [addToPlaylistOpen, setAddToPlaylistOpen] = useState(false);
   const [addToProjectOpen, setAddToProjectOpen] = useState(false);
+  const [licenseSong, setLicenseSong] = useState<typeof currentSong>(null);
   const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<
@@ -860,18 +862,20 @@ export default function MusicPlayer() {
           </DropdownShell>
 
           {currentSong.audioUrl && (
-            <a
-              href={currentSong.audioUrl}
-              download
+            <button
+              type="button"
+              onClick={() => setLicenseSong(currentSong)}
               aria-label="License song"
               className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-medium leading-none text-[var(--bg-primary)] transition hover:opacity-80"
             >
               <span>License</span>
               <DownloadIcon size={13} />
-            </a>
+            </button>
           )}
         </div>
       </div>
+
+      {licenseSong && <SongLicenseModal song={licenseSong} onClose={() => setLicenseSong(null)} />}
 
       <AddToPlaylistModal
         isOpen={addToPlaylistOpen}
