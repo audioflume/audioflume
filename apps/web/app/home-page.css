@@ -3232,13 +3232,14 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner) {
-  --audioflume-home-canvas: light-dark(#f7f7f5, #111111);
+  --audioflume-home-canvas: light-dark(#fff, #111111);
   --audioflume-experiment-search-bottom-padding: 0px;
 }
 
 .audioflume-home-mockup.is-discover-page > .is-embedded-featured-hero {
   min-height: 0;
   padding-top: 0;
+  background: var(--audioflume-home-canvas);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists {
