@@ -3,6 +3,7 @@
 import { SignIn, SignUp } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
 import SupabaseAccountAuthForm from "./SupabaseAccountAuthForm";
+import XIcon from "@/components/icons/XIcon";
 import { safeAuthRedirect } from "@/lib/auth/safeAuthRedirect";
 import styles from "./WebsiteAuthModal.module.css";
 
@@ -100,9 +101,7 @@ export default function WebsiteAuthModal({ provider }: { provider: "clerk" | "su
           </div>
         </div>
         <button ref={closeButtonRef} type="button" className={styles.close} aria-label="Close account modal" onClick={() => setModal(null)}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M5 5L19 19M19 5L5 19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
+          <XIcon size={12} />
         </button>
       </section>
     </div>
