@@ -120,6 +120,19 @@
 .playlistScroller > * {
   min-width: 0;
 }
+@media (width < 833.334px) {
+  .page > section .playlistScroller {
+    --discover3-shelf-snap-type: x mandatory;
+    --discover-playlist-snap-align: center;
+    --discover-playlist-snap-stop: always;
+  }
+  .page > section .playlistScroller > :first-child {
+    --discover-playlist-snap-align: start;
+  }
+  .page > section .playlistScroller > :last-child {
+    --discover-playlist-snap-align: end;
+  }
+}
 .playlistShelf :global([data-curated-playlist-image]) {
   isolation: isolate;
 }
