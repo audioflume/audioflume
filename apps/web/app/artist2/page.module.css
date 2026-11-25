@@ -902,12 +902,18 @@
 @media (max-width: 690px) {
   .headingSearchWrap {
     width: 100%;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
   }
 
   .headingSearchMeasure {
+    grid-column: 2;
     justify-self: stretch;
     text-align: center;
+  }
+
+  .headingSearchMeasure:not(.headingSearchMeasureHidden) + .headingSearch {
+    grid-column: 2;
+    padding-inline: min(28px, 1cqw);
   }
 
   .introMeta {
