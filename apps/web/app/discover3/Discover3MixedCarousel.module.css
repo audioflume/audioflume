@@ -6,6 +6,25 @@
   width: 100vw;
   margin: calc(-1 * var(--lift)) 0 0 calc(50% - 50vw);
 }
+.shelfNavigation {
+  position: absolute;
+  top: 100%;
+  left: var(--discover3-gutter);
+  right: var(--discover3-gutter);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+.shelf:is(:hover, :focus-within) .shelfNavigation {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none) {
+  .shelfNavigation { opacity: 1; pointer-events: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelfNavigation { transition: none; }
+}
 .scroller {
   display: flex;
   gap: 20px;
