@@ -2,7 +2,8 @@
   width: var(--filmwave-curated-shelf-card-width);
   min-width: 0;
   flex: 0 0 var(--filmwave-curated-shelf-card-width);
-  scroll-snap-align: start;
+  scroll-snap-align: var(--discover-playlist-snap-align, start);
+  scroll-snap-stop: var(--discover-playlist-snap-stop, normal);
 }
 
 .card {
