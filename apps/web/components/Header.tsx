@@ -1087,6 +1087,10 @@ export default function Header() {
           display: none;
         }
 
+        .filmwave-mobile-account-close {
+          display: none;
+        }
+
         @media (max-width: 690px) {
           .filmwave-web-header.has-open-mobile-nav {
             z-index: calc(var(--filmwave-z-header) + 3) !important;
@@ -1132,13 +1136,22 @@ export default function Header() {
             cursor: pointer;
           }
 
-          .filmwave-mobile-nav-toggle svg {
-            width: 22px;
-            height: 22px;
+          .filmwave-mobile-nav-toggle svg,
+          .filmwave-mobile-account-close {
+            width: 24px;
+            height: 24px;
             fill: none;
             stroke: currentColor;
             stroke-width: 1.5;
             stroke-linecap: round;
+          }
+
+          .filmwave-mobile-account-close {
+            display: block;
+          }
+
+          .filmwave-mobile-account-close + .filmwave-header-avatar {
+            display: none;
           }
 
           .filmwave-mobile-nav-panel {
@@ -1186,7 +1199,7 @@ export default function Header() {
             display: flex;
             flex-direction: column;
             gap: 36px;
-            padding: 28px 32px 32px;
+            padding: 40px 32px 32px;
           }
 
           .filmwave-mobile-nav-label {
@@ -1266,12 +1279,12 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
             display: grid;
-            --filmwave-mobile-account-group-gap: 24px;
+            --filmwave-mobile-account-group-gap: 36px;
             gap: var(--filmwave-mobile-account-group-gap);
             width: 100%;
             border: 0;
             background: var(--bg-primary);
-            padding: 28px 32px var(--filmwave-mobile-account-group-gap);
+            padding: 40px 32px var(--filmwave-mobile-account-group-gap);
             box-shadow: none;
           }
 
@@ -1303,12 +1316,13 @@ export default function Header() {
             .filmwave-web-user-menu
             .filmwave-user-menu-name {
             font-size: 18px;
+            font-weight: 400;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-email {
-            font-size: 14px;
+            font-size: 13px;
           }
 
           .filmwave-mobile-account-menu
@@ -1329,6 +1343,18 @@ export default function Header() {
             font-weight: 400;
             line-height: normal;
             transition: color 180ms ease;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-web-user-menu-new-project-icon {
+            order: 1;
+            width: 20px;
+            height: 20px;
+            flex-basis: 20px;
+            border-radius: 0;
+            background: transparent;
+            color: currentColor;
           }
 
           .filmwave-mobile-account-menu
@@ -1580,7 +1606,7 @@ export default function Header() {
             >
               {mobileNavOpen && !mobileAccountOpen ? (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 6L18 18M18 6L6 18" />
+                  <path d="M4 4L20 20M20 4L4 20" />
                 </svg>
               ) : (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1627,10 +1653,15 @@ export default function Header() {
                           setMenuOpen((prev) => !prev);
                         }}
                         className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
-                        aria-label="Open user menu"
+                        aria-label={mobileNavOpen && mobileAccountOpen ? "Close user menu" : "Open user menu"}
                         aria-haspopup="menu"
                         aria-expanded={menuOpen || (mobileNavOpen && mobileAccountOpen)}
                       >
+                        {mobileNavOpen && mobileAccountOpen ? (
+                          <svg className="filmwave-mobile-account-close" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 4L20 20M20 4L4 20" />
+                          </svg>
+                        ) : null}
                         <span
                           className="filmwave-header-avatar"
                           style={{
@@ -1692,6 +1723,7 @@ export default function Header() {
             <>
               <div className="filmwave-mobile-account-menu">
                 <UserMenu
+                  mobile
                   onClose={() => {
                     setMobileNavOpen(false);
                   }}

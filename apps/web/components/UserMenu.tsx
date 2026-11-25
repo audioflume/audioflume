@@ -47,7 +47,13 @@ function InviteCountBadge({ count }: { count: number }) {
   );
 }
 
-export default function UserMenu({ onClose }: { onClose?: () => void }) {
+export default function UserMenu({
+  onClose,
+  mobile = false,
+}: {
+  onClose?: () => void;
+  mobile?: boolean;
+}) {
   const { signOut, user } = useAccountSession();
   const { theme, setTheme } = useTheme();
   const { pendingInviteCount } = useArtistInvites();
@@ -105,6 +111,7 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       ) : null}
 
       <UserMenuActions className="filmwave-web-user-menu-library-section">
+        {mobile ? <h2 className="filmwave-mobile-nav-label">Projects</h2> : null}
         <MenuLink
           href="/projects"
           label="My Projects"
@@ -119,6 +126,7 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       </UserMenuActions>
 
       <UserMenuActions className="filmwave-web-user-menu-account-section">
+        {mobile ? <h2 className="filmwave-mobile-nav-label">Account</h2> : null}
         <MenuLink
           href="/account/settings"
           label="Settings"
