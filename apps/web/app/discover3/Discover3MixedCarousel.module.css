@@ -58,7 +58,7 @@
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px light-dark(rgba(0,0,0,.10), rgba(255,255,255,.08));
+  box-shadow: inset 0 0 0 1px light-dark(transparent, rgba(255,255,255,.08));
   pointer-events: none;
 }
 .item:is(:hover, :focus-within) .card { transform: translateY(calc(-1 * var(--lift))); }
