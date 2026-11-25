@@ -24,6 +24,9 @@ type Artist = {
 
 export default function Discover3ArtistShelves({ featured = false, source }: { featured?: boolean; source?: { artists: Artist[]; loading: boolean } }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const cancelScrollRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => () => cancelScrollRef.current?.(), []);
   const [fetchedArtists, setArtists] = useState<Artist[]>([]);
   const [fetchLoading, setLoading] = useState(true);
   const artists = source?.artists ?? fetchedArtists;
@@ -63,7 +66,61 @@ export default function Discover3ArtistShelves({ featured = false, source }: { f
     const second = scroller.children[1];
     if (!first || !second) return;
     const step = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
-    scroller.scrollBy({ left: direction * step, behavior: "smooth" });
+    if (hasSource) {
+      scroller.scrollBy({ left: direction * step, behavior: "smooth" });
+      return;
+    }
+
+    cancelScrollRef.current?.();
+    const start = scroller.scrollLeft;
+    const max = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    const bounds = scroller.getBoundingClientRect();
+    const targets = [0, max];
+    for (const child of Array.from(scroller.children).slice(1, -1)) {
+      const card = child.getBoundingClientRect();
+      const marginEnd = parseFloat(getComputedStyle(child).scrollMarginInlineEnd) || 0;
+      targets.push(Math.max(0, Math.min(max, start + card.left - bounds.left + (card.width + marginEnd - scroller.clientWidth) / 2)));
+    }
+    targets.sort((a, b) => a - b);
+    const target = direction > 0
+      ? targets.find((position) => position > start + 2) ?? max
+      : targets.slice().reverse().find((position) => position < start - 2) ?? 0;
+    if (Math.abs(target - start) < 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      scroller.scrollTo({ left: target, behavior: "instant" });
+      return;
+    }
+
+    const previousSnap = scroller.style.scrollSnapType;
+    const previousBehavior = scroller.style.scrollBehavior;
+    scroller.style.scrollSnapType = "none";
+    scroller.style.scrollBehavior = "auto";
+    let frame = 0;
+    const started = performance.now();
+    const duration = 520;
+    const cancel = () => {
+      cancelAnimationFrame(frame);
+      scroller.style.scrollSnapType = previousSnap;
+      scroller.style.scrollBehavior = previousBehavior;
+      scroller.removeEventListener("wheel", cancel);
+      scroller.removeEventListener("pointerdown", cancel);
+      scroller.removeEventListener("keydown", cancel);
+      window.removeEventListener("resize", cancel);
+      cancelScrollRef.current = null;
+    };
+    cancelScrollRef.current = cancel;
+    scroller.addEventListener("wheel", cancel, { passive: true });
+    scroller.addEventListener("pointerdown", cancel);
+    scroller.addEventListener("keydown", cancel);
+    window.addEventListener("resize", cancel);
+    const animate = (now: number) => {
+      const t = Math.min(1, (now - started) / duration);
+      const eased = t * t * (3 - 2 * t);
+      scroller.scrollLeft = start + (target - start) * eased;
+      if (t < 1) frame = requestAnimationFrame(animate);
+      else cancel();
+    };
+    frame = requestAnimationFrame(animate);
   }
 
   return (
@@ -111,6 +168,7 @@ export default function Discover3ArtistShelves({ featured = false, source }: { f
             onPrev={() => moveShelf(-1)}
             onNext={() => moveShelf(1)}
             progressScrollbar
+            onProgressPointerDown={() => cancelScrollRef.current?.()}
           />
         </div>
       ) : null}
