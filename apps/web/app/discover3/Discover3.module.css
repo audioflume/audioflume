@@ -1,7 +1,6 @@
 .page {
   --discover3-founding-mark-width: 134px;
   --discover3-featured-card-width: min(1204px, calc(100% - 28px + var(--discover3-gutter)));
-  --discover3-featured-card-height: clamp(320px, 39vw, 536px);
   --discover3-watching-mark-width: 100px;
   --discover3-gutter: clamp(22px, 4vw, 80px);
   --audioflume-music-field-icon-color: light-dark(#999, #555);
@@ -122,7 +121,7 @@
 }
 .featured .artistCard {
   flex: 0 0 var(--discover3-featured-card-width, 1204px);
-  height: var(--discover3-featured-card-height, 536px);
+  height: 536px;
 }
 .watching .artistCard {
   flex: 0 0 579px;
