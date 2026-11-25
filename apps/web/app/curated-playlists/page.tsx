@@ -5,8 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import HomeExperimentSearch from "@/components/HomeExperimentSearch";
-import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
+import GlobalSearchBar from "@/components/GlobalSearchBar";
+import CatalogueHeadingSearch from "@/components/CatalogueHeadingSearch";
+import styles from "../artist2/page.module.css";
+import { MusicLibraryEmptyState } from "@filmwave/shared";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -32,35 +34,14 @@ function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
 
 function CuratedPlaylistsLoadingSkeleton() {
   return (
-    <div className="curated-page-skeleton" aria-hidden="true">
-      <div className="curated-page-skeleton-intro">
-        <span className="curated-page-skeleton-intro-line is-long" />
-        <span className="curated-page-skeleton-intro-line is-short" />
-      </div>
-
-      <div className="curated-page-skeleton-pill-row">
-        <span className="curated-page-skeleton-search-pill" />
-        {Array.from({ length: 8 }, (_, index) => (
-          <span
-            key={index}
-            className={`curated-page-skeleton-pill is-${index % 4}`}
-          />
-        ))}
-      </div>
-
-      <section className="curated-page-skeleton-grid-group">
-        <div className="curated-page-skeleton-grid">
-          {Array.from({ length: 8 }, (_, index) => (
-            <article key={index} className="curated-page-skeleton-grid-card">
-              <div className="curated-page-skeleton-card" />
-              <span
-                className={`curated-page-skeleton-card-title is-${index % 3}`}
-              />
-              <span className="curated-page-skeleton-card-meta" />
-            </article>
-          ))}
+    <div className={styles.grid} aria-label="Loading playlists">
+      {Array.from({ length: 9 }, (_, index) => (
+        <div className={styles.skeletonCard} key={index}>
+          <div className={styles.skeleton} />
+          <div className={styles.skeletonTitle} />
+          <div className={styles.skeletonSubtitle} />
         </div>
-      </section>
+      ))}
     </div>
   );
 }
@@ -174,11 +155,19 @@ export default function CuratedPlaylistsPage() {
   const hasActiveSearch = searchQuery.trim().length > 0;
 
   return (
-    <main className="curated-playlists-page-root">
-      <HomeExperimentSearch />
-
-      <section className="curated-playlists-page-layer">
-        <div className="curated-page-content">
+    <main className={`${styles.page} artist2-page-root`}>
+      <div className={styles.searchbarBackground}>
+        <GlobalSearchBar musicFieldStyle darkSimilarButton />
+      </div>
+      <div className={styles.content}>
+        <CatalogueHeadingSearch
+          title="Discover playlists made for the edit."
+          description="A highly curated collection of playlists built around moods, genres, scenes, and production styles."
+          placeholder="search by playlist, genre, or keyword"
+          searchLabel="Search playlists"
+          query={searchQuery}
+          onQueryChange={setSearchQuery}
+        />
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
@@ -189,12 +178,8 @@ export default function CuratedPlaylistsPage() {
                 setActiveBrowseSubcategoryId(null);
               }}
               onSubcategoryChange={setActiveBrowseSubcategoryId}
-              searchValue={searchQuery}
-              onSearchChange={setSearchQuery}
-              onSearchSubmit={() => {
-                setActiveBrowseFilter(null);
-                setActiveBrowseSubcategoryId(null);
-              }}
+              showSearch={false}
+              showDescription={false}
             />
           )}
 
@@ -224,18 +209,16 @@ export default function CuratedPlaylistsPage() {
             playlists.length > 0 &&
             (activeBrowseFilter || hasActiveSearch) &&
             visiblePlaylists.length === 0 && (
-              <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
-                {hasActiveSearch
-                  ? "No curated playlists match your search."
-                  : "No playlists are assigned to this filter yet."}
-              </div>
+              <MusicLibraryEmptyState
+                title="No playlists found"
+                description={hasActiveSearch ? "Search for something different." : "No playlists are assigned to this filter yet."}
+              />
             )}
 
           {!loading &&
             !error &&
             visiblePlaylists.length > 0 && (
-              <section className="curated-page-grid-group">
-                <div className="curated-page-playlist-grid">
+              <section className={styles.grid} aria-label="Curated playlists">
                   {visiblePlaylists.map((playlist, index) => (
                     <CuratedPlaylistCard
                       key={playlist.id}
@@ -244,24 +227,11 @@ export default function CuratedPlaylistsPage() {
                       variant="curatedPage"
                     />
                   ))}
-                </div>
               </section>
             )}
 
-          {!loading && !error && playlists.length > 0 && (
-            <section className="curated-page-reference-search">
-              <div className="curated-page-reference-search-heading filmwave-section-heading-row">
-                <span>Find similar songs</span>
-              </div>
-              <div className="curated-page-reference-search-card">
-                <GlobalReferenceSearch embedded />
-              </div>
-            </section>
-          )}
-
-        </div>
-      </section>
-      <Footer className="curated-playlists-page-footer" showTopBorder={false} />
+      </div>
+      <Footer showTopBorder={false} />
     </main>
   );
 }
