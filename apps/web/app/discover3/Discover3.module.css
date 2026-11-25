@@ -29,7 +29,7 @@
   color: light-dark(#aaa, #555);
 }
 
-.featured, .watching {
+.featured, .watching, .playlistShelf {
   position: relative;
   width: 100%;
 }
@@ -43,7 +43,8 @@
   transition: opacity 180ms ease;
 }
 .featured:is(:hover, :focus-within) .shelfNavigation,
-.watching:is(:hover, :focus-within) .shelfNavigation {
+.watching:is(:hover, :focus-within) .shelfNavigation,
+.playlistShelf:is(:hover, :focus-within) .shelfNavigation {
   opacity: 1;
   pointer-events: auto;
 }
@@ -65,6 +66,21 @@
   overscroll-behavior-x: contain;
 }
 .artistScroller::-webkit-scrollbar { display: none; }
+.playlistScroller {
+  --filmwave-curated-shelf-card-width: 440px;
+}
+.playlistScroller > * {
+  min-width: 0;
+}
+.playlistShelf :global([data-curated-playlist-image]) {
+  isolation: isolate;
+}
+@media (max-width: 690px) {
+  .playlistScroller {
+    --filmwave-curated-shelf-card-width: calc(100% - 28px + var(--discover3-gutter));
+  }
+}
+
 .artistCard {
   position: relative;
   container-type: inline-size;
@@ -75,7 +91,7 @@
   background: #202020;
 }
 .artistCard::after,
-.songRows :global([data-curated-playlist-image])::after {
+.playlistShelf :global([data-curated-playlist-image])::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -206,9 +222,6 @@
 }
 .songRows {
   margin-inline: var(--discover3-gutter);
-}
-.songRows :global([data-curated-playlist-image]) {
-  isolation: isolate;
 }
 .loading { color: var(--text-muted); padding: 32px 0; }
 
