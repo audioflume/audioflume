@@ -202,7 +202,7 @@
 .sectionHeading { font-size: 119px; }
 .playlistHeading { font-size: clamp(48px, 4.6vw, 76px); }
 :is(.sectionHeading, .playlistHeading) a { color: inherit; text-decoration: none; }
-.page :global(.discover2-watching-heading-hover) { color: var(--text-primary); }
+:is(.sectionHeading, .playlistHeading) a:hover { color: var(--text-primary); }
 
 .collection {
   margin-top: 139px;
