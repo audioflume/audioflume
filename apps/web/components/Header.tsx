@@ -1153,7 +1153,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-panel a {
             display: flex;
-            min-height: 60px;
+            min-height: 30px;
             align-items: center;
             border-bottom: var(--filmwave-border-width) solid var(--border);
             padding: 0 20px;
