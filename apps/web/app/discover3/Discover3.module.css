@@ -68,6 +68,7 @@
 .artistScroller::-webkit-scrollbar { display: none; }
 .playlistScroller {
   --filmwave-curated-shelf-card-width: 440px;
+  column-gap: min(var(--filmwave-page-gutter), 48px);
 }
 .playlistScroller > * {
   min-width: 0;
