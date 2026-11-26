@@ -202,7 +202,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
 ):not(.artist-public-collection-drawer *) {
-  --filmwave-song-card-hover-bg: var(--audioflume-music-song-card-state-bg, var(--filmwave-neutral-surface)) !important;
+  --filmwave-song-card-hover-bg: var(--filmwave-song-card-state-surface) !important;
 }
 
 .fw-song-list .filmwave-song-card:not(.audioflume-music-page .filmwave-song-card),
@@ -220,7 +220,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
 ):not(.artist-public-collection-drawer *):not(:where(.audioflume-music-page .fw-song-list:has(.filmwave-song-card:hover) .filmwave-song-card.is-current:not(:hover))):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
-  background: var(--audioflume-music-song-card-state-bg, var(--filmwave-neutral-surface)) !important;
+  background: var(--filmwave-song-card-state-surface) !important;
 }
 
 .filmwave-song-play-overlay,
