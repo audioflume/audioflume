@@ -1408,7 +1408,7 @@ export default function Header() {
             className="filmwave-header-logo-action"
             aria-label="audioflume Home"
           >
-            <AudioflumeLogo className="filmwave-header-audioflume-logo" />
+            <AudioflumeLogo className="filmwave-header-audioflume-logo" wordmarkOnly />
           </Link>
         }
         actions={
