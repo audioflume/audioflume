@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import ModalShell from "@/components/ModalShell";
+import PremiumLabel from "@/components/PremiumLabel";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import type { Song } from "@/lib/types";
 import styles from "./SongLicenseModal.module.css";
@@ -48,7 +49,7 @@ export default function SongLicenseModal({ song, onClose }: { song: Song; onClos
           <div className={styles.trackCopy}>
             <h3 title={song.title}>{song.title}</h3>
             <p>{song.artist}</p>
-            <span className={styles.tag}>{premium ? "Artist premium" : "Subscription catalogue"}</span>
+            {premium ? <div className={styles.premiumBadge}><PremiumLabel /></div> : <span className={styles.tag}>Subscription catalogue</span>}
           </div>
         </div>
         {!review ? (
