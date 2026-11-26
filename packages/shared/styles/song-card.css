@@ -16,11 +16,7 @@
     var(--filmwave-song-card-action-size) + var(--filmwave-song-card-action-size) +
       var(--filmwave-song-card-action-size) + 8px
   );
-  --filmwave-song-card-hover-bg: color-mix(
-    in srgb,
-    var(--bg-hover) 55%,
-    transparent
-  );
+  --filmwave-song-card-hover-bg: var(--filmwave-song-card-state-surface);
   --filmwave-song-card-action-hover-bg: var(--bg-hover-strong);
   --filmwave-song-card-action-color: var(--icon-color);
   --filmwave-song-card-action-active-color: var(--text-primary);
@@ -59,7 +55,7 @@ html[data-theme="light"]
 .filmwave-song-card.is-current,
 .desktop-song-card.is-playing,
 .desktop-song-card.is-current {
-  background: var(--bg-hover);
+  background: var(--filmwave-song-card-hover-bg);
 }
 
 .filmwave-song-card.has-expanded-content {
