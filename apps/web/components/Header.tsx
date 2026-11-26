@@ -1087,10 +1087,6 @@ export default function Header() {
           display: none;
         }
 
-        .filmwave-mobile-account-close {
-          display: none;
-        }
-
         @media (max-width: 690px) {
           .filmwave-web-header.has-open-mobile-nav {
             --audioflume-mobile-menu-header-border: transparent;
@@ -1137,22 +1133,13 @@ export default function Header() {
             cursor: pointer;
           }
 
-          .filmwave-mobile-nav-toggle svg,
-          .filmwave-mobile-account-close {
+          .filmwave-mobile-nav-toggle svg {
             width: 24px;
             height: 24px;
             fill: none;
             stroke: currentColor;
             stroke-width: 1.5;
             stroke-linecap: round;
-          }
-
-          .filmwave-mobile-account-close {
-            display: block;
-          }
-
-          .filmwave-mobile-account-close + .filmwave-header-avatar {
-            display: none;
           }
 
           .filmwave-mobile-nav-panel {
@@ -1593,22 +1580,22 @@ export default function Header() {
               type="button"
               className="filmwave-mobile-nav-toggle"
               aria-label={
-                mobileNavOpen && !mobileAccountOpen
-                  ? "Close navigation"
+                mobileNavOpen
+                  ? mobileAccountOpen ? "Close user menu" : "Close navigation"
                   : "Open navigation"
               }
-              aria-expanded={mobileNavOpen && !mobileAccountOpen}
+              aria-expanded={mobileNavOpen}
               onClick={() => {
-                if (mobileAccountOpen) {
-                  setMobileAccountOpen(false);
-                  setMobileNavOpen(true);
+                if (mobileNavOpen) {
+                  setMobileNavOpen(false);
                   return;
                 }
 
-                setMobileNavOpen((open) => !open);
+                setMobileAccountOpen(false);
+                setMobileNavOpen(true);
               }}
             >
-              {mobileNavOpen && !mobileAccountOpen ? (
+              {mobileNavOpen ? (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M4 4L20 20M20 4L4 20" />
                 </svg>
@@ -1661,11 +1648,6 @@ export default function Header() {
                         aria-haspopup="menu"
                         aria-expanded={menuOpen || (mobileNavOpen && mobileAccountOpen)}
                       >
-                        {mobileNavOpen && mobileAccountOpen ? (
-                          <svg className="filmwave-mobile-account-close" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M4 4L20 20M20 4L4 20" />
-                          </svg>
-                        ) : null}
                         <span
                           className="filmwave-header-avatar"
                           style={{
