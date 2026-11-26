@@ -293,6 +293,7 @@
   margin-bottom: 151px;
 }
 .songRows {
+  --discover-new-songs-surface: transparent;
   margin-inline: var(--discover3-gutter);
 }
 .songRows :global(.fw-song-list) {
