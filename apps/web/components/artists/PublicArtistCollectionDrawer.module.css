@@ -201,7 +201,7 @@
 }
 
 .tracks :global(.filmwave-song-card) {
-  --filmwave-song-card-hover-bg: var(--filmwave-white);
+  --filmwave-song-card-hover-bg: light-dark(var(--filmwave-song-card-state-surface), var(--filmwave-white));
   width: calc(
     100% + var(--filmwave-song-card-padding-left) +
       var(--filmwave-song-card-padding-right)
@@ -213,7 +213,7 @@
 .tracks :global(.filmwave-song-card:hover),
 .tracks :global(.filmwave-song-card.is-current),
 .tracks :global(.filmwave-song-card.is-playing) {
-  background: var(--filmwave-white);
+  background: var(--filmwave-song-card-hover-bg);
 }
 
 .empty {
