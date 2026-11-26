@@ -698,7 +698,7 @@ body:has(.audioflume-home-landing)
   margin-left: 0;
   padding-right: 0;
   padding-left: 0;
-  background: var(--bg-secondary);
+  background: var(--discover-new-songs-surface, var(--bg-secondary));
 }
 
 .audioflume-home-reference-new-songs .filmwave-song-card {
