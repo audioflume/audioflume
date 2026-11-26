@@ -31,6 +31,15 @@
   line-height: 1.5;
   color: light-dark(#aaa, #555);
 }
+.introRating {
+  display: flex;
+  justify-content: center;
+  margin: 118px 0 32px;
+}
+.introRating :global(.audioflume-home-intro-rating) {
+  justify-content: center;
+  margin-top: 0;
+}
 
 .activeDiscoverShelf {
   --discover3-gutter: var(--filmwave-page-gutter);
