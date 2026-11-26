@@ -301,7 +301,10 @@
 .fadedSong {
   position: relative;
 }
-.fadedSong::after {
+.fadedSong :global(.filmwave-song-card) {
+  position: relative;
+}
+.fadedSong :global(.filmwave-song-card)::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -309,7 +312,7 @@
   pointer-events: none;
   background: linear-gradient(to bottom, transparent, light-dark(rgba(255,255,255,.55), rgba(17,17,17,.55)));
 }
-.lastSong::after {
+.lastSong :global(.filmwave-song-card)::after {
   background: linear-gradient(to bottom, light-dark(rgba(255,255,255,.55), rgba(17,17,17,.55)), light-dark(#fff, #111111));
 }
 .exploreMusic {
