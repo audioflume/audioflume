@@ -10,7 +10,6 @@
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
   --audioflume-music-search-input-background: #f7f7f5;
   --audioflume-music-hover-background: #f7f7f5;
-  --audioflume-music-song-card-state-bg: var(--audioflume-music-search-input-background);
   --filmwave-filter-clear-all-background: #f3f3f2;
   --audioflume-music-input-focus-color: #111;
 }
@@ -408,7 +407,7 @@ main
   --filmwave-song-card-padding-y: 12px !important;
   --filmwave-song-card-padding-left: 12px !important;
   --filmwave-song-card-padding-right: 12px !important;
-  --filmwave-song-card-hover-bg: var(--audioflume-music-hover-background, var(--bg-hover));
+  --filmwave-song-card-hover-bg: var(--filmwave-song-card-state-surface);
   border-radius: 0 !important;
   padding: 12px !important;
 }
