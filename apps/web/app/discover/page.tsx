@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { MusicListShell } from "@filmwave/shared";
 import { useSongs } from "@/hooks/useSongs";
 import Discover2MixedCarousel from "../discover2/Discover2MixedCarousel";
@@ -15,7 +16,7 @@ import "../home-page.css";
 
 export default function Discover3Page() {
   const { songs, loading } = useSongs();
-  const recentSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 8), [songs]);
+  const recentSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 10), [songs]);
 
   return (
     <main className={styles.page}>
@@ -56,9 +57,17 @@ export default function Discover3Page() {
         <div className={styles.songRows}>
           {loading ? <p className={styles.loading} role="status">Loading new music…</p> : (
             <MusicListShell title={null}>
-              {recentSongs.map((song) => (
-                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
-              ))}
+              {recentSongs.map((song, index) => {
+                const card = <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />;
+                if (index < 8) return card;
+                const last = index === recentSongs.length - 1;
+                return (
+                  <div key={song.id} className={`${styles.fadedSong}${last ? ` ${styles.lastSong}` : ""}`}>
+                    {card}
+                    {last && <Link href="/music" className={styles.exploreMusic}>Explore more music <ArrowUpRightIcon size={18} strokeWidth={1.5} /></Link>}
+                  </div>
+                );
+              })}
             </MusicListShell>
           )}
         </div>
