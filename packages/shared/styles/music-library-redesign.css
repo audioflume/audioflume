@@ -818,7 +818,7 @@
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
   --filmwave-song-card-padding-left: 24px;
   --filmwave-song-card-padding-right: 24px;
-  --filmwave-song-card-hover-bg: var(--bg-hover);
+  --filmwave-song-card-hover-bg: var(--filmwave-song-card-state-surface);
   border-bottom: 0;
   border-radius: 0;
 }
