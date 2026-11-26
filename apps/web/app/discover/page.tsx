@@ -23,7 +23,18 @@ export default function Discover3Page() {
       <GlobalSearchBar position="flow" musicFieldStyle darkSimilarButton />
       <header className={styles.intro}>
         <h1>Human made music &amp; SFX for film.</h1>
-        <p>Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</p>
+        <div className={styles.introRating}>
+          <div className="audioflume-home-intro-rating">
+            <span aria-hidden="true" className="audioflume-home-intro-stars">
+              {Array.from({ length: 5 }, (_, index) => (
+                <svg key={index} viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                  <path d="M12 1L14.84 8.16L22.54 8.65L16.61 13.58L18.51 21.05L12 16.91L5.49 21.05L7.39 13.58L1.46 8.65L9.16 8.16Z" />
+                </svg>
+              ))}
+            </span>
+            <span>Music made for filmmakers and storytellers</span>
+          </div>
+        </div>
       </header>
       <Discover3ArtistShelves featured />
       <h2 className={`${styles.sectionHeading} discover3-heading-scope`}>
