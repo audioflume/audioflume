@@ -21,8 +21,8 @@
 }
 .trackCopy { min-width: 0; }
 .trackCopy h3 {
-  margin: 0 0 4px;
-  font-size: 18px;
+  margin: 0 0 1px;
+  font-size: 15px;
   font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -34,6 +34,16 @@
   font-size: 13px;
   font-weight: 300;
   line-height: 1.5;
+}
+.trackCopy h3, .trackCopy p {
+  line-height: 1.25;
+}
+.trackCopy p {
+  font-weight: 400;
+}
+.premiumBadge {
+  display: flex;
+  margin-top: 6px;
 }
 .tag {
   display: block;
