@@ -1160,6 +1160,7 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-panel {
+            --filmwave-mobile-panel-background: light-dark(#e5e5df, var(--bg-primary));
             --filmwave-mobile-menu-link-color: color-mix(
               in srgb,
               var(--text-primary) 60%,
@@ -1172,7 +1173,7 @@ export default function Header() {
             flex-direction: column;
             overflow-y: auto;
             overscroll-behavior: contain;
-            background: var(--bg-primary);
+            background: var(--filmwave-mobile-panel-background);
             color: var(--text-primary);
             opacity: 0;
             visibility: hidden;
@@ -1182,6 +1183,10 @@ export default function Header() {
               transform 280ms cubic-bezier(.22, 1, .36, 1),
               opacity 220ms ease,
               visibility 0s linear 280ms;
+          }
+
+          .filmwave-mobile-nav-panel.is-account-menu {
+            --filmwave-mobile-panel-background: var(--bg-primary);
           }
 
           .filmwave-mobile-nav-panel.is-open {
@@ -1205,30 +1210,11 @@ export default function Header() {
             justify-content: space-between;
             min-height: var(--filmwave-header-height, 75px);
             padding: env(safe-area-inset-top, 0px) var(--filmwave-header-padding-x) 0;
-            background: var(--bg-primary);
+            background: var(--filmwave-mobile-panel-background);
           }
 
           .filmwave-mobile-panel-toolbar .filmwave-mobile-nav-toggle {
             margin-left: auto;
-          }
-
-          .filmwave-mobile-panel-avatar {
-            display: grid;
-            width: 32px;
-            height: 32px;
-            flex: 0 0 32px;
-            place-items: center;
-            overflow: hidden;
-            border-radius: 50%;
-            background: #808080;
-            color: #fff;
-            font-size: 11px;
-          }
-
-          .filmwave-mobile-panel-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
           }
 
           .filmwave-mobile-nav-content {
@@ -1239,7 +1225,6 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-content > section + section {
-            border-top: 1px solid var(--border);
             padding-top: 24px;
           }
 
@@ -1253,15 +1238,6 @@ export default function Header() {
 
           .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link[aria-current] {
             color: var(--text-secondary);
-          }
-
-          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link[aria-current]::after {
-            content: "";
-            width: 6px;
-            height: 6px;
-            margin-left: 12px;
-            border-radius: 50%;
-            background: currentColor;
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -1348,6 +1324,7 @@ export default function Header() {
             .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
             display: grid;
             --filmwave-mobile-account-group-gap: 24px;
+            --filmwave-menu-profile-hover: transparent;
             gap: var(--filmwave-mobile-account-group-gap);
             width: 100%;
             border: 0;
@@ -1445,7 +1422,7 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-signout {
-            border-top: 1px solid var(--border);
+            border-top: 0;
             border-bottom: 0;
             padding-top: 20px;
           }
@@ -1780,7 +1757,7 @@ export default function Header() {
       />
 
       <nav
-        className={`filmwave-mobile-nav-panel${mobileNavOpen ? " is-open" : ""}`}
+        className={`filmwave-mobile-nav-panel${mobileNavOpen ? " is-open" : ""}${mobileAccountOpen ? " is-account-menu" : ""}`}
         aria-label={mobileAccountOpen ? "Mobile user menu" : "Mobile navigation"}
         aria-hidden={!mobileNavOpen}
         inert={!mobileNavOpen}
@@ -1800,11 +1777,6 @@ export default function Header() {
                 <path d="M4 4L20 20M20 4L4 20" />
               </svg>
             </button>
-            {user ? (
-              <span className="filmwave-mobile-panel-avatar" aria-hidden="true">
-                {avatarImage && !avatarImageFailed ? <img src={avatarImage} alt="" /> : initials}
-              </span>
-            ) : null}
           </div>
           {mobileAccountOpen && user ? (
             <>
