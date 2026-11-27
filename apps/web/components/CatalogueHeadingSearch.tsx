@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useRef } from "react";
 import XIcon from "@/components/icons/XIcon";
 import styles from "@/app/artist2/page.module.css";
 
 export default function CatalogueHeadingSearch({ title, description, placeholder, searchLabel, query, onQueryChange }: {
   title: string;
-  description: ReactNode;
+  description: string;
   placeholder: string;
   searchLabel: string;
   query: string;
@@ -52,7 +52,7 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
             </div>
           </div>
           <div className={styles.introMeta}>
-            {typeof description === "string" ? <p>{description}</p> : description}
+            <p>{description}</p>
           </div>
         </header>
   );
