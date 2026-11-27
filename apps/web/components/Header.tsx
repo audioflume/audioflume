@@ -1259,8 +1259,9 @@ export default function Header() {
             transition: color 180ms ease;
           }
 
+          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]),
           .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]) {
-            color: var(--text-primary);
+            color: var(--text-secondary);
           }
 
           .filmwave-mobile-nav-account-trigger,
@@ -1424,7 +1425,7 @@ export default function Header() {
             .filmwave-web-user-menu
             .filmwave-dropdown-item:is(:hover:not(:disabled), :focus-visible) {
             background: transparent;
-            color: var(--text-primary);
+            color: var(--text-secondary);
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
