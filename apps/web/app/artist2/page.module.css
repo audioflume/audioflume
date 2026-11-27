@@ -794,6 +794,7 @@
   position: relative;
   box-sizing: border-box;
   max-width: 100%;
+  --heading-search-inset: calc(min(40px, 2cqw) + min(28px, 1cqw));
   padding-inline: min(40px, 2cqw);
   grid-template-columns: minmax(0, max-content);
   margin: 0 auto;
@@ -845,7 +846,7 @@
   border-radius: 0;
   outline: 0;
   background: transparent;
-  padding: 0 calc(min(40px, 2cqw) + min(28px, 1cqw));
+  padding: 0 var(--heading-search-inset);
   color: var(--text-primary);
   text-align: left;
   appearance: none;
@@ -856,12 +857,12 @@
 }
 
 .headingSearchMeasureHidden + .headingSearch {
-  padding-right: 44px;
+  padding-right: calc(var(--heading-search-inset) + 36px);
 }
 
 .headingSearchClear {
   position: absolute;
-  right: 0;
+  right: max(0px, calc(var(--heading-search-inset) - 9px));
   top: 50%;
   transform: translateY(-50%);
   display: grid;
