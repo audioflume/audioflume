@@ -109,6 +109,7 @@ export default function Header() {
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobilePanelCloseRef = useRef<HTMLButtonElement>(null);
   const mobileCommunityActive =
     mobileNavOpen &&
     (pathname === "/playlists/community" ||
@@ -210,17 +211,32 @@ export default function Header() {
     if (!mobileNavOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const mobileMedia = window.matchMedia("(max-width: 690px)");
+    const focusFrame = window.requestAnimationFrame(() => mobilePanelCloseRef.current?.focus({ preventScroll: true }));
 
     function handleMobileNavEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setMobileNavOpen(false);
+      if (event.key === "Escape" && !event.defaultPrevented && !document.querySelector('[role="dialog"][aria-modal="true"]')) {
+        setMobileNavOpen(false);
+      }
+    }
+
+    function handleMobileResize(event: MediaQueryListEvent) {
+      if (!event.matches) setMobileNavOpen(false);
     }
 
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleMobileNavEscape);
+    mobileMedia.addEventListener("change", handleMobileResize);
 
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleMobileNavEscape);
+      mobileMedia.removeEventListener("change", handleMobileResize);
+      if (mobileMedia.matches) previousFocus?.focus({ preventScroll: true });
     };
   }, [mobileNavOpen]);
 
@@ -229,7 +245,7 @@ export default function Header() {
 
     const timeout = window.setTimeout(() => {
       setMobileAccountOpen(false);
-    }, 180);
+    }, 280);
 
     return () => window.clearTimeout(timeout);
   }, [mobileNavOpen, mobileAccountOpen]);
@@ -1150,50 +1166,114 @@ export default function Header() {
               var(--text-secondary)
             );
             position: fixed;
-            top: var(
-              --filmwave-web-header-bottom,
-              var(--filmwave-top-chrome-initial-bottom)
-            );
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: calc(var(--filmwave-z-header) + 2);
+            inset: 0;
+            z-index: var(--filmwave-z-menu, 140);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            overscroll-behavior: contain;
             background: var(--bg-primary);
             color: var(--text-primary);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transform: translateX(-100%);
+            transform: translateY(-18px);
             transition:
-              transform 180ms ease,
-              opacity 140ms ease,
-              visibility 0s linear 180ms;
+              transform 280ms cubic-bezier(.22, 1, .36, 1),
+              opacity 220ms ease,
+              visibility 0s linear 280ms;
           }
 
           .filmwave-mobile-nav-panel.is-open {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            transform: translateX(0);
+            transform: translateY(0);
             transition:
-              transform 180ms ease,
-              opacity 140ms ease,
+              transform 280ms cubic-bezier(.22, 1, .36, 1),
+              opacity 220ms ease,
               visibility 0s linear 0s;
+          }
+
+          .filmwave-mobile-panel-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: space-between;
+            min-height: var(--filmwave-header-height, 75px);
+            padding: env(safe-area-inset-top, 0px) var(--filmwave-header-padding-x) 0;
+            background: var(--bg-primary);
+          }
+
+          .filmwave-mobile-panel-toolbar .filmwave-mobile-nav-toggle {
+            margin-left: auto;
+          }
+
+          .filmwave-mobile-panel-avatar {
+            display: grid;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #808080;
+            color: #fff;
+            font-size: 11px;
+          }
+
+          .filmwave-mobile-panel-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
 
           .filmwave-mobile-nav-content {
             display: flex;
             flex-direction: column;
-            gap: 36px;
-            padding: 40px 32px 32px;
+            gap: 26px;
+            padding: 32px 28px max(32px, env(safe-area-inset-bottom));
+          }
+
+          .filmwave-mobile-nav-content > section + section {
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+          }
+
+          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link {
+            min-height: 47px;
+            font-size: clamp(30px, 8vw, 42px);
+            letter-spacing: -.045em;
+            line-height: 1.1;
+            color: var(--text-primary);
+          }
+
+          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link[aria-current] {
+            color: var(--text-secondary);
+          }
+
+          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link[aria-current]::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            margin-left: 12px;
+            border-radius: 50%;
+            background: currentColor;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .filmwave-mobile-nav-panel,
+            .filmwave-mobile-nav-panel.is-open {
+              transition: none;
+            }
           }
 
           .filmwave-mobile-nav-label {
-            margin: 0 0 14px;
-            color: color-mix(in srgb, var(--text-primary) 20%, var(--text-secondary));
+            margin: 0 0 12px;
+            color: var(--text-secondary);
             font-size: 11px;
             font-weight: 400;
             letter-spacing: 0.06em;
@@ -1202,10 +1282,10 @@ export default function Header() {
 
           .filmwave-mobile-nav-link {
             display: flex;
-            min-height: 30px;
+            min-height: 42px;
             align-items: center;
             color: var(--filmwave-mobile-menu-link-color);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
             text-decoration: none;
             transition: color 180ms ease;
@@ -1261,19 +1341,18 @@ export default function Header() {
           }
 
           .filmwave-mobile-account-menu {
-            min-height: 0;
-            overflow-y: auto;
+            flex: 1 0 auto;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
             display: grid;
-            --filmwave-mobile-account-group-gap: 36px;
+            --filmwave-mobile-account-group-gap: 24px;
             gap: var(--filmwave-mobile-account-group-gap);
             width: 100%;
             border: 0;
             background: var(--bg-primary);
-            padding: 40px 32px var(--filmwave-mobile-account-group-gap);
+            padding: 32px 28px max(32px, env(safe-area-inset-bottom));
             box-shadow: none;
           }
 
@@ -1296,15 +1375,16 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-avatar {
-            width: 44px;
-            height: 44px;
-            flex-basis: 44px;
+            width: 60px;
+            height: 60px;
+            flex-basis: 60px;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-name {
-            font-size: 18px;
+            font-size: 24px;
+            letter-spacing: -.035em;
             font-weight: 400;
           }
 
@@ -1323,12 +1403,12 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-dropdown-item {
-            height: 30px;
-            min-height: 30px;
+            height: 42px;
+            min-height: 42px;
             border-bottom: 0;
             padding: 0;
             color: var(--filmwave-mobile-menu-link-color);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
             line-height: normal;
             transition: color 180ms ease;
@@ -1352,19 +1432,22 @@ export default function Header() {
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu-new-project {
             border-bottom: 0;
+            background: var(--bg-secondary);
+            padding: 10px 14px;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
-            .filmwave-user-menu-library-section,
+            .filmwave-web-user-menu-library-section,
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-web-user-menu-account-section,
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             .filmwave-user-menu-signout {
-            border-top: 0;
+            border-top: 1px solid var(--border);
             border-bottom: 0;
+            padding-top: 20px;
           }
 
           .filmwave-mobile-account-menu
@@ -1698,9 +1781,31 @@ export default function Header() {
 
       <nav
         className={`filmwave-mobile-nav-panel${mobileNavOpen ? " is-open" : ""}`}
-        aria-label="Mobile navigation"
+        aria-label={mobileAccountOpen ? "Mobile user menu" : "Mobile navigation"}
         aria-hidden={!mobileNavOpen}
+        inert={!mobileNavOpen}
       >
+          <div className="filmwave-mobile-panel-toolbar">
+            <Link href="/" aria-label="audioflume Home" onClick={() => setMobileNavOpen(false)}>
+              <AudioflumeLogo className="filmwave-header-audioflume-logo" wordmarkOnly />
+            </Link>
+            <button
+              ref={mobilePanelCloseRef}
+              type="button"
+              className="filmwave-mobile-nav-toggle"
+              aria-label={mobileAccountOpen ? "Close user menu" : "Close navigation"}
+              onClick={() => setMobileNavOpen(false)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4L20 20M20 4L4 20" />
+              </svg>
+            </button>
+            {user ? (
+              <span className="filmwave-mobile-panel-avatar" aria-hidden="true">
+                {avatarImage && !avatarImageFailed ? <img src={avatarImage} alt="" /> : initials}
+              </span>
+            ) : null}
+          </div>
           {mobileAccountOpen && user ? (
             <>
               <div className="filmwave-mobile-account-menu">
