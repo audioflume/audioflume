@@ -34,6 +34,7 @@ type DirectoryArtist = {
 };
 
 const PREVIEW_CARD_COUNT = 8;
+const ARTIST_INITIALS = ["All", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 
 function ArtistPreviewCard() {
   return (
@@ -163,6 +164,7 @@ export default function Artist2Page() {
   const [error, setError] = useState("");
   const [openArtistId, setOpenArtistId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [initial, setInitial] = useState("All");
   useEffect(() => {
     const controller = new AbortController();
 
@@ -186,13 +188,14 @@ export default function Artist2Page() {
 
   const visibleArtists = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
-    if (!term) return artists;
-    return artists.filter((artist) =>
-      [artist.name, artist.designation ?? "", artist.intro_text ?? "", ...artist.genres]
-        .some((value) => value.toLocaleLowerCase().includes(term))
+    const matches = artists.filter((artist) =>
+      (initial === "All" || artist.name.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().startsWith(initial)) &&
+      (!term || [artist.name, artist.designation ?? "", artist.intro_text ?? "", ...artist.genres]
+        .some((value) => value.toLocaleLowerCase().includes(term)))
     );
-  }, [artists, query]);
-  const showPreviews = !query.trim();
+    return initial === "All" ? matches : matches.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+  }, [artists, query, initial]);
+  const showPreviews = !query.trim() && initial === "All";
   const cards = [
     ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
@@ -208,7 +211,20 @@ export default function Artist2Page() {
       <div className={styles.content}>
           <CatalogueHeadingSearch
             title="Discover the artists behind the sounds."
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore."
+            description={
+              <div className={styles.alphabetFilter} role="group" aria-label="Filter artists by first letter">
+                {ARTIST_INITIALS.map((letter) => (
+                  <button
+                    key={letter}
+                    type="button"
+                    aria-pressed={initial === letter}
+                    onClick={() => setInitial(letter)}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            }
             placeholder="search by artist, genre, or keyword"
             searchLabel="Search artists"
             query={query}
