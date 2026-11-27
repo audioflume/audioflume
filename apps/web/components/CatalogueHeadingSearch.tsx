@@ -45,7 +45,7 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
                     searchRef.current?.focus({ preventScroll: true });
                   }}
                 >
-                  <XIcon size={24} strokeWidth={1.4} />
+                  <XIcon size={36} strokeWidth={1.4} />
                 </button>
               ) : null}
               </div>
