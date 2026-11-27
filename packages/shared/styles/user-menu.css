@@ -56,7 +56,7 @@ html[data-theme="light"] {
 }
 
 .filmwave-dropdown-shell.filmwave-user-menu > .filmwave-user-menu-profile-link:hover {
-  background: var(--filmwave-menu-hover);
+  background: var(--filmwave-menu-profile-hover, var(--filmwave-menu-hover));
 }
 
 .filmwave-user-menu-profile {
@@ -332,7 +332,10 @@ html[data-theme="light"] {
   border-top: 1.25px solid var(--filmwave-menu-sep);
 }
 
-.filmwave-web-user-menu > .filmwave-user-menu-profile-link:hover,
+.filmwave-web-user-menu > .filmwave-user-menu-profile-link:hover {
+  background: var(--filmwave-menu-profile-hover, var(--filmwave-menu-hover));
+}
+
 .filmwave-web-user-menu .filmwave-web-user-menu-new-project-button:hover {
   background: var(--filmwave-menu-hover);
 }
