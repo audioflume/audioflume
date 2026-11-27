@@ -1161,11 +1161,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-panel {
             --filmwave-mobile-panel-background: light-dark(#e5e5df, var(--bg-primary));
-            --filmwave-mobile-menu-link-color: color-mix(
-              in srgb,
-              var(--text-primary) 60%,
-              var(--text-secondary)
-            );
+            --filmwave-mobile-menu-link-color: var(--text-primary);
             position: fixed;
             inset: 0;
             z-index: var(--filmwave-z-menu, 140);
@@ -1234,10 +1230,6 @@ export default function Header() {
             letter-spacing: -.045em;
             line-height: 1.1;
             color: var(--text-primary);
-          }
-
-          .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link[aria-current] {
-            color: var(--text-secondary);
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -1369,6 +1361,7 @@ export default function Header() {
             .filmwave-web-user-menu
             .filmwave-user-menu-email {
             font-size: 13px;
+            color: var(--filmwave-mobile-menu-link-color);
           }
 
           .filmwave-mobile-account-menu
@@ -1410,7 +1403,7 @@ export default function Header() {
             .filmwave-web-user-menu-new-project {
             border-bottom: 0;
             background: var(--bg-secondary);
-            padding: 10px 14px;
+            padding: 10px 0;
           }
 
           .filmwave-mobile-account-menu
