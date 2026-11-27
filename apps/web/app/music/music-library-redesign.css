@@ -584,7 +584,7 @@ main
 
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-song
-    > span {
+    > span:not([aria-hidden="true"]) {
     display: none;
   }
 
