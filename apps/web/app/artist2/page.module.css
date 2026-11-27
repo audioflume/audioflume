@@ -881,38 +881,6 @@
   color: var(--text-primary);
 }
 
-.alphabetFilter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 4px 8px;
-}
-
-.alphabetFilter button {
-  display: inline-flex;
-  min-width: 24px;
-  min-height: 28px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  padding: 0 4px;
-  background: transparent;
-  color: var(--text-secondary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: color 150ms ease;
-}
-
-.alphabetFilter button:is(:hover, :focus-visible, [aria-pressed="true"]) {
-  color: var(--text-primary);
-}
-
-.alphabetFilter button[aria-pressed="true"] {
-  box-shadow: inset 0 -1px currentColor;
-}
 
 .introMeta {
   position: relative;
