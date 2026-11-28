@@ -12,13 +12,11 @@ import Discover2MixedCarousel from "../discover2/Discover2MixedCarousel";
 import Discover3ArtistShelves from "../discover3/Discover3ArtistShelves";
 import Discover3Playlists from "../discover3/Discover3Playlists";
 import styles from "../discover3/Discover3.module.css";
-import { HomeReadyToCutSongCard, HomeTrendingSkeleton } from "../HomePageContent";
 import "../home-page.css";
 
 export default function Discover3Page() {
   const { songs, loading } = useSongs();
   const recentSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 10), [songs]);
-  const storySongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12), [songs]);
 
   return (
     <main className={styles.page}>
@@ -98,15 +96,6 @@ export default function Discover3Page() {
             </span>
           </Link>
         </h2>
-      </section>
-      <section className={styles.storySongs} aria-label="Tracks for your next story">
-        {loading ? <HomeTrendingSkeleton discoverLayout /> : (
-          <div className="audioflume-home-reference-width grid gap-2 min-[520px]:grid-cols-2 xl:grid-cols-3">
-            {storySongs.map((song, index) => (
-              <HomeReadyToCutSongCard key={song.id} song={song} index={index + 30} queue={storySongs} discoverPlaybackIcon />
-            ))}
-          </div>
-        )}
       </section>
       <div className={styles.footer}>
         <Footer pageGutter={false} showTopBorder={false} />
