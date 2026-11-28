@@ -464,7 +464,7 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           gap: 24px;
-          background: var(--audioflume-home-cta-background, light-dark(#111111, #10100f));
+          background: var(--audioflume-home-cta-background, #111111);
           transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5df;
@@ -736,7 +736,7 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
-          --filmwave-transparent-header-text: light-dark(#fff, var(--text-primary));
+          --filmwave-transparent-header-text: #fff;
           --filmwave-transparent-header-hover-text: var(--text-primary);
           --filmwave-transparent-header-muted-text: var(--text-secondary);
         }
@@ -1180,8 +1180,8 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-panel {
-            --filmwave-mobile-panel-background: #e5e5df;
-            --filmwave-mobile-menu-link-color: #111111;
+            --filmwave-mobile-panel-background: light-dark(#e5e5df, var(--bg-primary));
+            --filmwave-mobile-menu-link-color: var(--text-primary);
             position: fixed;
             inset: 0;
             z-index: var(--filmwave-z-menu, 140);
@@ -1190,7 +1190,7 @@ export default function Header() {
             overflow-y: auto;
             overscroll-behavior: contain;
             background: var(--filmwave-mobile-panel-background);
-            color: var(--filmwave-mobile-menu-link-color);
+            color: var(--text-primary);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -1203,7 +1203,6 @@ export default function Header() {
 
           .filmwave-mobile-nav-panel.is-account-menu {
             --filmwave-mobile-panel-background: var(--bg-primary);
-            --filmwave-mobile-menu-link-color: var(--text-primary);
           }
 
           .filmwave-mobile-nav-panel.is-open {
@@ -1250,7 +1249,7 @@ export default function Header() {
             font-size: clamp(30px, 8vw, 42px);
             letter-spacing: -.045em;
             line-height: 1.1;
-            color: var(--filmwave-mobile-menu-link-color);
+            color: var(--text-primary);
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -1262,7 +1261,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-label {
             margin: 0 0 12px;
-            color: color-mix(in srgb, #111111 48%, transparent);
+            color: var(--text-secondary);
             font-size: 11px;
             font-weight: 400;
             letter-spacing: 0.06em;
@@ -1282,7 +1281,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]),
           .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]) {
-            color: color-mix(in srgb, #111111 48%, transparent);
+            color: var(--text-secondary);
           }
 
           .filmwave-mobile-nav-account-trigger,
@@ -1456,8 +1455,8 @@ export default function Header() {
             min-height: 48px;
             justify-content: center;
             border: 0;
-            background: var(--filmwave-mobile-menu-link-color);
-            color: #fff;
+            background: var(--text-primary);
+            color: var(--bg-primary);
             font-size: 13px;
             font-weight: 500;
             text-decoration: none;
