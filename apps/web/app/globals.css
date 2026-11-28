@@ -107,11 +107,17 @@ html.light, html[data-theme="light"] {
 
 /* Website-only dark palette: darker canvas with raised surfaces kept distinct. */
 :root:not(.light):not([data-theme="light"]) {
-  --filmwave-black: #111111;
-  --filmwave-neutral-surface: #1b1b1b;
-  --filmwave-search-surface: #1b1b1b;
-  --bg-tertiary-hover: #252525;
-  --bg-panel-2: #222222;
+  --filmwave-black: #131312;
+  --filmwave-neutral-surface: #1c1c1a;
+  --filmwave-search-surface: #1c1c1a;
+  --bg-tertiary-hover: #272725;
+  --bg-panel-2: #272725;
+  --filmwave-section-title-color: #f0f0ed;
+  --text-primary: #dededb;
+  --text-secondary: #92928e;
+  --text-muted: #777773;
+  --text-subtle: #777773;
+  --icon-color: #60605d;
 }
 
 html,
@@ -218,7 +224,7 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
 
 :where(html:not(.light):not([data-theme="light"]))
   .audioflume-arrow-text-link {
-  color: #444444;
+  color: var(--text-secondary);
 }
 
 .audioflume-arrow-text-link.inline-flex {
