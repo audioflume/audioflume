@@ -722,7 +722,7 @@ main
 }
 
 .audioflume-music-page
-  > section:not(:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open))
+  > section
   > .fw-music-content-column {
   padding-right: calc(var(--filmwave-page-gutter) - 12px) !important;
   padding-left: calc(var(--filmwave-page-gutter) - 8px) !important;
@@ -751,14 +751,16 @@ main
   display: none !important;
 }
 
-.audioflume-music-page
-  > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
-  > .fw-music-content-column {
-  padding-right: var(--audioflume-music-content-gap) !important;
-  padding-left: calc(
-    var(--audioflume-music-filter-width) +
-      var(--audioflume-music-content-gap)
-  ) !important;
+@media (width > 690px) {
+  .audioflume-music-page
+    > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
+    > .fw-music-content-column {
+    padding-right: var(--audioflume-music-content-gap) !important;
+    padding-left: calc(
+      var(--audioflume-music-filter-width) +
+        var(--audioflume-music-content-gap)
+    ) !important;
+  }
 }
 
 .audioflume-music-page
@@ -1543,10 +1545,12 @@ main
   background: #353535;
 }
 
-.audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
-  --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
-  --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
-  --audioflume-music-banner-slide-width: calc(100vw - var(--audioflume-music-filter-width) - var(--audioflume-music-content-gap) * 2 - 20px);
+@media (width > 690px) {
+  .audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
+    --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
+    --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
+    --audioflume-music-banner-slide-width: calc(100vw - var(--audioflume-music-filter-width) - var(--audioflume-music-content-gap) * 2 - 20px);
+  }
 }
 
 .audioflume-music-page .audioflume-music-home-hero [aria-label="featured artist banners"] {
@@ -2214,12 +2218,6 @@ main
 }
 
 @media (max-width: 690px) {
-  .audioflume-music-page
-    > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
-    > .fw-music-content-column {
-    padding-left: var(--audioflume-music-content-gap) !important;
-  }
-
   .audioflume-music-page
     > section
     > .fw-music-content-column
