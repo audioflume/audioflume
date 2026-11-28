@@ -3,8 +3,8 @@
   --discover3-featured-card-width: min(1204px, calc(100cqw - 28px - var(--discover3-gutter)));
   --discover3-watching-mark-width: 100px;
   --discover3-gutter: clamp(22px, 4vw, 80px);
-  --audioflume-music-field-icon-color: light-dark(#999, #555);
-  --audioflume-music-field-placeholder-color: light-dark(#aaa, #555);
+  --audioflume-music-field-icon-color: light-dark(#999, #444442);
+  --audioflume-music-field-placeholder-color: light-dark(#aaa, #444442);
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
