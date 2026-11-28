@@ -542,7 +542,7 @@ export function HomeReadyToCutSongCard({
         if (event.key !== "Enter" && event.key !== " ") return;
         stopHomeTrackKeyEvent(event);
       }}
-      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 rounded-[4px] bg-[var(--home-ready-track-background,color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%))] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 rounded-[4px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <HomeReadyToCutCoverImage song={song} index={index} />
@@ -1077,7 +1077,7 @@ export function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayou
       {Array.from({ length: 12 }, (_, index) => (
         <article
           key={index}
-          className={`audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 rounded-[4px] bg-[var(--home-ready-track-background,color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%))] px-2${discoverLayout ? " is-discover-skeleton" : ""}`}
+          className={`audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 rounded-[4px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2${discoverLayout ? " is-discover-skeleton" : ""}`}
           aria-hidden="true"
         >
           <HomeSkeletonBlock className="is-ready-track-cover" />
