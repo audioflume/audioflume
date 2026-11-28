@@ -186,7 +186,7 @@ export default function ModalShell({
         <button
           type="button"
           onClick={onClose}
-          className="filmwave-modal-close absolute right-5 top-5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border-0 p-0 text-[var(--text-secondary)] transition-colors duration-150"
+          className="filmwave-modal-close absolute right-5 top-5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border-0 p-0 text-[light-dark(var(--text-secondary),#60605d)] transition-colors duration-150"
           aria-label={closeLabel}
         >
           <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
