@@ -4508,7 +4508,7 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   align-items: center;
   background: var(--filmwave-search-surface);
-  color: #5a5a5a;
+  color: var(--filmwave-web-search-muted, #5a5a5a);
 }
 .audioflume-home-landing-search-brand {
   display: flex;
@@ -4562,7 +4562,7 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
 }
 .audioflume-home-landing-search-field input::placeholder {
-  color: #5a5a5a;
+  color: var(--filmwave-web-search-muted, #5a5a5a);
   font-size: 16px;
   opacity: 1;
 }
@@ -5660,9 +5660,9 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
   --audioflume-home-search-divider: #303030;
-  --audioflume-home-search-icon: #555;
+  --audioflume-home-search-icon: var(--filmwave-web-search-muted, #555);
   --audioflume-home-search-active: #fff;
-  --audioflume-home-search-placeholder: #555;
+  --audioflume-home-search-placeholder: var(--filmwave-web-search-muted, #555);
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #e5e5df;
   --audioflume-home-find-similar-text: #111;
