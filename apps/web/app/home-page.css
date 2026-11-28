@@ -5653,8 +5653,8 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 :where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
   --audioflume-home-header-background: var(--bg-primary);
   --audioflume-home-header-scrolled-background: var(--bg-primary);
-  --audioflume-home-header-text: #fff;
-  --audioflume-home-header-muted-link: #fff;
+  --audioflume-home-header-text: var(--text-primary);
+  --audioflume-home-header-muted-link: var(--text-primary);
   --audioflume-home-canvas: var(--bg-primary);
   --audioflume-home-content-text: var(--text-primary);
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
@@ -6779,8 +6779,8 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   body:has(.audioflume-home-experiment .audioflume-home-intro) .filmwave-web-header:not(.is-home-scrolled) {
     --audioflume-home-header-background: transparent;
     --audioflume-home-header-border: transparent;
-    --audioflume-home-header-text: #fff;
-    --audioflume-home-header-muted-link: #fff;
+    --audioflume-home-header-text: light-dark(#fff, var(--text-primary));
+    --audioflume-home-header-muted-link: light-dark(#fff, var(--text-primary));
   }
 
   .audioflume-home-experiment:has(.audioflume-home-intro) {
