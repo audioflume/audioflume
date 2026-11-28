@@ -49,7 +49,6 @@ function InviteCountBadge({ count }: { count: number }) {
 
 export default function UserMenu({
   onClose,
-  mobile = false,
 }: {
   onClose?: () => void;
   mobile?: boolean;
@@ -111,7 +110,6 @@ export default function UserMenu({
       ) : null}
 
       <UserMenuActions className="filmwave-web-user-menu-library-section">
-        {mobile ? <h2 className="filmwave-mobile-nav-label">Projects</h2> : null}
         <MenuLink
           href="/projects"
           label="My Projects"
@@ -126,7 +124,6 @@ export default function UserMenu({
       </UserMenuActions>
 
       <UserMenuActions className="filmwave-web-user-menu-account-section">
-        {mobile ? <h2 className="filmwave-mobile-nav-label">Account</h2> : null}
         <MenuLink
           href="/account/settings"
           label="Settings"
