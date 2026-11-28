@@ -10,7 +10,7 @@
   display: grid;
   width: 100%;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--bg-secondary);
 }
 
