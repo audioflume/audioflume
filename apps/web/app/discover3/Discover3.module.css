@@ -362,6 +362,11 @@
   line-height: 1.12;
   letter-spacing: -.058em;
 }
+.storySongs {
+  --home-ready-track-background: var(--filmwave-song-card-state-surface);
+  --home-reference-width: 100%;
+  margin: 0 var(--discover3-gutter) 122px;
+}
 .footer {
   margin-inline: var(--discover3-gutter);
 }
