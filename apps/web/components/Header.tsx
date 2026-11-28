@@ -465,11 +465,14 @@ export default function Header() {
           justify-content: space-between;
           gap: 24px;
           background: var(--audioflume-home-cta-background, #111111);
-          border-bottom: light-dark(0px, var(--filmwave-border-width)) solid var(--filmwave-border-color);
           transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5df;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+        }
+
+        :where(html:not(.light):not([data-theme="light"])) .audioflume-artist-cta-bar {
+          border-bottom: var(--filmwave-border-width) solid var(--filmwave-border-color);
         }
 
         .audioflume-artist-cta-copy {
