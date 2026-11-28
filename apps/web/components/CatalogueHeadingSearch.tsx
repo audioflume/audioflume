@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import XIcon from "@/components/icons/XIcon";
 import styles from "@/app/artist2/page.module.css";
 
 export default function CatalogueHeadingSearch({ title, description, placeholder, searchLabel, query, onQueryChange }: {
@@ -45,7 +44,9 @@ export default function CatalogueHeadingSearch({ title, description, placeholder
                     searchRef.current?.focus({ preventScroll: true });
                   }}
                 >
-                  <XIcon size={36} strokeWidth={1.4} />
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" />
+                  </svg>
                 </button>
               ) : null}
               </div>
