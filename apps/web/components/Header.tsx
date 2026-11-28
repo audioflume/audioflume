@@ -137,7 +137,7 @@ export default function Header() {
   const homeChromeRoute = pathname === "/" || pathname === "/discover3" || pathname === "/curated-playlists" || pathname === "/community-playlists" || pathname === "/artists" || pathname === "/pricing";
   const transparentAtTop = pathname === "/founding-artists";
   const headerIsSolid =
-    !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
+    !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [
     "filmwave-web-header",
     useCombinedHeaderHeight ? "is-editorial-header" : "",
