@@ -2228,7 +2228,7 @@ main
       var(--filmwave-top-chrome-initial-bottom)
     ) !important;
     right: 0 !important;
-    bottom: 0 !important;
+    bottom: var(--filmwave-sidebar-bottom-offset, 0px) !important;
     left: 0 !important;
     z-index: calc(var(--filmwave-z-header) - 2) !important;
     width: 100vw !important;
