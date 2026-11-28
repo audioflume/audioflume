@@ -479,7 +479,7 @@ export default function AddToPlaylistModal({
                     placeholder="Name"
                     data-transparent-input
                     autoFocus
-                    className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)] outline-none transition placeholder:text-[light-dark(var(--text-muted),#444442)] focus:border-0 disabled:opacity-60"
+                    className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-0 disabled:opacity-60"
                   />
 
                   <button
