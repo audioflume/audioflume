@@ -981,7 +981,7 @@ main
   .fw-filter-accordion-content.fw-filter-advanced-panel-content:has(
     > .fw-filter-control-stack
   ) {
-  --filmwave-filter-button-text: light-dark(var(--text-secondary), #92928e);
+  --filmwave-filter-button-text: light-dark(var(--text-secondary), #777773);
   padding-top: 18px;
   padding-bottom: 18px;
 }
