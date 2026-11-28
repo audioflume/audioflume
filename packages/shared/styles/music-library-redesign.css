@@ -481,7 +481,7 @@
   border-radius: 999px;
   background: var(--bg-control);
   padding: 4px 11px;
-  color: var(--filmwave-filter-button-text, var(--text-secondary));
+  color: var(--text-secondary);
   font-family: inherit;
   font-size: 10px;
   font-weight: 400;
@@ -555,7 +555,7 @@
   border-radius: 999px;
   background: transparent;
   padding: 4px 11px;
-  color: var(--filmwave-filter-button-text, var(--text-secondary));
+  color: var(--text-secondary);
   font-family: inherit;
   font-size: 10px;
   font-weight: 400;
