@@ -112,6 +112,12 @@ html.light, html[data-theme="light"] {
   --filmwave-search-surface: #1b1b1b;
   --bg-tertiary-hover: #252525;
   --bg-panel-2: #222222;
+  --filmwave-web-search-muted: #444444;
+  --filmwave-song-secondary: #505050;
+  --filmwave-song-muted: #404040;
+  --filmwave-filter-secondary: #505050;
+  --filmwave-filter-muted: #404040;
+  --waveform-color: #363636;
 }
 
 html,
