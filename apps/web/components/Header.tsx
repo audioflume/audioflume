@@ -736,7 +736,7 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
-          --filmwave-transparent-header-text: #fff;
+          --filmwave-transparent-header-text: light-dark(#fff, var(--text-primary));
           --filmwave-transparent-header-hover-text: var(--text-primary);
           --filmwave-transparent-header-muted-text: var(--text-secondary);
         }
