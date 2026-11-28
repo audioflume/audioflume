@@ -767,7 +767,6 @@ main
   > section
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
-  --text-secondary: light-dark(color-mix(in srgb, var(--filmwave-black) 48%, transparent), #92928e);
   --audioflume-music-filter-height: calc(
     100dvh - var(--filmwave-header-height, 60px) - 75px -
       var(--filmwave-sidebar-bottom-offset, 0px)
