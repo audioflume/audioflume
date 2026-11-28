@@ -125,7 +125,7 @@
   border-radius: 0;
   background: var(--audioflume-music-search-input-background, #1b1b1b);
   padding: 0 16px;
-  color: light-dark(#555, #444442);
+  color: #555;
 }
 
 .audioflume-music-page-searchbar
@@ -171,7 +171,7 @@
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: light-dark(#555, #444442);
+  color: #555;
   opacity: 1;
 }
 
@@ -981,7 +981,6 @@ main
   .fw-filter-accordion-content.fw-filter-advanced-panel-content:has(
     > .fw-filter-control-stack
   ) {
-  --filmwave-filter-button-text: light-dark(var(--text-secondary), #494946);
   padding-top: 18px;
   padding-bottom: 18px;
 }
