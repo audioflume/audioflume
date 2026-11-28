@@ -506,6 +506,15 @@ export default function Header() {
         }
 
         @media (max-width: 640px) {
+          .audioflume-artist-cta-bar {
+            gap: 12px;
+          }
+
+          .audioflume-artist-cta-copy {
+            white-space: normal;
+            line-height: 1.2;
+          }
+
           .audioflume-artist-cta-link {
             font-size: 8px;
           }
@@ -1444,7 +1453,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && !useCombinedHeaderHeight && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
+      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
