@@ -50,6 +50,7 @@
   width: 100%;
   height: 367px;
   overflow: hidden;
+  border-radius: 8px;
   color: #fff;
   background: #131313;
   text-decoration: none;
