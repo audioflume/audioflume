@@ -235,6 +235,10 @@ html[data-theme="light"] {
   padding: 12px;
 }
 
+.filmwave-web-user-menu .filmwave-user-menu-email {
+  color: light-dark(var(--text-secondary), var(--text-primary));
+}
+
 .filmwave-web-user-menu-new-project {
   border-bottom: 1.25px solid var(--filmwave-menu-sep);
 }
@@ -304,6 +308,7 @@ html[data-theme="light"] {
 
 .filmwave-web-user-menu .filmwave-dropdown-item {
   font-weight: 400;
+  color: light-dark(#222222, var(--text-primary));
 }
 
 :where(html.light, html[data-theme="light"])
