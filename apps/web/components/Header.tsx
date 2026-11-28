@@ -1645,15 +1645,9 @@ export default function Header() {
                 setMobileNavOpen(true);
               }}
             >
-              {mobileNavOpen ? (
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 4L20 20M20 4L4 20" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M1 9H23M1 15H23" strokeLinecap="butt" />
-                </svg>
-              )}
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M1 9H23M1 15H23" strokeLinecap="butt" />
+              </svg>
             </button>
 
             {isLoaded && (
