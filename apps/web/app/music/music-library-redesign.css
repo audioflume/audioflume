@@ -64,7 +64,7 @@
   border-right: 0;
   background: transparent;
   padding: 0 30px;
-  color: var(--text-primary);
+  color: light-dark(var(--text-primary), var(--text-secondary));
   font: inherit;
   font-size: 13px;
   font-weight: 400;
@@ -931,7 +931,7 @@ main
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-label {
-  color: var(--text-primary);
+  color: light-dark(var(--text-primary), var(--text-secondary));
 }
 
 .audioflume-music-page
@@ -1097,7 +1097,7 @@ main
   position: relative;
   width: 20px;
   height: 20px;
-  color: var(--text-primary) !important;
+  color: light-dark(var(--text-primary), var(--text-secondary)) !important;
   transition: opacity 160ms ease, color 160ms ease, transform 160ms ease !important;
 }
 
@@ -2317,7 +2317,7 @@ main
     flex: 0 0 var(--filmwave-searchbar-height, 75px);
     align-items: center;
     justify-content: space-between;
-    color: var(--text-primary);
+    color: light-dark(var(--text-primary), var(--text-secondary));
   }
 
   .audioflume-music-page
