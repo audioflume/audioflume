@@ -1180,8 +1180,8 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-panel {
-            --filmwave-mobile-panel-background: light-dark(#e5e5df, var(--bg-primary));
-            --filmwave-mobile-menu-link-color: var(--text-primary);
+            --filmwave-mobile-panel-background: #e5e5df;
+            --filmwave-mobile-menu-link-color: #111111;
             position: fixed;
             inset: 0;
             z-index: var(--filmwave-z-menu, 140);
@@ -1190,7 +1190,7 @@ export default function Header() {
             overflow-y: auto;
             overscroll-behavior: contain;
             background: var(--filmwave-mobile-panel-background);
-            color: var(--text-primary);
+            color: var(--filmwave-mobile-menu-link-color);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -1203,6 +1203,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-panel.is-account-menu {
             --filmwave-mobile-panel-background: var(--bg-primary);
+            --filmwave-mobile-menu-link-color: var(--text-primary);
           }
 
           .filmwave-mobile-nav-panel.is-open {
@@ -1249,7 +1250,7 @@ export default function Header() {
             font-size: clamp(30px, 8vw, 42px);
             letter-spacing: -.045em;
             line-height: 1.1;
-            color: var(--text-primary);
+            color: var(--filmwave-mobile-menu-link-color);
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -1261,7 +1262,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-label {
             margin: 0 0 12px;
-            color: var(--text-secondary);
+            color: color-mix(in srgb, #111111 48%, transparent);
             font-size: 11px;
             font-weight: 400;
             letter-spacing: 0.06em;
@@ -1281,7 +1282,7 @@ export default function Header() {
 
           .filmwave-mobile-nav-content > section:first-child .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]),
           .filmwave-mobile-nav-link:is(:hover, :focus-visible, [aria-current]) {
-            color: var(--text-secondary);
+            color: color-mix(in srgb, #111111 48%, transparent);
           }
 
           .filmwave-mobile-nav-account-trigger,
@@ -1455,8 +1456,8 @@ export default function Header() {
             min-height: 48px;
             justify-content: center;
             border: 0;
-            background: var(--text-primary);
-            color: var(--bg-primary);
+            background: var(--filmwave-mobile-menu-link-color);
+            color: #fff;
             font-size: 13px;
             font-weight: 500;
             text-decoration: none;
