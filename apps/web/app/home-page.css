@@ -6776,7 +6776,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 
 @media (max-width: 690px) {
-  body:has(.audioflume-home-experiment .audioflume-home-intro) .filmwave-web-header:not(.is-home-scrolled):not(.has-open-mobile-nav) {
+  body:has(.audioflume-home-experiment .audioflume-home-intro) .filmwave-web-header:not(.is-home-scrolled) {
     --audioflume-home-header-background: transparent;
     --audioflume-home-header-border: transparent;
     --audioflume-home-header-text: #fff;
