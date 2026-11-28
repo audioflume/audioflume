@@ -465,6 +465,7 @@ export default function Header() {
           justify-content: space-between;
           gap: 24px;
           background: var(--audioflume-home-cta-background, #111111);
+          border-bottom: light-dark(0px, var(--filmwave-border-width)) solid var(--filmwave-border-color);
           transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5df;
