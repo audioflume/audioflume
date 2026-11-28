@@ -3232,7 +3232,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner) {
-  --audioflume-home-canvas: light-dark(#fff, var(--bg-primary));
+  --audioflume-home-canvas: light-dark(#fff, #111111);
   --audioflume-experiment-search-bottom-padding: 0px;
 }
 
@@ -4508,7 +4508,7 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   align-items: center;
   background: var(--filmwave-search-surface);
-  color: light-dark(#5a5a5a, #444442);
+  color: #5a5a5a;
 }
 .audioflume-home-landing-search-brand {
   display: flex;
@@ -4562,7 +4562,7 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
 }
 .audioflume-home-landing-search-field input::placeholder {
-  color: light-dark(#5a5a5a, #444442);
+  color: #5a5a5a;
   font-size: 16px;
   opacity: 1;
 }
@@ -5653,20 +5653,20 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 :where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
   --audioflume-home-header-background: var(--bg-primary);
   --audioflume-home-header-scrolled-background: var(--bg-primary);
-  --audioflume-home-header-text: var(--text-primary);
-  --audioflume-home-header-muted-link: var(--text-primary);
+  --audioflume-home-header-text: #fff;
+  --audioflume-home-header-muted-link: #fff;
   --audioflume-home-canvas: var(--bg-primary);
-  --audioflume-home-content-text: var(--text-primary);
+  --audioflume-home-content-text: #fff;
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
   --audioflume-home-search-divider: #303030;
-  --audioflume-home-search-icon: #444442;
+  --audioflume-home-search-icon: #555;
   --audioflume-home-search-active: #fff;
-  --audioflume-home-search-placeholder: #444442;
+  --audioflume-home-search-placeholder: #555;
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #e5e5df;
   --audioflume-home-find-similar-text: #111;
-  --audioflume-home-songs-surface: var(--bg-panel-2);
+  --audioflume-home-songs-surface: #262626;
   --audioflume-home-songs-link: #fff;
 }
 
@@ -6779,8 +6779,8 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   body:has(.audioflume-home-experiment .audioflume-home-intro) .filmwave-web-header:not(.is-home-scrolled) {
     --audioflume-home-header-background: transparent;
     --audioflume-home-header-border: transparent;
-    --audioflume-home-header-text: light-dark(#fff, var(--text-primary));
-    --audioflume-home-header-muted-link: light-dark(#fff, var(--text-primary));
+    --audioflume-home-header-text: #fff;
+    --audioflume-home-header-muted-link: #fff;
   }
 
   .audioflume-home-experiment:has(.audioflume-home-intro) {
