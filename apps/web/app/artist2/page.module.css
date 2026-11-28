@@ -9,12 +9,12 @@
   --curated-main-pill-active-background: transparent;
   --curated-main-pill-active-color: var(--text-primary);
   --audioflume-experiment-search-bottom-padding: 0px;
-  --audioflume-music-field-icon-color: light-dark(#999, #555);
-  --audioflume-music-field-placeholder-color: light-dark(#aaa, #555);
+  --audioflume-music-field-icon-color: light-dark(#999, var(--icon-color));
+  --audioflume-music-field-placeholder-color: light-dark(#aaa, var(--text-muted));
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 60px);
-  background: light-dark(#fff, #111111);
+  background: light-dark(#fff, var(--bg-primary));
   color: var(--text-primary);
 }
 
@@ -718,7 +718,7 @@
 
 .artist2Intro p {
   margin: clamp(75px, 9.5vw, 145px) 0 0;
-  color: light-dark(#999, #555);
+  color: light-dark(#999, var(--icon-color));
   font-size: 14px;
   font-weight: 300;
   line-height: 1.5;
@@ -903,7 +903,7 @@
   border: 0;
   background: transparent;
   padding: 0;
-  color: light-dark(#999, #555);
+  color: light-dark(#999, var(--icon-color));
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
   font-weight: 300;
