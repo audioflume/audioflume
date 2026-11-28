@@ -226,12 +226,13 @@ export default function CreatePlaylistModal({
 
           <input
             id="playlist-name"
+            data-transparent-input
             type="text"
             value={name}
             disabled={isCreating}
             onChange={(e) => onNameChange(toSmartTitleCaseInput(e.target.value))}
             onBlur={normalizeName}
-            className={modalInputClass}
+            className={modalInputClass.replace("bg-[var(--bg-primary)]", "bg-transparent")}
           />
         </div>
 
