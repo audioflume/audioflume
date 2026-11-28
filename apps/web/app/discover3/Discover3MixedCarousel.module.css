@@ -1,14 +1,15 @@
 .shelf {
   --card-width: 310px;
   --lift: 46px;
+  --caption-feather: 8px;
   --inset: 22px;
   position: relative;
   width: 100vw;
-  margin: calc(-1 * var(--lift)) 0 0 calc(50% - 50vw);
+  margin: calc(-1 * var(--lift)) 0 calc(-1 * var(--caption-feather)) calc(50% - 50vw);
 }
 .shelfNavigation {
   position: absolute;
-  top: 100%;
+  top: calc(100% - var(--caption-feather));
   left: var(--discover3-gutter);
   right: var(--discover3-gutter);
   opacity: 0;
@@ -31,7 +32,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  padding: 0;
+  padding: 0 0 var(--caption-feather);
   scrollbar-width: none;
 }
 .scroller::-webkit-scrollbar { display: none; }
@@ -66,17 +67,17 @@
 .item:is(:hover, :focus-within) .card { transform: translateY(calc(-1 * var(--lift))); }
 .caption {
   position: absolute;
-  bottom: 0;
+  bottom: calc(-1 * var(--caption-feather));
   left: 0;
   right: 0;
   z-index: 0;
   display: grid;
   box-sizing: border-box;
-  height: var(--lift);
+  height: calc(var(--lift) + var(--caption-feather));
   align-content: end;
-  padding-bottom: 4px;
+  padding-bottom: var(--caption-feather);
   overflow: hidden;
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 7px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--caption-feather)), transparent);
   font-size: 18px;
   line-height: 1.05;
   letter-spacing: -.045em;
@@ -122,7 +123,7 @@
 .songCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .songCopy span:last-child { font-size: 10px; }
 @media (hover: none) {
-  .shelf { margin-top: 0; }
+  .shelf { --caption-feather: 0px; margin-top: 0; }
   .item { padding-top: 0; padding-bottom: var(--lift); }
   .caption { opacity: 1; mask-image: none; padding-bottom: 0; }
   .caption > span { transform: none; }
