@@ -156,7 +156,7 @@ html[data-theme="light"]
   max-width: 100%;
   overflow: hidden;
   margin: 2px 0 0;
-  color: var(--text-subtle);
+  color: var(--filmwave-song-secondary, var(--text-subtle));
   font-size: 11.5px;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -167,14 +167,14 @@ html[data-theme="light"]
 .filmwave-song-duration,
 .desktop-song-duration,
 .desktop-song-key-bpm {
-  color: var(--text-secondary);
+  color: var(--filmwave-song-secondary, var(--text-secondary));
   font-size: 11.5px;
 }
 
 .filmwave-song-genre,
 .desktop-song-genre,
 .desktop-song-genre-slot span {
-  color: var(--text-muted);
+  color: var(--filmwave-song-muted, var(--text-muted));
   font-size: 11px;
   font-weight: 500;
   line-height: 1.25;
