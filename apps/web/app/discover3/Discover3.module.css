@@ -156,7 +156,6 @@
   container-type: inline-size;
   isolation: isolate;
   overflow: hidden;
-  border-radius: 8px;
   scroll-snap-align: var(--discover3-card-snap-align, start);
   scroll-snap-stop: var(--discover3-card-snap-stop, normal);
   scroll-margin-inline-end: var(--discover3-card-snap-margin-end, 0px);
