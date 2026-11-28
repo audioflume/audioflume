@@ -224,7 +224,6 @@ html[data-theme="light"] {
 .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
   box-sizing: border-box;
   background: var(--filmwave-web-user-menu-bg);
-  --filmwave-menu-hover: light-dark(#f7f7f5, var(--bg-hover));
   padding: 10px;
 }
 
@@ -234,10 +233,6 @@ html[data-theme="light"] {
 
 .filmwave-web-user-menu .filmwave-user-menu-profile {
   padding: 12px;
-}
-
-.filmwave-web-user-menu .filmwave-user-menu-email {
-  color: light-dark(var(--text-secondary), var(--text-primary));
 }
 
 .filmwave-web-user-menu-new-project {
@@ -266,7 +261,7 @@ html[data-theme="light"] {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: light-dark(color-mix(in srgb, var(--text-primary) 10%, transparent), var(--filmwave-search-surface));
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
   color: var(--text-primary);
   transition: background-color 100ms ease;
 }
@@ -309,7 +304,6 @@ html[data-theme="light"] {
 
 .filmwave-web-user-menu .filmwave-dropdown-item {
   font-weight: 400;
-  color: light-dark(#222222, var(--text-primary));
 }
 
 :where(html.light, html[data-theme="light"])
