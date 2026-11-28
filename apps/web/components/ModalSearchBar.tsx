@@ -24,7 +24,7 @@ export default function ModalSearchBar({
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="h-[21px] w-[21px] shrink-0 fill-none stroke-current transition-colors duration-150 group-focus-within:text-[var(--text-primary)] [stroke-linecap:round] [stroke-width:1.4]"
+        className="h-[21px] w-[21px] shrink-0 fill-none stroke-current text-[var(--filmwave-web-search-muted,#999)] transition-colors duration-150 group-focus-within:text-[var(--text-primary)] [stroke-linecap:round] [stroke-width:1.4]"
       >
         <circle cx="11" cy="11" r="6.5" />
         <path d="m16 16 4.5 4.5" />
@@ -35,7 +35,7 @@ export default function ModalSearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-[14px] font-light text-[var(--text-primary)] !outline-none placeholder:text-[14px] placeholder:text-[#a3a3a3] placeholder:opacity-100 focus:!border-0"
+        className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-[14px] font-light text-[var(--text-primary)] !outline-none placeholder:text-[14px] placeholder:text-[var(--filmwave-web-search-muted,#aaa)] placeholder:opacity-100 focus:!border-0"
       />
 
       {value ? (
