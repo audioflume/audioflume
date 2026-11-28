@@ -1787,7 +1787,6 @@ export default function Header() {
             <div className="filmwave-mobile-nav-content">
               {MOBILE_NAV_GROUPS.map((group) => (
                 <section key={group.label} aria-label={group.label}>
-                  <h2 className="filmwave-mobile-nav-label">{group.label}</h2>
                   {group.links.map((link) => {
                     if (link.href.startsWith("mailto:")) {
                       return (
