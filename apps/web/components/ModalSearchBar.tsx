@@ -19,12 +19,12 @@ export default function ModalSearchBar({
 }: ModalSearchBarProps) {
   return (
     <label
-      className={`flex h-12 flex-shrink-0 items-center gap-3 rounded-none bg-[var(--filmwave-search-surface)] px-4 text-[var(--text-muted)]${className ? ` ${className}` : ""}`}
+      className={`group flex h-12 flex-shrink-0 items-center gap-3 rounded-none bg-[var(--filmwave-search-surface)] px-4${className ? ` ${className}` : ""}`}
     >
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="h-[22px] w-[22px] shrink-0 fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]"
+        className="h-[21px] w-[21px] shrink-0 fill-none stroke-current text-[light-dark(#999,#444442)] transition-colors duration-150 group-focus-within:text-[var(--text-primary)] [stroke-linecap:round] [stroke-width:1.4]"
       >
         <circle cx="11" cy="11" r="6.5" />
         <path d="m16 16 4.5 4.5" />
@@ -35,17 +35,17 @@ export default function ModalSearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-[16px] font-light text-[var(--text-primary)] !outline-none placeholder:text-[16px] placeholder:text-[#a3a3a3] focus:!border-0"
+        className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-[14px] font-light text-[var(--text-primary)] !outline-none placeholder:text-[14px] placeholder:text-[light-dark(#aaa,#444442)] placeholder:opacity-100 focus:!border-0"
       />
 
       {value ? (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="flex h-[22px] w-[22px] shrink-0 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
+          className="flex h-[22px] w-[22px] shrink-0 items-center justify-center border-0 bg-transparent p-0 text-[#999] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={clearLabel}
         >
-          <XIcon size={8} strokeWidth={1.4} className="h-[21px] w-[21px]" />
+          <XIcon size={8} strokeWidth={1.4} className="h-[18px] w-[18px]" />
         </button>
       ) : null}
     </label>
