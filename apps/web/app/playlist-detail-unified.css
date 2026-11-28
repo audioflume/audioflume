@@ -441,7 +441,7 @@
   --border: color-mix(in srgb, var(--filmwave-white) 5%, transparent);
   --border-subtle: color-mix(in srgb, var(--filmwave-white) 5%, transparent);
   --filmwave-border-color: color-mix(in srgb, var(--filmwave-white) 5%, transparent);
-  --waveform-color: color-mix(in srgb, var(--filmwave-white) 30%, transparent);
+  --waveform-color: #41413e;
   --waveform-progress: var(--filmwave-white);
   background: var(--filmwave-black);
   color: var(--filmwave-white);
