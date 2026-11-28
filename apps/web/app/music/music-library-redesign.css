@@ -125,7 +125,7 @@
   border-radius: 0;
   background: var(--audioflume-music-search-input-background, #1b1b1b);
   padding: 0 16px;
-  color: light-dark(#555, var(--icon-color));
+  color: light-dark(#555, #444442);
 }
 
 .audioflume-music-page-searchbar
@@ -171,7 +171,7 @@
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: light-dark(#555, var(--text-muted));
+  color: light-dark(#555, #444442);
   opacity: 1;
 }
 
