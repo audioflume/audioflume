@@ -268,7 +268,7 @@
   line-height: 1.05;
   letter-spacing: -.06em;
   text-align: center;
-  color: light-dark(#d0d0d0, var(--filmwave-search-surface));
+  color: light-dark(#d0d0d0, #272725);
 }
 .sectionHeading { font-size: 119px; }
 .playlistHeading { font-size: clamp(48px, 4.6vw, 76px); }
